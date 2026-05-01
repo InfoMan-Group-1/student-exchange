@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
-import { createStudent, listStudents } from "@/lib/repositories/students";
-import { createStudentSchema } from "@/lib/validation/student";
+import {
+  createStudent,
+  listStudents,
+} from "@/features/students/server/repository";
+import { createStudentSchema } from "@/features/students/server/schema";
 
 export async function GET() {
   try {
