@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Student Exchange Starter
 
-## Getting Started
+Simple full-stack Next.js setup using:
 
-First, run the development server:
+- Native SQL queries with `mysql2`
+- SQL migrations with `dbmate`
+- Request validation with `zod`
+- UI components with `shadcn/ui`
+
+## 1) Configure environment
+
+Copy `.env.example` values into your local `.env` and set your real database values.
+
+Required:
+- `DB_HOST`
+- `DB_PORT`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `DB_DATABASE`
+
+Optional (defaults to secure TLS on):
+- `DB_SSL=true`
+- `DATABASE_URL` (used by dbmate CLI)
+
+Example:
+
+```env
+DB_HOST=your-host
+DB_PORT=4000
+DB_USERNAME=your-user
+DB_PASSWORD=your-password
+DB_DATABASE=students_exchange
+DB_SSL=true
+DATABASE_URL=mysql://your-user:your-password@your-host:4000/students_exchange?tls=true
+```
+
+## 2) Run migrations
+
+```bash
+npm run db:up
+```
+
+Migration files are in `db/migrations`.
+
+Useful commands:
+- `npm run db:new -- create_students`
+- `npm run db:status`
+- `npm run db:down`
+
+## 3) Seed data (separate from migrations)
+
+Seed files are in `db/seeds`.
+
+Run all seed files:
+
+```bash
+npm run db:seed
+```
+
+Run a single seed file:
+
+```bash
+npm run db:seed:file -- 001_students_seed.sql
+```
+
+## 4) Start development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/lib/db.ts` - MySQL pool setup
+- `src/lib/repositories/students.ts` - native SQL query functions
+- `src/lib/validation/student.ts` - Zod request validation
+- `src/app/api/students/route.ts` - backend API endpoints
+- `src/app/page.tsx` - simple UI using shadcn components

@@ -1,65 +1,165 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import useSWR from "swr";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+type Student = {
+  id: number;
+  fullName: string;
+  email: string;
+  destinationCountry: string;
+  createdAt: string;
+};
+
+const fetcher = async (url: string): Promise<Student[]> => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to fetch students.");
+  }
+
+  return response.json() as Promise<Student[]>;
+};
 
 export default function Home() {
+  const [error, setError] = useState("");
+  const { data, isLoading, mutate } = useSWR<Student[]>(
+    "/api/students",
+    fetcher,
+    {
+      onError(fetchError) {
+        setError(
+          fetchError instanceof Error
+            ? fetchError.message
+            : "Unexpected error while loading students.",
+        );
+      },
+    },
+  );
+
+  async function handleSubmit(formData: FormData) {
+    const payload = {
+      fullName: String(formData.get("fullName") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      destinationCountry: String(formData.get("destinationCountry") ?? ""),
+    };
+
+    try {
+      setError("");
+      const response = await fetch("/api/students", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const data = (await response.json()) as { message?: string };
+        throw new Error(data.message ?? "Create student failed.");
+      }
+
+      await mutate();
+    } catch (submitError) {
+      setError(
+        submitError instanceof Error
+          ? submitError.message
+          : "Unexpected error while creating student.",
+      );
+    }
+  }
+  const students = data ?? [];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Student Exchange Backend Starter</CardTitle>
+          <CardDescription>
+            Next.js + mysql2 + dbmate migrations + native SQL queries.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form
+            action={handleSubmit}
+            className="grid grid-cols-1 gap-4 md:grid-cols-3"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Full Name</Label>
+              <Input id="fullName" name="fullName" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" name="email" type="email" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="destinationCountry">Destination Country</Label>
+              <Input
+                id="destinationCountry"
+                name="destinationCountry"
+                required
+              />
+            </div>
+            <div className="md:col-span-3">
+              <Button type="submit">Create Student</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Students</CardTitle>
+          <CardDescription>
+            {isLoading ? "Loading..." : `${students.length} students found`}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {error ? <p className="text-sm text-red-600">{error}</p> : null}
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Destination</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {students.map((student) => (
+                <TableRow key={student.id}>
+                  <TableCell>{student.id}</TableCell>
+                  <TableCell>{student.fullName}</TableCell>
+                  <TableCell>{student.email}</TableCell>
+                  <TableCell>{student.destinationCountry}</TableCell>
+                </TableRow>
+              ))}
+              {!isLoading && students.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center text-sm">
+                    No students yet.
+                  </TableCell>
+                </TableRow>
+              ) : null}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </main>
   );
 }
