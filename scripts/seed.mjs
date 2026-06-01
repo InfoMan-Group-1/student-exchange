@@ -45,9 +45,9 @@ async function listSeedFiles() {
 }
 
 async function run() {
-  const fileIndex = process.argv.indexOf("--file");
-  const targetFile =
-    fileIndex >= 0 ? process.argv[fileIndex + 1] : process.argv[2];
+  const args = process.argv.slice(2).filter((arg) => arg !== "--reset");
+  const fileIndex = args.indexOf("--file");
+  const targetFile = fileIndex >= 0 ? args[fileIndex + 1] : args[0];
 
   const files = targetFile ? [targetFile] : await listSeedFiles();
 
@@ -58,7 +58,28 @@ async function run() {
 
   const connection = await mysql.createConnection(getConnectionConfig());
 
+  const shouldReset = process.argv.includes("--reset");
+
   try {
+    if (shouldReset) {
+      await connection.query("SET FOREIGN_KEY_CHECKS = 0");
+      const tables = [
+        "student_languages",
+        "events_attended",
+        "university_choices",
+        "applications",
+        "students",
+        "events",
+        "guardians",
+        "programs",
+      ];
+      for (const table of tables) {
+        await connection.query(`DELETE FROM ${table}`);
+      }
+      await connection.query("SET FOREIGN_KEY_CHECKS = 1");
+      console.log("Cleared seed tables (--reset).");
+    }
+
     for (const fileName of files) {
       const fullPath = path.join(seedsDir, fileName);
       const sql = await fs.readFile(fullPath, "utf8");

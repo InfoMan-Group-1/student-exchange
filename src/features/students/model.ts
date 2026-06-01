@@ -1,7 +1,10 @@
 export type Student = {
-  id: number;
+  studentNumber: string;
   fullName: string;
-  email: string;
-  destinationCountry: string;
-  createdAt: string;
+  programId: string;
+  guardianId: string;
+  age: number | null;
+  nationality: string | null;
+  schoolEmail: string | null;
+  cumulativeGwa: number | null;
 };

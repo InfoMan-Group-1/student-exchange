@@ -73,14 +73,16 @@ student-exchange/
 |  |- components/ui/                     # shadcn base components
 |  |- lib/
 |  |  |- db.ts                          # MySQL pool setup
-|  |  |- env.ts                         # Environment variable loading
-|  |  |- repositories/students.ts       # Compatibility re-export
-|  |  |- validation/student.ts          # Compatibility re-export
+|  |  |- env.ts                         # Environment variable validation
+|  |  |- utils.ts                       # UI className helper
 |- db/
 |  |- migrations/                       # dbmate migration files
-|  |- seeds/                            # seed SQL files
+|  |- seeds/                            # seed SQL (from Records.xlsx)
+|  |- queries/                          # sample reporting SQL
 |- scripts/
-|  |- seed.mjs                          # custom seed runner
+|  |- seed.mjs                          # seed runner (--reset clears tables)
+|  |- generate-seed-from-xlsx.mjs       # rebuild seed from Records.xlsx
+|  |- _generate_seed_from_xlsx.py       # xlsx parser (used by generate script)
 |- docs/                                # setup and project notes
 ```
 
@@ -94,8 +96,10 @@ student-exchange/
 - `npm run db:up` - apply migrations
 - `npm run db:down` - rollback latest migration
 - `npm run db:status` - check migration status
-- `npm run db:seed` - run all seed files
-- `npm run db:seed:file -- 001_students_seed.sql` - run one seed file
+- `npm run db:seed:generate` - rebuild `db/seeds/001_seed_data.sql` from `Records.xlsx` (official sheets only)
+- `npm run db:seed` - clear seed tables and load `Records.xlsx` data
+- `npm run db:seed:keep` - seed without clearing existing rows
+- `npm run db:seed:file -- 001_seed_data.sql` - run one seed file
 
 ## Contribution guideline (initial)
 

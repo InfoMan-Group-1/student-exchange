@@ -6,7 +6,7 @@
 -- =====================================================
 
 CREATE TABLE applications (
-    application_id INT AUTO_INCREMENT PRIMARY KEY,
+    application_id VARCHAR(10) NOT NULL,
 
     student_number VARCHAR(20) NOT NULL,
 
@@ -15,7 +15,7 @@ CREATE TABLE applications (
 
     has_application_form BOOLEAN DEFAULT FALSE,
     has_cv BOOLEAN DEFAULT FALSE,
-    has_tor BOOLEAN DEFAULT FALSE,
+    has_tcg BOOLEAN DEFAULT FALSE,
     has_recommendation_letter BOOLEAN DEFAULT FALSE,
     has_essay BOOLEAN DEFAULT FALSE,
     has_form_5 BOOLEAN DEFAULT FALSE,
@@ -37,7 +37,9 @@ CREATE TABLE applications (
         FOREIGN KEY (student_number)
         REFERENCES students(student_number)
         ON UPDATE CASCADE
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    PRIMARY KEY (application_id)
 );
 
 CREATE INDEX idx_applications_student_number

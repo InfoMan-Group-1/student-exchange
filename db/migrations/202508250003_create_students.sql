@@ -6,10 +6,10 @@
 -- =====================================================
 
 CREATE TABLE students (
-    student_number VARCHAR(20) PRIMARY KEY,
+    student_number VARCHAR(20) NOT NULL,
 
-    program_id INT NOT NULL,
-    guardian_id INT NOT NULL,
+    program_id VARCHAR(10) NOT NULL,
+    guardian_id VARCHAR(10) NOT NULL,
 
     full_name VARCHAR(100) NOT NULL,
     age INT,
@@ -47,10 +47,11 @@ CREATE TABLE students (
         FOREIGN KEY (guardian_id)
         REFERENCES guardians(guardian_id)
         ON UPDATE CASCADE
-        ON DELETE RESTRICT
+        ON DELETE RESTRICT,
+
+    PRIMARY KEY (student_number)
 );
 
--- Indexes for foreign keys
 CREATE INDEX idx_students_program_id
     ON students(program_id);
 

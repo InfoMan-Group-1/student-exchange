@@ -1,0 +1,14 @@
+Shared:
+1. Landing Page - 
+2. Login (student/admin side) - 
+
+Student side:
+Dashboard
+Profile
+Application Form
+
+Admin side:
+- Dashboard
+- Applicants/Students list
+- Application detail
+

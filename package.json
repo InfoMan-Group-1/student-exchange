@@ -11,8 +11,10 @@
     "db:down": "dbmate --migrations-dir ./db/migrations down",
     "db:new": "dbmate --migrations-dir ./db/migrations new",
     "db:status": "dbmate --migrations-dir ./db/migrations status",
-    "db:seed": "node ./scripts/seed.mjs",
-    "db:seed:file": "node ./scripts/seed.mjs --file"
+    "db:seed": "node ./scripts/seed.mjs --reset",
+    "db:seed:keep": "node ./scripts/seed.mjs",
+    "db:seed:file": "node ./scripts/seed.mjs --file",
+    "db:seed:generate": "node ./scripts/generate-seed-from-xlsx.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

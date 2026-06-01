@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,8 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -33,93 +30,25 @@ const fetcher = async (url: string): Promise<Student[]> => {
 
 export function StudentsDashboard() {
   const [error, setError] = useState("");
-  const { data, isLoading, mutate } = useSWR<Student[]>(
-    "/api/students",
-    fetcher,
-    {
-      onError(fetchError) {
-        setError(
-          fetchError instanceof Error
-            ? fetchError.message
-            : "Unexpected error while loading students.",
-        );
-      },
-    },
-  );
-
-  async function handleSubmit(formData: FormData) {
-    const payload = {
-      fullName: String(formData.get("fullName") ?? ""),
-      email: String(formData.get("email") ?? ""),
-      destinationCountry: String(formData.get("destinationCountry") ?? ""),
-    };
-
-    try {
-      setError("");
-      const response = await fetch("/api/students", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const data = (await response.json()) as { message?: string };
-        throw new Error(data.message ?? "Create student failed.");
-      }
-
-      await mutate();
-    } catch (submitError) {
+  const { data, isLoading } = useSWR<Student[]>("/api/students", fetcher, {
+    onError(fetchError) {
       setError(
-        submitError instanceof Error
-          ? submitError.message
-          : "Unexpected error while creating student.",
+        fetchError instanceof Error
+          ? fetchError.message
+          : "Unexpected error while loading students.",
       );
-    }
-  }
+    },
+  });
+
   const students = data ?? [];
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
+    <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6">
       <Card>
         <CardHeader>
-          <CardTitle>Student Exchange Backend Starter</CardTitle>
+          <CardTitle>Student Exchange</CardTitle>
           <CardDescription>
-            Next.js + mysql2 + dbmate migrations + native SQL queries.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            action={handleSubmit}
-            className="grid grid-cols-1 gap-4 md:grid-cols-3"
-          >
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input id="fullName" name="fullName" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="destinationCountry">Destination Country</Label>
-              <Input
-                id="destinationCountry"
-                name="destinationCountry"
-                required
-              />
-            </div>
-            <div className="md:col-span-3">
-              <Button type="submit">Create Student</Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Students</CardTitle>
-          <CardDescription>
-            {isLoading ? "Loading..." : `${students.length} students found`}
+            Students loaded from TiDB via native SQL (mysql2).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -127,30 +56,35 @@ export function StudentsDashboard() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
+                <TableHead>Student #</TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Destination</TableHead>
+                <TableHead>Program</TableHead>
+                <TableHead>GWA</TableHead>
+                <TableHead>School email</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {students.map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell>{student.id}</TableCell>
+                <TableRow key={student.studentNumber}>
+                  <TableCell>{student.studentNumber}</TableCell>
                   <TableCell>{student.fullName}</TableCell>
-                  <TableCell>{student.email}</TableCell>
-                  <TableCell>{student.destinationCountry}</TableCell>
+                  <TableCell>{student.programId}</TableCell>
+                  <TableCell>{student.cumulativeGwa ?? "—"}</TableCell>
+                  <TableCell>{student.schoolEmail ?? "—"}</TableCell>
                 </TableRow>
               ))}
               {!isLoading && students.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center text-sm">
-                    No students yet.
+                  <TableCell colSpan={5} className="text-center text-sm">
+                    No students found. Run migrations and seed first.
                   </TableCell>
                 </TableRow>
               ) : null}
             </TableBody>
           </Table>
+          <p className="text-sm text-muted-foreground">
+            {isLoading ? "Loading..." : `${students.length} students`}
+          </p>
         </CardContent>
       </Card>
     </main>

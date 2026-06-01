@@ -117,14 +117,21 @@ Seed files live in:
 
 - `db/seeds`
 
-Run all seed files:
+Rebuild seed SQL from `Records.xlsx` (official tabs only; `Sheet8` is ignored):
+
+```bash
+npm run db:seed:generate
+```
+
+Run all seed files (clears seed tables first, then loads fresh data):
 
 ```bash
 npm run db:seed
 ```
 
 What it does:
-- Runs all `.sql` files in `db/seeds` in filename order
+- Deletes rows from seed tables, then runs all `.sql` files in `db/seeds`
+- Data matches `Records.xlsx` tabs: `programs`, `guardians`, `students`, `applications`, etc.
 
 Run one seed file:
 

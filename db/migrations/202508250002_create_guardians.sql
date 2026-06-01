@@ -6,16 +6,18 @@
 -- =====================================================
 
 CREATE TABLE guardians (
-    guardian_id INT AUTO_INCREMENT PRIMARY KEY,
+    guardian_id VARCHAR(10) NOT NULL,
     guardian_name VARCHAR(100) NOT NULL,
-    relationship_to_student VARCHAR(50),
-    address TEXT,
-    contact_number VARCHAR(20),
-    email_address VARCHAR(100),
+    relation_to_student VARCHAR(50),
+    guardian_address TEXT,
+    guardian_contact_number VARCHAR(20),
+    guardian_email VARCHAR(100),
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (guardian_id)
 );
 
 -- migrate:down

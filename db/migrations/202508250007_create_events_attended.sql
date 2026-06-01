@@ -7,7 +7,7 @@
 
 CREATE TABLE events_attended (
     student_number VARCHAR(20) NOT NULL,
-    event_id INT NOT NULL,
+    event_id VARCHAR(10) NOT NULL,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
