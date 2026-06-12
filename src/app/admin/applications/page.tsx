@@ -19,6 +19,11 @@ export default function ApplicantsPage() {
 
   return (
     <div className="p-8 space-y-6 max-w-7xl mx-auto pb-12">
+      <ApplicantsQuickStats stats={{
+        totalApplicants: applicants.length,
+        reviewedApplications: applicants.filter((a: any) => a.is_complete).length,
+        priorityAttention: applicants.filter((a: any) => !a.is_complete).length,
+      }} />
       <ApplicantsToolbar
         search={search}
         filterStatus={filterStatus}
@@ -30,11 +35,7 @@ export default function ApplicantsPage() {
         search={search}
         filterStatus={filterStatus}
       />
-      <ApplicantsQuickStats stats={{
-        totalApplicants: applicants.length,
-        reviewedApplications: applicants.filter((a: any) => a.is_complete).length,
-        priorityAttention: applicants.filter((a: any) => !a.is_complete).length,
-      }} />
+
     </div>
   );
 }

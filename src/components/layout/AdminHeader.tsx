@@ -7,10 +7,6 @@ import { Bell, HelpCircle, Search, LayoutDashboard, Users, LogOut } from "lucide
 export function AdminHeader() {
   const pathname = usePathname();
   const isApplications = pathname === "/admin/applications";
-  const isApplicationDetail = pathname.startsWith("/admin/applications/") && pathname.length > "/admin/applications/".length;
-  // Normally we would fetch the name, but for UI mockup we'll hardcode or extract from URL if possible.
-  // We'll just display a placeholder name if it's the detail view.
-  const breadcrumbName = isApplicationDetail ? "Juan Dela Cruz" : "";
 
   return (
     <header className="flex justify-between items-center w-full h-16 px-8 sticky top-0 z-40 bg-surface border-b border-outline-variant shadow-sm">
@@ -47,33 +43,7 @@ export function AdminHeader() {
       </div>
 
       <div className="flex items-center gap-6 flex-1 justify-end">
-        {/* If we are on detail view, optionally show breadcrumbs in the middle, or right, but Top Nav usually has a static structure. 
-            For now, let's keep the dynamic breadcrumbs for detail pages next to the nav or center. */}
-        {isApplicationDetail && (
-          <div className="hidden lg:flex items-center text-on-surface-variant font-label-md gap-2 mr-auto ml-12 bg-surface-container-low px-4 py-1.5 rounded-full">
-            <Link href="/admin/applications" className="hover:text-primary transition-colors">Applicants</Link>
-            <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-            <span className="text-primary font-bold">{breadcrumbName}</span>
-          </div>
-        )}
-        <div className="relative hidden lg:block">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-on-surface-variant" />
-          <input 
-            type="text" 
-            placeholder="Search applications..." 
-            className="pl-10 pr-4 py-2 bg-surface-container-low border border-outline rounded-full w-64 font-label-md focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-          />
-        </div>
-
         <div className="flex items-center gap-2">
-          <button className="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors active:scale-95">
-            <Bell className="h-6 w-6" />
-          </button>
-          <button className="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors active:scale-95">
-            <HelpCircle className="h-6 w-6" />
-          </button>
-          
-          <div className="h-8 w-[1px] bg-outline-variant mx-2"></div>
         
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
