@@ -33,29 +33,32 @@ export class ApplicationService {
     }
 
     const choices = await repo.getUniversityChoices(applicationId);
+    const languages = await repo.getLanguagesForStudent(application.student_number);
 
     return {
       ...application,
-      university_choices: choices
+      university_choices: choices,
+      languages,
     };
   }
 
   async updateApplication(applicationId: string, data: Record<string, any>) {
-    // Basic sanitization to ensure we only update allowed fields in the applications table
+    // Allowlist strictly matches applications table columns (see migration 202508250004)
     const allowedFields = [
       'semester_preference', 'duration_preference', 'is_complete',
       'has_application_form', 'has_cv', 'has_tcg', 'has_valid_passport',
-      'has_recommendation_letter', 'has_medical_certificate', 
-      'has_consent_form', 'has_study_plan'
+      'has_recommendation_letter', 'has_essay', 'has_form_5',
+      'has_online_application_form',
+      'program_advisor', 'department_chair', 'college_secretary', 'dean_name',
     ];
-    
+
     const cleanData: Record<string, any> = {};
     for (const key of Object.keys(data)) {
       if (allowedFields.includes(key)) {
         cleanData[key] = data[key];
       }
     }
-    
+
     return repo.updateApplication(applicationId, cleanData);
   }
 
