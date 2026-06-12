@@ -41,11 +41,6 @@ export function ApplicantsToolbar({
           </select>
           <ListFilter className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 pointer-events-none text-on-surface-variant" />
         </div>
-
-        <button className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md hover:brightness-110 transition-all active:scale-95">
-          <Download className="h-5 w-5" />
-          Export
-        </button>
       </div>
     </section>
   );

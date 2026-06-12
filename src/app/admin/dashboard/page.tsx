@@ -1,6 +1,5 @@
 "use client";
 
-import { Download } from "lucide-react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/api-client";
 import { AdminStatCards } from "@/features/admin/components/AdminStatCards";
@@ -15,17 +14,9 @@ export default function AdminDashboardPage() {
   
   return (
     <div className="p-container-padding space-y-stack-lg max-w-7xl mx-auto pb-12">
-      <section className="flex items-end justify-between">
-        <div>
-          <h1 className="font-headline-lg text-headline-lg text-primary">Dashboard</h1>
-          <p className="font-body-md text-on-surface-variant mt-1">Overview of the current exchange application cycle.</p>
-        </div>
-        <div className="flex gap-3">
-          <button className="px-4 py-2 border border-outline text-primary font-label-md rounded-lg flex items-center gap-2 hover:bg-surface-container transition-colors active:scale-95">
-            <Download className="h-5 w-5" />
-            Export Report
-          </button>
-        </div>
+      <section>
+        <h1 className="font-headline-lg text-headline-lg text-primary">Dashboard</h1>
+        <p className="font-body-md text-on-surface-variant mt-1">Overview of the current exchange application cycle.</p>
       </section>
 
       <AdminStatCards stats={{

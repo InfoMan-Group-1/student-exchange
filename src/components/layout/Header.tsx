@@ -30,37 +30,21 @@ export function Header() {
           PUP Student Exchange
         </h1>
       </div>
-      <nav className="hidden md:flex items-center gap-8">
-        <Link
-          className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
-          href="#programs"
-        >
-          Programs
-        </Link>
-        <Link
-          className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
-          href="#admissions"
-        >
-          Admissions
-        </Link>
-        <Link
-          className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
-          href="#contact"
-        >
-          Contact
-        </Link>
-        <Link
-          href="/login"
-          className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
-        >
-          Log in
-        </Link>
-        <Link
-          href="/register"
-          className="bg-primary hover:bg-primary/90 text-on-primary px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all duration-200 active:scale-95 shadow-sm hover:shadow"
-        >
-          Register
-        </Link>
+      <nav className="hidden md:flex items-center">
+        <div className="inline-flex items-center p-1 bg-surface-container-low border border-outline-variant rounded-full shadow-sm">
+          <Link
+            href="/login"
+            className="px-5 py-2 rounded-full font-label-md text-on-surface-variant hover:text-primary hover:bg-surface transition-all duration-200"
+          >
+            Log in
+          </Link>
+          <Link
+            href="/register"
+            className="px-5 py-2 rounded-full bg-primary text-on-primary font-label-md hover:brightness-110 transition-all duration-200 active:scale-95 shadow-sm"
+          >
+            Register
+          </Link>
+        </div>
       </nav>
       <button className="md:hidden p-2 text-primary" type="button" aria-label="Menu">
         <Menu className="h-6 w-6" />

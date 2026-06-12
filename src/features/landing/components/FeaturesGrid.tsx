@@ -10,7 +10,7 @@ export async function FeaturesGrid() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Large Feature Card */}
         <div className="md:col-span-2 bg-surface p-card-padding rounded-xl shadow-sm border border-outline-variant flex flex-col justify-between overflow-hidden group">
-          <div className="max-w-md">
+          <div>
             <div className="w-12 h-12 bg-secondary-container rounded-lg flex items-center justify-center text-on-secondary-container mb-6">
               <Globe className="h-6 w-6" />
             </div>
