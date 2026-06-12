@@ -25,3 +25,12 @@ Admin api test
 We will login manually to generate a real JWT token.
 We will navigate to the Admin Dashboard and verify that the stats display '0' or match our seed data.
 We will interact with the Checklist toggles and verify the network tab shows a successful PATCH request, and the UI remains in sync.
+
+student api test
+Log in as a Student.
+Navigate to Profile and save new details; verify it persists after refresh.
+Navigate to Applications and save preferences; verify it updates.
+Verify the Dashboard accurately reflects the state of the application.
+
+Future:
+1. implement file upload for documents, also a online signature where admin can draw their signature in each students applications - or more of a bulk operations

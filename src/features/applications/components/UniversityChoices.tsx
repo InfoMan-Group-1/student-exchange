@@ -2,12 +2,13 @@ import { Building2 } from "lucide-react";
 import { UniversityChoice } from "@/lib/mockApplicationData";
 
 interface Props {
-  choices: UniversityChoice[];
+  choices: any[];
+  onChange: (rank: number, name: string) => void;
 }
 
-export function UniversityChoices({ choices }: Props) {
-  // Sort by preference order to ensure 1, 2, 3 alignment
-  const sortedChoices = [...choices].sort((a, b) => a.preferenceOrder - b.preferenceOrder);
+export function UniversityChoices({ choices, onChange }: Props) {
+  // We need to render exactly 3 choice slots
+  const slots = [1, 2, 3];
 
   return (
     <section className="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30 p-card-padding">
@@ -19,20 +20,23 @@ export function UniversityChoices({ choices }: Props) {
       </div>
       
       <div className="space-y-6">
-        {sortedChoices.map((choice, index) => {
-          const isFirst = index === 0;
+        {slots.map((rank) => {
+          const isFirst = rank === 1;
           const numberStyle = isFirst 
             ? "bg-secondary text-on-secondary" 
             : "bg-outline text-white";
 
             const placeholderInst = isFirst ? "e.g. Nanyang Technological University" : 
-                                    index === 1 ? "Second Choice Institution" : "Third Choice Institution";
+                                    rank === 2 ? "Second Choice Institution" : "Third Choice Institution";
+
+            // Find the choice data for this rank
+            const choiceData = choices.find(c => c.university_choice_rank === rank);
 
             return (
-              <div key={choice.preferenceOrder} className="grid grid-cols-12 gap-4 items-end">
+              <div key={rank} className="grid grid-cols-12 gap-4 items-end">
                 <div className="col-span-1 flex justify-center pb-3">
                   <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${numberStyle}`}>
-                    {choice.preferenceOrder}
+                    {rank}
                   </span>
                 </div>
                 <div className="col-span-11 grid grid-cols-1 gap-4">
@@ -44,7 +48,8 @@ export function UniversityChoices({ choices }: Props) {
                     )}
                     <input 
                       type="text" 
-                      defaultValue={choice.universityName}
+                      value={choiceData?.university_name || ""}
+                      onChange={(e) => onChange(rank, e.target.value)}
                       placeholder={placeholderInst}
                       className="w-full bg-surface-container-low border border-outline rounded-lg px-4 py-3 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                     />

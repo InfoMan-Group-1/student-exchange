@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Student } from "@/lib/mockStudentData";
 import { BadgeCheck, Users, GraduationCap, Save, RefreshCw, CheckCircle2 } from "lucide-react";
+import { apiFetch } from "@/lib/api-client";
+import { mutate } from "swr";
 
-export function StudentProfileForm({ student }: { student: Student }) {
+export function StudentProfileForm({ student }: { student: any }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -18,23 +19,34 @@ export function StudentProfileForm({ student }: { student: Student }) {
 
   const handleReset = () => {
     if (confirm("Are you sure you want to discard changes?")) {
-      // In a real app, reset form to initial values
-      displayToast("Changes discarded");
+      window.location.reload();
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSaving(true);
 
-    setTimeout(() => {
-      setIsSaving(false);
+    const formData = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await apiFetch("/api/v1/students/me/profile", {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Failed to save profile");
+
+      mutate("/api/v1/students/me/profile");
       setIsSuccess(true);
-      
-      setTimeout(() => {
-        setIsSuccess(false);
-      }, 2000);
-    }, 1200);
+      displayToast("Profile updated successfully");
+      setTimeout(() => setIsSuccess(false), 2000);
+    } catch (e) {
+      displayToast("Failed to save profile");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -63,7 +75,7 @@ export function StudentProfileForm({ student }: { student: Student }) {
                   <input
                     type="text"
                     readOnly
-                    defaultValue={student.studentNumber}
+                    defaultValue={student.student_number}
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                   />
                 </div>
@@ -75,7 +87,8 @@ export function StudentProfileForm({ student }: { student: Student }) {
                   </label>
                   <input
                     type="text"
-                    defaultValue={student.fullName}
+                    name="full_name"
+                    defaultValue={student.full_name}
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                   />
                 </div>
@@ -86,6 +99,7 @@ export function StudentProfileForm({ student }: { student: Student }) {
                     <label className="font-label-md text-label-md text-on-surface-variant">Age</label>
                     <input
                       type="number"
+                      name="age"
                       defaultValue={student.age}
                       className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                     />
@@ -93,6 +107,7 @@ export function StudentProfileForm({ student }: { student: Student }) {
                   <div className="space-y-2">
                     <label className="font-label-md text-label-md text-on-surface-variant">Sex</label>
                     <select
+                      name="sex"
                       defaultValue={student.sex}
                       className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                     >
@@ -108,7 +123,8 @@ export function StudentProfileForm({ student }: { student: Student }) {
                   <label className="font-label-md text-label-md text-on-surface-variant">Birth Date</label>
                   <input
                     type="date"
-                    defaultValue={student.birthDate}
+                    name="birth_date"
+                    defaultValue={student.birth_date ? new Date(student.birth_date).toISOString().split('T')[0] : ''}
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                   />
                 </div>
@@ -118,6 +134,7 @@ export function StudentProfileForm({ student }: { student: Student }) {
                   <label className="font-label-md text-label-md text-on-surface-variant">Nationality</label>
                   <input
                     type="text"
+                    name="nationality"
                     defaultValue={student.nationality}
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                   />
@@ -128,20 +145,33 @@ export function StudentProfileForm({ student }: { student: Student }) {
                   <label className="font-label-md text-label-md text-on-surface-variant">Passport Number</label>
                   <input
                     type="text"
+                    name="passport_number"
                     placeholder="e.g. P1234567A"
-                    defaultValue={student.passportNumber}
+                    defaultValue={student.passport_number}
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                   />
                 </div>
 
                 {/* Emails */}
-                <div className="space-y-2">
-                  <label className="font-label-md text-label-md text-on-surface-variant">Email Address</label>
-                  <input
-                    type="email"
-                    defaultValue={student.email}
-                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="font-label-md text-label-md text-on-surface-variant">School Email</label>
+                    <input
+                      type="email"
+                      name="school_email"
+                      defaultValue={student.school_email}
+                      className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="font-label-md text-label-md text-on-surface-variant">Alternate Email</label>
+                    <input
+                      type="email"
+                      name="alternate_email"
+                      defaultValue={student.alternate_email}
+                      className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
+                    />
+                  </div>
                 </div>
 
                 {/* Academic Program */}
@@ -150,28 +180,21 @@ export function StudentProfileForm({ student }: { student: Student }) {
                   <div className="flex items-center gap-2 p-3 bg-secondary-fixed/30 border border-secondary-fixed rounded-lg">
                     <GraduationCap className="text-on-secondary-container h-5 w-5" />
                     <span className="font-body-md text-on-secondary-container font-semibold">
-                      {student.academicProgram}
+                      {student.program_name || "BS Information Technology — CCIS"}
                     </span>
                   </div>
                 </div>
 
-                {/* GWA & Status */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="font-label-md text-label-md text-on-surface-variant">Current GWA</label>
-                    <input
-                      type="text"
-                      defaultValue={student.gwa}
-                      className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md font-bold text-primary"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="font-label-md text-label-md text-on-surface-variant">Enrollment Status</label>
-                    <div className="bg-green-100 text-green-800 px-3 py-2.5 rounded-lg flex items-center justify-center gap-2 text-sm font-bold">
-                      <span className="w-2 h-2 rounded-full bg-green-600 animate-pulse"></span>
-                      {student.enrollmentStatus}
-                    </div>
-                  </div>
+                {/* GWA */}
+                <div className="space-y-2">
+                  <label className="font-label-md text-label-md text-on-surface-variant">Current GWA</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="cumulative_gwa"
+                    defaultValue={student.cumulative_gwa}
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md font-bold text-primary"
+                  />
                 </div>
 
                 {/* Address (Span 2) */}
@@ -179,7 +202,8 @@ export function StudentProfileForm({ student }: { student: Student }) {
                   <label className="font-label-md text-label-md text-on-surface-variant">Permanent Address</label>
                   <textarea
                     rows={2}
-                    defaultValue={student.permanentAddress}
+                    name="home_address"
+                    defaultValue={student.home_address}
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                   />
                 </div>
@@ -205,7 +229,8 @@ export function StudentProfileForm({ student }: { student: Student }) {
                   <label className="font-label-md text-label-md text-on-surface-variant">Full Name</label>
                   <input
                     type="text"
-                    defaultValue={student.guardian.fullName}
+                    name="guardian_name"
+                    defaultValue={student.guardian_name}
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                   />
                 </div>
@@ -214,7 +239,8 @@ export function StudentProfileForm({ student }: { student: Student }) {
                 <div className="space-y-2">
                   <label className="font-label-md text-label-md text-on-surface-variant">Relationship</label>
                   <select
-                    defaultValue={student.guardian.relationship}
+                    name="relation_to_student"
+                    defaultValue={student.relation_to_student}
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                   >
                     <option value="Father">Father</option>
@@ -228,11 +254,11 @@ export function StudentProfileForm({ student }: { student: Student }) {
                 <div className="space-y-2">
                   <label className="font-label-md text-label-md text-on-surface-variant">Contact Number</label>
                   <div className="relative">
-                    <span className="absolute left-4 top-2.5 text-outline text-body-md">+63</span>
                     <input
                       type="tel"
-                      defaultValue={student.guardian.contactNumber}
-                      className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 pl-12 pr-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
+                      name="guardian_contact_number"
+                      defaultValue={student.guardian_contact_number}
+                      className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                     />
                   </div>
                 </div>
@@ -242,8 +268,9 @@ export function StudentProfileForm({ student }: { student: Student }) {
                   <label className="font-label-md text-label-md text-on-surface-variant">Email Address</label>
                   <input
                     type="email"
+                    name="guardian_email"
                     placeholder="m.delacruz@example.com"
-                    defaultValue={student.guardian.emailAddress}
+                    defaultValue={student.guardian_email}
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
                   />
                 </div>

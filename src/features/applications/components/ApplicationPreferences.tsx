@@ -3,9 +3,10 @@ import { Settings } from "lucide-react";
 interface Props {
   targetSemester: string;
   duration: string;
+  onChange: (key: string, value: string) => void;
 }
 
-export function ApplicationPreferences({ targetSemester, duration }: Props) {
+export function ApplicationPreferences({ targetSemester, duration, onChange }: Props) {
   return (
     <section className="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30 p-card-padding">
       <div className="flex items-center gap-3 mb-6">
@@ -19,12 +20,13 @@ export function ApplicationPreferences({ targetSemester, duration }: Props) {
         <div className="space-y-2">
           <label className="font-label-md text-label-md text-on-surface-variant">Target Semester</label>
           <select 
-            defaultValue={targetSemester}
+            value={targetSemester}
+            onChange={(e) => onChange("semester_preference", e.target.value)}
             className="w-full bg-surface-container-low border border-outline rounded-lg px-4 py-3 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 appearance-none transition-all"
           >
-            <option>First Semester (August - December)</option>
-            <option>Second Semester (January - May)</option>
-            <option>Summer Term (June - July)</option>
+            <option>1st Semester</option>
+            <option>2nd Semester</option>
+            <option>Summer Term</option>
           </select>
         </div>
         
@@ -36,7 +38,8 @@ export function ApplicationPreferences({ targetSemester, duration }: Props) {
                 type="radio" 
                 name="duration" 
                 className="hidden peer" 
-                defaultChecked={duration === "1 Semester"} 
+                checked={duration === "1 Semester"} 
+                onChange={() => onChange("duration_preference", "1 Semester")}
               />
               <div className="h-full border border-outline rounded-lg p-3 text-center peer-checked:border-primary peer-checked:bg-primary-container/5 peer-checked:text-primary transition-all">
                 <p className="font-label-md text-label-md font-bold">1 Semester</p>
@@ -48,7 +51,8 @@ export function ApplicationPreferences({ targetSemester, duration }: Props) {
                 type="radio" 
                 name="duration" 
                 className="hidden peer" 
-                defaultChecked={duration === "Full Year"} 
+                checked={duration === "Full Year"} 
+                onChange={() => onChange("duration_preference", "Full Year")}
               />
               <div className="h-full border border-outline rounded-lg p-3 text-center peer-checked:border-primary peer-checked:bg-primary-container/5 peer-checked:text-primary transition-all">
                 <p className="font-label-md text-label-md font-bold">Full Year</p>
