@@ -1,7 +1,8 @@
 "use client";
 
-import { Bell, HelpCircle, Search, User } from "lucide-react";
+import { Bell, HelpCircle, Search, User, LogOut, LayoutDashboard, FileText } from "lucide-react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 interface DashboardHeaderProps {
   fullName: string;
@@ -19,33 +20,38 @@ export function DashboardHeader({
   const isApplication = pathname === "/dashboard/applications";
 
   return (
-    <header className="sticky top-0 z-40 bg-surface border-b border-outline-variant flex justify-between items-center w-full h-20 px-8">
-      {isApplication ? (
-        <div className="flex items-center gap-4">
-          <h2 className="font-headline-md text-headline-md text-primary font-bold">
-            Exchange application
-          </h2>
-          <div className="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm text-label-sm">
-            DRAFT
+    <header className="sticky top-0 z-40 bg-surface border-b border-outline-variant flex justify-between items-center w-full h-16 px-8 shadow-sm">
+      <div className="flex items-center gap-12">
+        {/* Branding */}
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-primary rounded flex items-center justify-center font-bold text-on-primary text-xs">
+            PUP
           </div>
+          <span className="font-headline-md font-bold text-primary">Exchange</span>
         </div>
-      ) : isProfile ? (
-        <div className="flex items-center gap-4">
-          <User className="text-outline h-6 w-6" />
-          <h2 className="font-headline-lg text-2xl font-bold text-primary">
-            Student Profile
-          </h2>
-        </div>
-      ) : (
-        <div>
-          <h2 className="font-headline-lg text-headline-lg font-bold text-primary">
-            Welcome, {fullName}
-          </h2>
-          <span className="font-label-sm text-label-sm text-on-tertiary-container tracking-wider uppercase">
-            Student No: {studentNumber}
-          </span>
-        </div>
-      )}
+
+        {/* Navigation */}
+        <nav className="hidden md:flex items-center gap-6">
+          <Link 
+            href="/dashboard"
+            className={`flex items-center gap-2 font-label-md transition-colors ${
+              pathname === "/dashboard" ? "text-primary font-bold border-b-2 border-primary py-5" : "text-on-surface-variant hover:text-primary py-5"
+            }`}
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            Dashboard
+          </Link>
+          <Link 
+            href="/dashboard/applications"
+            className={`flex items-center gap-2 font-label-md transition-colors ${
+              pathname.startsWith("/dashboard/applications") ? "text-primary font-bold border-b-2 border-primary py-5" : "text-on-surface-variant hover:text-primary py-5"
+            }`}
+          >
+            <FileText className="h-4 w-4" />
+            Applications
+          </Link>
+        </nav>
+      </div>
 
       <div className="flex items-center gap-6">
         {isProfile && (
@@ -74,25 +80,28 @@ export function DashboardHeader({
             <>
               <div className="h-8 w-[1px] bg-outline-variant mx-2"></div>
               <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <p className="font-label-md text-label-md font-bold">
-                    Academic Year 2024-2025
+                <div className="text-right hidden sm:block">
+                  <p className="font-label-md text-label-md font-bold text-primary">
+                    Draft Application
                   </p>
                   <p className="text-[11px] text-on-surface-variant uppercase tracking-widest">
-                    Global Mobility Program
+                    Academic Year 2024-2025
                   </p>
                 </div>
               </div>
             </>
           ) : (
             <div className="flex items-center gap-3 pl-4 border-l border-outline-variant">
-              <div className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-primary-container/20">
+              <Link href="/dashboard/profile" className="w-9 h-9 rounded-full bg-surface-container-highest overflow-hidden border border-primary-container/20 hover:ring-2 hover:ring-primary/50 transition-all">
                 <img
                   alt="User profile avatar"
                   className="w-full h-full object-cover"
                   src={avatarUrl}
                 />
-              </div>
+              </Link>
+              <Link href="/login" className="p-2 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-full transition-colors ml-2" title="Logout">
+                <LogOut className="h-5 w-5" />
+              </Link>
             </div>
           )}
         </div>

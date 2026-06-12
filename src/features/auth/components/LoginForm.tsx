@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff, LogIn } from "lucide-react";
+import Link from "next/link";
 import { mockLogin, UserRole } from "@/lib/mockAuth";
 import { ErrorBanner } from "./ErrorBanner";
 
@@ -112,12 +113,12 @@ export function LoginForm() {
               >
                 Password
               </label>
-              <a
-                className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors"
-                href="#"
+              <Link
+                href="/login/forgot"
+                className="font-label-md text-primary font-bold hover:underline"
               >
-                Forgot?
-              </a>
+                Forgot your password?
+              </Link>
             </div>
             <div className="relative">
               <input

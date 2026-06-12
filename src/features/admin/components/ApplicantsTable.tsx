@@ -61,7 +61,7 @@ export function ApplicantsTable({ applicants }: { applicants: ApplicantListEntry
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link href="#" className="text-primary font-label-md hover:underline underline-offset-4 flex items-center justify-end gap-1 ml-auto">
+                    <Link href={`/admin/applications/${app.studentNumber}`} className="text-primary font-label-md hover:underline underline-offset-4 flex items-center justify-end gap-1 ml-auto">
                       View <Eye className="h-[18px] w-[18px]" />
                     </Link>
                   </td>

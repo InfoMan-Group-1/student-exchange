@@ -11,7 +11,7 @@ export function IncompleteApplicationsTable({ apps }: { apps: IncompleteApplicat
           <p className="font-label-sm text-on-surface-variant">Students needing immediate document follow-up</p>
         </div>
         <Link 
-          href="#"
+          href="/admin/applications"
           className="text-primary font-label-md font-bold hover:underline flex items-center gap-1 group"
         >
           View all applicants

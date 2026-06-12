@@ -15,22 +15,22 @@ export function Footer() {
         </div>
         <div className="flex gap-6">
           <Link
-            className="font-label-sm text-label-sm text-on-tertiary-container hover:text-primary transition-colors"
-            href="#"
+            href="#about-pup"
+            className="text-on-surface-variant hover:text-primary transition-colors text-sm"
           >
-            Privacy Policy
+            About PUP
           </Link>
           <Link
-            className="font-label-sm text-label-sm text-on-tertiary-container hover:text-primary transition-colors"
-            href="#"
+            href="#international-affairs"
+            className="text-on-surface-variant hover:text-primary transition-colors text-sm"
           >
-            Contact
+            International Affairs
           </Link>
           <Link
-            className="font-label-sm text-label-sm text-on-tertiary-container hover:text-primary transition-colors"
-            href="#"
+            href="#contact"
+            className="text-on-surface-variant hover:text-primary transition-colors text-sm"
           >
-            Help Center
+            Contact Us
           </Link>
         </div>
         <p className="font-label-sm text-label-sm text-on-tertiary-container">

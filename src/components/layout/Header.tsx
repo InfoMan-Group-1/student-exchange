@@ -33,21 +33,21 @@ export function Header() {
       <nav className="hidden md:flex items-center gap-8">
         <Link
           className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
-          href="#"
+          href="#programs"
         >
           Programs
         </Link>
         <Link
           className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
-          href="#"
+          href="#admissions"
         >
-          Eligibility
+          Admissions
         </Link>
         <Link
           className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
-          href="#"
+          href="#contact"
         >
-          Partners
+          Contact
         </Link>
         <Link
           href="/login"
