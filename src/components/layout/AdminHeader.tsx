@@ -1,12 +1,19 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Bell, HelpCircle, Search, LayoutDashboard, Users, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, LogOut } from "lucide-react";
+import { removeAuthToken } from "@/lib/api-client";
 
 export function AdminHeader() {
   const pathname = usePathname();
+  const router = useRouter();
   const isApplications = pathname === "/admin/applications";
+
+  const handleLogout = () => {
+    removeAuthToken();
+    router.push("/login");
+  };
 
   return (
     <header className="flex justify-between items-center w-full h-16 px-8 sticky top-0 z-40 bg-surface border-b border-outline-variant shadow-sm">
@@ -57,9 +64,13 @@ export function AdminHeader() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <Link href="/login" className="p-2 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-full transition-colors ml-2" title="Logout">
+            <button
+              onClick={handleLogout}
+              className="p-2 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-full transition-colors ml-2"
+              title="Logout"
+            >
               <LogOut className="h-5 w-5" />
-            </Link>
+            </button>
           </div>
         </div>
       </div>
