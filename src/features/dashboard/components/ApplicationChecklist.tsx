@@ -4,13 +4,13 @@ import Link from "next/link";
 export function ApplicationChecklist({ application }: { application: any }) {
   const documents = [
     { key: "has_application_form", name: "Application Form", isComplete: application.has_application_form },
-    { key: "has_cv", name: "Curriculum Vitae", isComplete: application.has_cv },
+    { key: "has_cv", name: "Curriculum Vitae (CV)", isComplete: application.has_cv },
     { key: "has_tcg", name: "True Copy of Grades", isComplete: application.has_tcg },
     { key: "has_recommendation_letter", name: "Recommendation Letter", isComplete: application.has_recommendation_letter },
-    { key: "has_medical_certificate", name: "Medical Certificate", isComplete: application.has_medical_certificate },
-    { key: "has_consent_form", name: "Consent Form", isComplete: application.has_consent_form },
-    { key: "has_study_plan", name: "Study Plan", isComplete: application.has_study_plan },
+    { key: "has_essay", name: "Study Plan / Essay", isComplete: application.has_essay },
+    { key: "has_form_5", name: "Form 5 (Enrollment)", isComplete: application.has_form_5 },
     { key: "has_valid_passport", name: "Valid Passport", isComplete: application.has_valid_passport },
+    { key: "has_online_application_form", name: "Online Application Form", isComplete: application.has_online_application_form },
   ];
 
   return (
