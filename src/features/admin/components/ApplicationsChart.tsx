@@ -1,36 +1,69 @@
-import { BarChart3 } from "lucide-react";
+"use client";
 
-export function ApplicationsChart() {
+interface ProgramStat {
+  program_name: string;
+  college_name: string;
+  total: number;
+  complete_count: number;
+}
+
+export function ApplicationsChart({ byProgram }: { byProgram?: ProgramStat[] }) {
+  const data = byProgram ?? [];
+  const maxTotal = Math.max(...data.map(p => Number(p.total)), 1);
+
+  const collegColors: Record<string, string> = {
+    "CCIS": "bg-primary",
+    "CEA": "bg-secondary-container",
+    "CBA": "bg-primary-container",
+    "CAL": "bg-primary/40",
+    "COE": "bg-secondary",
+  };
+
   return (
     <div className="lg:col-span-2 bg-surface p-card-padding rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30">
       <div className="flex items-center justify-between mb-6">
-        <h4 className="font-title-lg text-primary">Applications by College</h4>
-        <div className="flex gap-2">
-          <button className="px-3 py-1 bg-surface-container-low text-primary font-label-sm rounded-full border border-outline">
-            Weekly
-          </button>
-          <button className="px-3 py-1 text-on-surface-variant font-label-sm rounded-full">
-            Monthly
-          </button>
+        <div>
+          <h4 className="font-title-lg text-primary">Applications by Program</h4>
+          <p className="font-label-sm text-on-surface-variant mt-0.5">{data.length} programs</p>
         </div>
       </div>
 
-      <div className="aspect-[16/9] bg-surface-container-lowest border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center text-on-tertiary-container relative overflow-hidden group">
-        {/* Simulated Chart Visuals */}
-        <div className="absolute inset-0 flex items-end justify-around px-10 pb-8 pt-20">
-          <div className="w-12 bg-primary rounded-t-lg transition-all duration-700 group-hover:h-[60%] h-[45%]" />
-          <div className="w-12 bg-secondary-container rounded-t-lg transition-all duration-700 group-hover:h-[80%] h-[65%]" />
-          <div className="w-12 bg-primary-container rounded-t-lg transition-all duration-700 group-hover:h-[40%] h-[30%]" />
-          <div className="w-12 bg-primary/20 rounded-t-lg transition-all duration-700 group-hover:h-[90%] h-[75%]" />
-          <div className="w-12 bg-secondary rounded-t-lg transition-all duration-700 group-hover:h-[50%] h-[55%]" />
+      {data.length === 0 ? (
+        <div className="flex items-center justify-center h-48 text-on-surface-variant font-label-md">
+          No application data yet.
         </div>
+      ) : (
+        <div className="space-y-4">
+          {data.map((prog) => {
+            const total = Number(prog.total);
+            const complete = Number(prog.complete_count);
+            const pct = Math.round((total / maxTotal) * 100);
+            const completePct = total > 0 ? Math.round((complete / total) * 100) : 0;
+            const color = collegColors[prog.college_name] ?? "bg-primary/60";
 
-        <div className="relative z-10 text-center bg-white/80 backdrop-blur-sm px-6 py-4 rounded-xl border border-outline shadow-xl">
-          <BarChart3 className="h-12 w-12 mx-auto mb-2 opacity-50" />
-          <p className="font-label-md font-bold">College Distribution Chart</p>
-          <p className="text-[12px]">Interactive Visualization Placeholder</p>
+            return (
+              <div key={prog.program_name} className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-label-md text-on-surface font-medium truncate max-w-[240px]">{prog.program_name}</p>
+                    <p className="font-label-sm text-on-surface-variant">{prog.college_name}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="font-label-md font-bold text-on-surface">{total}</span>
+                    <p className="font-label-sm text-on-surface-variant">{completePct}% complete</p>
+                  </div>
+                </div>
+                <div className="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-700 ${color}`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </div>
+      )}
     </div>
   );
 }

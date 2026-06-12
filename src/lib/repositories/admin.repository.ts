@@ -12,6 +12,22 @@ export class AdminRepository extends BaseRepository {
     return stats;
   }
 
+  async getApplicationsByProgram() {
+    const sql = `
+      SELECT 
+        p.program_name,
+        p.college_name,
+        COUNT(*) as total,
+        SUM(CASE WHEN a.is_complete = true THEN 1 ELSE 0 END) as complete_count
+      FROM applications a
+      JOIN students s ON a.student_number = s.student_number
+      JOIN programs p ON s.program_id = p.program_id
+      GROUP BY p.program_id, p.program_name, p.college_name
+      ORDER BY total DESC
+    `;
+    return this.query<any[]>(sql);
+  }
+
   async getRecentIncompleteApplications(limit: number = 5) {
     const sql = `
       SELECT 

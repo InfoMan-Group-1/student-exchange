@@ -6,6 +6,7 @@ export class AdminService {
   async getDashboardData() {
     const stats = await repo.getDashboardStats();
     const recentIncomplete = await repo.getRecentIncompleteApplications();
+    const byProgram = await repo.getApplicationsByProgram();
 
     return {
       stats: {
@@ -13,6 +14,7 @@ export class AdminService {
         incompleteApplications: Number(stats.incomplete_applications) || 0,
         averageGwa: Number(stats.average_gwa) || 0,
       },
+      byProgram,
       recentIncomplete
     };
   }

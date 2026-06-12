@@ -7,7 +7,6 @@ import { AdminStatCards } from "@/features/admin/components/AdminStatCards";
 import { ApplicationsChart } from "@/features/admin/components/ApplicationsChart";
 import { RecentAlerts } from "@/features/admin/components/RecentAlerts";
 import { IncompleteApplicationsTable } from "@/features/admin/components/IncompleteApplicationsTable";
-import { getAdminDashboardData } from "@/lib/mockAdminData"; // Fallback for alerts/chart
 
 export default function AdminDashboardPage() {
   const { data, error, isLoading } = useSWR("/api/v1/admin/dashboard", fetcher);
@@ -42,7 +41,7 @@ export default function AdminDashboardPage() {
       }} />
 
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <ApplicationsChart />
+        <ApplicationsChart byProgram={data?.byProgram} />
         <RecentAlerts alerts={[
           { id: "1", type: "info", title: "System Update", description: "Admin Dashboard APIs are now connected." }
         ]} />
