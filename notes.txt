@@ -12,3 +12,4 @@ Admin side:
 - Applicants/Students list
 - Application detail
 
+-craete new migration for auth and rbac, just make it simple. two role - students and admin. Create with two seed account. For the existing students records in the database, just let it be. Im thinking of a user can be either a student or a admin, if student it will create a student record in the student table. /grill-me 
