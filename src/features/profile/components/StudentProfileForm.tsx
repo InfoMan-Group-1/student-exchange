@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BadgeCheck, Users, GraduationCap, Save, RefreshCw, CheckCircle2 } from "lucide-react";
+import { BadgeCheck, Users, GraduationCap, Save, RefreshCw, CheckCircle2, Pencil } from "lucide-react";
 import { apiFetch } from "@/lib/api-client";
 import { mutate } from "swr";
 
@@ -10,6 +10,7 @@ export function StudentProfileForm({ student }: { student: any }) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   const displayToast = (msg: string) => {
     setToastMessage(msg);
@@ -19,6 +20,7 @@ export function StudentProfileForm({ student }: { student: any }) {
 
   const handleReset = () => {
     if (confirm("Are you sure you want to discard changes?")) {
+      setIsEditing(false);
       window.location.reload();
     }
   };
@@ -40,6 +42,7 @@ export function StudentProfileForm({ student }: { student: any }) {
       mutate("/api/v1/students/me/profile");
       setIsSuccess(true);
       displayToast("Profile updated successfully");
+      setIsEditing(false);
       setTimeout(() => setIsSuccess(false), 2000);
     } catch (e: any) {
       displayToast(e.message || "Failed to save profile");
@@ -51,8 +54,24 @@ export function StudentProfileForm({ student }: { student: any }) {
   return (
     <>
       <div className="max-w-5xl mx-auto p-container-padding animate-in fade-in slide-in-from-bottom-4 duration-700">
+        {!isEditing && (
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="font-headline-md text-headline-md text-on-surface">
+              Hi, <span className="text-primary font-bold">{student?.full_name?.split(" ")[0] || "Student"}</span>!
+            </h2>
+            <button
+              type="button"
+              onClick={() => setIsEditing(true)}
+              className="flex items-center gap-2 px-6 py-2.5 bg-primary text-on-primary rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95"
+            >
+              <Pencil className="w-4 h-4" />
+              Edit Profile
+            </button>
+          </div>
+        )}
         <form id="profile-form" className="space-y-stack-lg" onSubmit={handleSubmit}>
-          
+          <fieldset disabled={!isEditing} className={`space-y-stack-lg ${!isEditing ? "opacity-90" : ""}`}>
+            
           {/* Section A: Student Information */}
           <section className="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] overflow-hidden border border-outline-variant/30">
             <div className="bg-surface-container-low px-card-padding py-4 border-b border-outline-variant/50 flex items-center justify-between">
@@ -176,12 +195,18 @@ export function StudentProfileForm({ student }: { student: any }) {
                 {/* Academic Program */}
                 <div className="space-y-2">
                   <label className="font-label-md text-label-md text-on-surface-variant">Academic Program</label>
-                  <div className="flex items-center gap-2 p-3 bg-secondary-fixed/30 border border-secondary-fixed rounded-lg">
-                    <GraduationCap className="text-on-secondary-container h-5 w-5" />
-                    <span className="font-body-md text-on-secondary-container font-semibold">
-                      {student.program_name || "BS Information Technology — CCIS"}
-                    </span>
-                  </div>
+                  <select
+                    name="program_name"
+                    defaultValue={student.program_name || "BS Information Technology — CCIS"}
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
+                  >
+                    <option value="BS Information Technology — CCIS">BS Information Technology — CCIS</option>
+                    <option value="BS Computer Science — CCIS">BS Computer Science — CCIS</option>
+                    <option value="BS Business Administration — CBA">BS Business Administration — CBA</option>
+                    <option value="BS Accountancy — CAF">BS Accountancy — CAF</option>
+                    <option value="BA Communication — COC">BA Communication — COC</option>
+                    <option value="BS Engineering — CE">BS Engineering — CE</option>
+                  </select>
                 </div>
 
                 {/* GWA */}
@@ -277,11 +302,13 @@ export function StudentProfileForm({ student }: { student: any }) {
               </div>
             </div>
           </section>
+          </fieldset>
         </form>
       </div>
 
       {/* Floating Action Footer */}
-      <footer className="fixed bottom-0 right-0 w-[calc(100%-280px)] bg-surface border-t border-outline-variant flex justify-end items-center gap-4 px-10 py-6 z-40 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
+      {isEditing && (
+        <footer className="fixed bottom-0 right-0 w-full md:w-[calc(100%-280px)] bg-surface border-t border-outline-variant flex justify-end items-center gap-4 px-10 py-6 z-40 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
         <button
           type="button"
           onClick={handleReset}
@@ -314,6 +341,7 @@ export function StudentProfileForm({ student }: { student: any }) {
           )}
         </button>
       </footer>
+      )}
 
       {/* Simulated Toast Notification */}
       {showToast && (
