@@ -10,16 +10,18 @@ export class StudentApplicationService {
     const studentNumber = await profileService.getStudentNumberByUserId(userId);
     if (!studentNumber) throw new Error("Student not found.");
 
-    // Find the latest application for this student
+    // Find the latest application for this student.
+    // NOTE: BaseRepository.query() already destructures the pool.execute() tuple
+    // and returns a plain array — do NOT destructure again.
     const sql = `
       SELECT * FROM applications 
       WHERE student_number = ? 
       ORDER BY created_at DESC LIMIT 1
     `;
-    const [rows] = await (appRepo as any).query(sql, [studentNumber]);
-    if (!rows || rows.length === 0) return null;
+    const results = await (appRepo as any).query(sql, [studentNumber]);
+    if (!results || results.length === 0) return null;
 
-    const application = rows[0];
+    const application = results[0];
     const choices = await appRepo.getUniversityChoices(application.application_id);
 
     return {
@@ -32,19 +34,23 @@ export class StudentApplicationService {
     const studentNumber = await profileService.getStudentNumberByUserId(userId);
     if (!studentNumber) throw new Error("Student not found.");
 
-    // Generate a simple application ID (in a real app, use a better ID generator)
-    const appId = `APP-${Date.now()}`;
-    
+    // Check if the student already has an application
+    const existing = await this.getDashboard(userId);
+    if (existing) throw new Error("Student already has an active application.");
+
+    // Generate next APP-style ID matching seed pattern: APP001, APP002, …
+    const appId = await appRepo.getNextApplicationId();
+
     const sql = `
       INSERT INTO applications (
         application_id, student_number, semester_preference, duration_preference
       ) VALUES (?, ?, ?, ?)
     `;
     await (appRepo as any).query(sql, [
-      appId, 
-      studentNumber, 
-      data.semester_preference || '1st Semester', 
-      data.duration_preference || '1 Semester'
+      appId,
+      studentNumber,
+      data.semester_preference || '1st Semester',
+      data.duration_preference || '1 Semester',
     ]);
 
     return { applicationId: appId };

@@ -85,4 +85,27 @@ export class ApplicationRepository extends BaseRepository {
     await this.query(sql, [applicationId, rank, name]);
     return true;
   }
+
+  /**
+   * Returns the next sequential application ID following the APPxxx seed pattern.
+   * Queries the highest existing ID and increments it (APP001 → APP002 → APP020, etc.)
+   */
+  async getNextApplicationId(): Promise<string> {
+    const sql = `SELECT application_id FROM applications ORDER BY application_id DESC LIMIT 1`;
+    const rows = await this.query<any[]>(sql);
+    if (!rows || rows.length === 0) return 'APP001';
+    const last: string = rows[0].application_id; // e.g. "APP019"
+    const num = parseInt(last.replace(/^APP/, ''), 10);
+    const next = isNaN(num) ? 1 : num + 1;
+    return `APP${String(next).padStart(3, '0')}`;
+  }
+
+  /**
+   * Fetches language proficiencies for a student — used when building the full
+   * application detail object returned to the admin.
+   */
+  async getLanguagesForStudent(studentNumber: string) {
+    const sql = `SELECT language_name, proficiency_level FROM student_languages WHERE student_number = ?`;
+    return this.query<any[]>(sql, [studentNumber]);
+  }
 }
