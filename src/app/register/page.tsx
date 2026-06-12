@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { LoginCard } from "@/features/auth/components/LoginCard";
 import { RegisterForm } from "@/features/auth/components/RegisterForm";
 
@@ -20,10 +21,13 @@ export default function RegisterPage() {
         </LoginCard>
 
         {/* Footer / Support */}
-        <footer className="mt-8 text-center space-y-2">
+        <footer className="mt-8 text-center space-y-4">
           <p className="font-label-sm text-label-sm text-on-tertiary-container">
-            Already have an account? <a href="/login" className="text-primary hover:underline font-bold">Log in here</a>
+            Already have an account? <Link href="/login" className="text-primary hover:underline font-bold">Log in here</Link>
           </p>
+          <div className="pt-4 border-t border-outline-variant/30 text-on-tertiary-container font-label-sm text-label-sm">
+            Polytechnic University of the Philippines
+          </div>
         </footer>
       </main>
     </div>

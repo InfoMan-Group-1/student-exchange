@@ -19,17 +19,17 @@ export function HeroSection() {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
           <Link
-            href="/login"
-            className="bg-primary-container text-on-primary px-8 py-4 rounded-lg font-label-md text-label-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 group"
+            href="/register"
+            className="bg-primary hover:bg-primary/90 text-on-primary px-8 py-4 rounded-xl font-label-md text-label-md transition-all duration-300 flex items-center gap-2 group shadow-sm hover:shadow active:scale-[0.98]"
           >
-            Student Login
+            Create an Account
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
             href="/login"
-            className="border-2 border-primary-container text-primary-container px-8 py-4 rounded-lg font-label-md text-label-md hover:bg-primary-container/5 transition-all duration-300"
+            className="bg-surface hover:bg-surface-container text-on-surface border border-outline-variant px-8 py-4 rounded-xl font-label-md text-label-md transition-all duration-300 shadow-sm hover:shadow active:scale-[0.98]"
           >
-            Staff Login
+            Log in
           </Link>
         </div>
       </div>

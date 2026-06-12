@@ -51,9 +51,15 @@ export function Header() {
         </Link>
         <Link
           href="/login"
-          className="bg-surface-container-low hover:bg-surface-container-high text-primary px-6 py-2 rounded-lg font-label-md text-label-md transition-all duration-200 active:scale-95 border border-outline inline-block"
+          className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md"
         >
-          Login
+          Log in
+        </Link>
+        <Link
+          href="/register"
+          className="bg-primary hover:bg-primary/90 text-on-primary px-6 py-2.5 rounded-lg font-label-md text-label-md transition-all duration-200 active:scale-95 shadow-sm hover:shadow"
+        >
+          Register
         </Link>
       </nav>
       <button className="md:hidden p-2 text-primary" type="button" aria-label="Menu">
