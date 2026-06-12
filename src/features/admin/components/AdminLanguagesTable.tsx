@@ -10,7 +10,7 @@ export function AdminLanguagesTable({ languages }: { languages?: Language[] }) {
         Languages
       </h3>
       <div className="space-y-4">
-        {languages.map((lang, index) => (
+        {(languages ?? []).map((lang, index) => (
           <div key={index} className="flex items-center justify-between">
             <span className="font-body-md">{lang.language_name}</span>
             <span className="bg-secondary/10 text-secondary px-2 py-1 rounded font-label-sm">

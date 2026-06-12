@@ -37,10 +37,16 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json();
     const service = new StudentApplicationService();
     
-    if (body.choices) {
-      await service.updateUniversityChoices(user.userId, body.choices);
-    } else {
-      await service.updateApplication(user.userId, body);
+    const { choices, ...rest } = body;
+
+    // Update non-choice fields (preferences, endorsements, documents, etc.)
+    if (Object.keys(rest).length > 0) {
+      await service.updateApplication(user.userId, rest);
+    }
+
+    // Update university choices if provided
+    if (choices) {
+      await service.updateUniversityChoices(user.userId, choices);
     }
     
     return NextResponse.json({ message: "Application updated successfully" });

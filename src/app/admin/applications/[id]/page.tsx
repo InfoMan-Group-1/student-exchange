@@ -9,6 +9,7 @@ import { EmergencyContact } from "@/features/admin/components/EmergencyContact";
 import { AcademicPreferences } from "@/features/admin/components/AcademicPreferences";
 import { AdminDocumentsChecklist } from "@/features/admin/components/AdminDocumentsChecklist";
 import { AdminLanguagesTable } from "@/features/admin/components/AdminLanguagesTable";
+import { AdminEndorsementDetails } from "@/features/admin/components/AdminEndorsementDetails";
 import { DetailFooter } from "@/features/admin/components/DetailFooter";
 
 export default function ApplicationDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -29,12 +30,13 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
         </div>
 
         <div className="lg:col-span-8 space-y-8">
-          <AcademicPreferences preferences={detail.university_choices} />
+          <AcademicPreferences preferences={detail.university_choices} detail={detail} />
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <AdminDocumentsChecklist detail={detail} />
             <AdminLanguagesTable languages={detail.languages} />
           </div>
+          <AdminEndorsementDetails detail={detail} />
         </div>
       </div>
 

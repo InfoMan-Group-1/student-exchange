@@ -5,6 +5,7 @@ import { ApplicationPreferences } from "./ApplicationPreferences";
 import { UniversityChoices } from "./UniversityChoices";
 import { DocumentsChecklist } from "./DocumentsChecklist";
 import { LanguageProficiencies } from "./LanguageProficiencies";
+import { EndorsementDetails } from "./EndorsementDetails";
 import { useState } from "react";
 import { apiFetch } from "@/lib/api-client";
 import { mutate } from "swr";
@@ -24,6 +25,10 @@ export function ApplicationForm({ data }: { data: any }) {
       const payload = {
         semester_preference: applicationData.semester_preference,
         duration_preference: applicationData.duration_preference,
+        program_advisor: applicationData.program_advisor,
+        department_chair: applicationData.department_chair,
+        college_secretary: applicationData.college_secretary,
+        dean_name: applicationData.dean_name,
         choices: (applicationData.university_choices || []).map((c: any) => ({
           rank: c.university_choice_rank,
           name: c.university_name,
@@ -88,6 +93,16 @@ export function ApplicationForm({ data }: { data: any }) {
               onUpdate={(key, value) => setApplicationData({ ...applicationData, [key]: value })}
             />
           </div>
+
+          <EndorsementDetails
+            data={{
+              program_advisor: applicationData.program_advisor,
+              department_chair: applicationData.department_chair,
+              college_secretary: applicationData.college_secretary,
+              dean_name: applicationData.dean_name,
+            }}
+            onChange={(key, value) => setApplicationData({ ...applicationData, [key]: value })}
+          />
           
           <div className="h-10"></div> {/* Spacer for fixed footer */}
         </form>
