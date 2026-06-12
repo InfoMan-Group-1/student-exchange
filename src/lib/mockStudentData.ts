@@ -1,7 +1,25 @@
+export interface Guardian {
+  fullName: string;
+  relationship: string;
+  contactNumber: string;
+  emailAddress: string;
+}
+
 export interface Student {
   studentNumber: string;
   fullName: string;
   avatarUrl: string;
+  age: number;
+  sex: string;
+  birthDate: string;
+  nationality: string;
+  passportNumber: string;
+  email: string;
+  academicProgram: string;
+  gwa: number;
+  enrollmentStatus: string;
+  permanentAddress: string;
+  guardian: Guardian;
 }
 
 export interface Application {
@@ -43,10 +61,26 @@ export async function getStudentDashboardData(): Promise<DashboardData> {
 
   return {
     student: {
-      studentNumber: "2023-10001-MN-0",
-      fullName: "Juan Dela Cruz",
+      studentNumber: "2021-00458-MN-0", // Updated to match profile wireframe
+      fullName: "Juan Alberto S. Dela Cruz",
       avatarUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuBIFKITN_oKc9OiPFdNZFClWxiB344e9i8wUR8XL6HOVgyo0se3giosKX30QYvFc0Eu0_mvQBXStCIIekxUEE1RstF7Si5DDUdcW_KWgZgaBDtr1I_OOesnrgGCbt-Gb5c_Z5VsTR8JE2cbm-zYAkonifKBIf_HxwiVHI4uUZLNVHxOAegFQ5459dMNMTZkbC33fbAwIVzWHMJZlxRAksYSaDUVpf9XImPxK_2s6twvWYo6-udK6wG6B28xbDoDQHKXNDKAoCO4i3qn",
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuBCHd_sLp1Rpp9yAY4i6IXqSQbylsIe_Xq0gDDTsgmeG431FlTvf7BqpeVildLXf4vdAT020MDuf_Se9Bt5EzcFNs-Wc3Rw9xhfOpwHcFzMN07JRWDEbVoXlZ9lD2z3t-d95w9hbRRRG0G-B0L4sdv2WbQblClstAD2cSaGQ8A2EhElsTF7xWna0ht5qZMQMoX5X7j4vYqptG6S2MUxdTaef1oDyfTvoY4hS1EgSeI5pfoRPzMNQLYk_0EtAr9lOL1uSq87S6Wacw4P",
+      age: 21,
+      sex: "Male",
+      birthDate: "2002-05-14",
+      nationality: "Filipino",
+      passportNumber: "",
+      email: "ja.delacruz@student.pup.edu.ph",
+      academicProgram: "BS Information Technology — CCIS",
+      gwa: 1.25,
+      enrollmentStatus: "REGULAR",
+      permanentAddress: "123 Sta. Mesa St., Sampaloc, Manila, 1008, Philippines",
+      guardian: {
+        fullName: "Maria Dela Cruz",
+        relationship: "Mother",
+        contactNumber: "917 123 4567",
+        emailAddress: "",
+      },
     },
     application: {
       status: "Submitted",
