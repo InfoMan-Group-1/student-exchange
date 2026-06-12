@@ -28,7 +28,7 @@ export function ExchangeJourneyTimeline({ application }: { application: any }) {
           
           return (
             <div key={step.key} className="flex flex-col items-center gap-3 bg-surface px-1 md:px-3 relative z-10">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isCompleted ? 'bg-primary text-on-primary shadow-md' : isCurrent ? 'bg-primary-container text-primary border-[3px] border-primary shadow-sm' : 'bg-surface-container text-on-surface-variant border-2 border-outline-variant'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isCompleted ? 'bg-primary text-on-primary shadow-md' : isCurrent ? 'bg-white text-primary border-[3px] border-primary shadow-sm' : 'bg-surface-container text-on-surface-variant border-2 border-outline-variant'}`}>
                 {isCompleted ? <Check className="w-4 h-4 stroke-[3]" /> : <span className="text-xs font-bold">{index + 1}</span>}
               </div>
               <span className={`text-[10px] md:text-xs font-bold text-center max-w-[80px] leading-tight ${isCurrent ? 'text-primary' : isCompleted ? 'text-on-surface' : 'text-on-surface-variant/70'}`}>
