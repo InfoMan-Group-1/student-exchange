@@ -1,5 +1,5 @@
 import { User } from "lucide-react";
-import { ApplicationDetailData } from "@/lib/mockAdminData";
+import { ApplicationDetailData } from "@/lib/types/admin";
 
 export function StudentSummary({ info }: { info: ApplicationDetailData }) {
   return (

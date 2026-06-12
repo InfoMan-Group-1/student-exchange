@@ -1,5 +1,5 @@
 import { Users, CalendarDays, Star, FileClock } from "lucide-react";
-import { AdminStats } from "@/lib/mockAdminData";
+import { AdminStats } from "@/lib/types/admin";
 
 export function AdminStatCards({ stats }: { stats: AdminStats }) {
   return (

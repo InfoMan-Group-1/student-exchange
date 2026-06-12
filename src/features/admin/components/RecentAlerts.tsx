@@ -1,5 +1,5 @@
 import { AlertTriangle, Info, Mail } from "lucide-react";
-import { AdminAlert } from "@/lib/mockAdminData";
+import { AdminAlert } from "@/lib/types/admin";
 
 export function RecentAlerts({ alerts }: { alerts: AdminAlert[] }) {
   return (

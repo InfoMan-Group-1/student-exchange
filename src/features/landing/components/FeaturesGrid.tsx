@@ -1,4 +1,4 @@
-import { getLandingStats } from "@/lib/mockData";
+import { getLandingStats } from "@/lib/constants/landing";
 import { Globe, Award, CheckCircle, FileText, Headset } from "lucide-react";
 import Image from "next/image";
 

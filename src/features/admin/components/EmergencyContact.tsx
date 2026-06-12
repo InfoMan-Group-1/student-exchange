@@ -1,5 +1,5 @@
 import { HeartPulse } from "lucide-react";
-import { ApplicationDetailData } from "@/lib/mockAdminData";
+import { ApplicationDetailData } from "@/lib/types/admin";
 
 export function EmergencyContact({ info }: { info: ApplicationDetailData }) {
   return (

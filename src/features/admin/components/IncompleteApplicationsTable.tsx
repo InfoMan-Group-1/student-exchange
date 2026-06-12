@@ -1,5 +1,5 @@
 import { ArrowRight, MoreVertical, Eye } from "lucide-react";
-import { IncompleteApplication } from "@/lib/mockAdminData";
+import { IncompleteApplication } from "@/lib/types/admin";
 import Link from "next/link";
 
 export function IncompleteApplicationsTable({ apps }: { apps: IncompleteApplication[] }) {

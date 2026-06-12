@@ -1,5 +1,5 @@
 import { Building2 } from "lucide-react";
-import { UniversityChoice } from "@/lib/mockApplicationData";
+import { UniversityChoice } from "@/lib/types/application";
 
 interface Props {
   choices: any[];

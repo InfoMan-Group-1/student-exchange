@@ -1,5 +1,5 @@
 import { CalendarClock } from "lucide-react";
-import { Application } from "@/lib/mockStudentData";
+import { Application } from "@/lib/types/student";
 
 export function DeadlineCard({ application }: { application: Application }) {
   // Simple calculation for remaining days based on mock date "2023-10-30" vs "2023-10-18"

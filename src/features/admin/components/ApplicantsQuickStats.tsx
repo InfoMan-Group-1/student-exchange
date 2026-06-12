@@ -1,5 +1,5 @@
 import { Users, CheckCircle2, BellRing, TrendingUp } from "lucide-react";
-import { ApplicantsData } from "@/lib/mockAdminData";
+import { ApplicantsData } from "@/lib/types/admin";
 
 export function ApplicantsQuickStats({ stats }: { stats: ApplicantsData["stats"] }) {
   return (

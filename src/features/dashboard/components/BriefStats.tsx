@@ -1,4 +1,4 @@
-import { Application } from "@/lib/mockStudentData";
+import { Application } from "@/lib/types/student";
 
 export function BriefStats({ application }: { application: any }) {
   // Count boolean flags for documents
