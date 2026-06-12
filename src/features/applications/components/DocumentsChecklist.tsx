@@ -12,13 +12,13 @@ interface Props {
 export function DocumentsChecklist({ application }: Props) {
   const documents = [
     { key: "has_application_form", name: "Application Form", desc: "Validated by the University Registrar" },
-    { key: "has_cv", name: "Curriculum Vitae", desc: "Standard format" },
+    { key: "has_cv", name: "Curriculum Vitae (CV)", desc: "Standard format" },
     { key: "has_tcg", name: "True Copy of Grades", desc: "Verified true copy" },
     { key: "has_recommendation_letter", name: "Recommendation Letter", desc: "From faculty" },
-    { key: "has_medical_certificate", name: "Medical Certificate", desc: "Fit to travel" },
-    { key: "has_consent_form", name: "Consent Form", desc: "Parent/Guardian consent" },
-    { key: "has_study_plan", name: "Study Plan", desc: "Signed by Department Chairperson" },
+    { key: "has_essay", name: "Study Plan / Essay", desc: "Signed by Department Chairperson" },
+    { key: "has_form_5", name: "Form 5 (Enrollment)", desc: "Latest enrollment form" },
     { key: "has_valid_passport", name: "Passport Copy", desc: "Valid for at least 12 months" },
+    { key: "has_online_application_form", name: "Online Application Form", desc: "Partner university form" },
   ];
 
   const [toggling, setToggling] = useState<string | null>(null);

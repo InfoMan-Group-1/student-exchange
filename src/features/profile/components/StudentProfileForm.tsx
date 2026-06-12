@@ -31,19 +31,18 @@ export function StudentProfileForm({ student }: { student: any }) {
     const payload = Object.fromEntries(formData.entries());
 
     try {
-      const res = await apiFetch("/api/v1/students/me/profile", {
+      // apiFetch throws on non-2xx — no need to check res.ok
+      await apiFetch("/api/v1/students/me/profile", {
         method: "PATCH",
         body: JSON.stringify(payload),
       });
-
-      if (!res.ok) throw new Error("Failed to save profile");
 
       mutate("/api/v1/students/me/profile");
       setIsSuccess(true);
       displayToast("Profile updated successfully");
       setTimeout(() => setIsSuccess(false), 2000);
-    } catch (e) {
-      displayToast("Failed to save profile");
+    } catch (e: any) {
+      displayToast(e.message || "Failed to save profile");
     } finally {
       setIsSaving(false);
     }

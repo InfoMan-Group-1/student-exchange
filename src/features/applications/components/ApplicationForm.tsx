@@ -24,21 +24,18 @@ export function ApplicationForm({ data }: { data: any }) {
           rank: c.university_choice_rank,
           name: c.university_name,
         })),
-        // Document toggles are automatically updated via DocumentsChecklist immediately
       };
       
-      const res = await apiFetch("/api/v1/applications/me", {
+      // apiFetch throws on non-2xx — no need to check res.ok
+      await apiFetch("/api/v1/applications/me", {
         method: "PATCH",
         body: JSON.stringify(payload)
       });
       
-      if (!res.ok) throw new Error("Failed to save");
-      
-      // Revalidate to ensure UI is in sync
       mutate("/api/v1/applications/me");
       alert("Application saved successfully");
-    } catch (e) {
-      alert("Failed to save application");
+    } catch (e: any) {
+      alert(e.message || "Failed to save application");
     } finally {
       setIsSubmitting(false);
     }
@@ -75,8 +72,7 @@ export function ApplicationForm({ data }: { data: any }) {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <DocumentsChecklist application={applicationData} />
-            {/* Keeping Languages purely client-side for now as it's not fully modeled in the DB yet */}
-            <LanguageProficiencies initialLanguages={[]} />
+          <LanguageProficiencies />
           </div>
           
           <div className="h-10"></div> {/* Spacer for fixed footer */}
