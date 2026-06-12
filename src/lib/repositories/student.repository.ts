@@ -88,7 +88,11 @@ export class StudentRepository extends BaseRepository {
   }
 
   async insertLanguage(studentNumber: string, name: string, level: string) {
-    const sql = `INSERT INTO student_languages (student_number, language_name, proficiency_level) VALUES (?, ?, ?)`;
+    const sql = `
+      INSERT INTO student_languages (student_number, language_name, proficiency_level) 
+      VALUES (?, ?, ?)
+      ON DUPLICATE KEY UPDATE proficiency_level = VALUES(proficiency_level)
+    `;
     await this.query(sql, [studentNumber, name, level]);
     return true;
   }

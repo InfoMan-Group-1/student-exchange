@@ -36,13 +36,13 @@ export function LoginForm() {
       if (!res.ok) {
         setErrorMessage(data.detail || data.message || "Login failed");
       } else {
-        // Success: Store token and redirect
-        setAuthToken(data.token);
+        // Success: Store token and force full page reload to sync state
+        setAuthToken(data.data.token);
         console.log("Logged in successfully");
         if (role === "admin") {
-          router.push("/admin/dashboard");
+          window.location.href = "/admin/dashboard";
         } else {
-          router.push("/dashboard");
+          window.location.href = "/dashboard";
         }
       }
     } catch (err) {

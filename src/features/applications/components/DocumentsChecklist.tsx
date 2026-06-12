@@ -7,15 +7,16 @@ import { useState } from "react";
 
 interface Props {
   application: any;
+  onUpdate?: (key: string, value: boolean) => void;
 }
 
-export function DocumentsChecklist({ application }: Props) {
+export function DocumentsChecklist({ application, onUpdate }: Props) {
   const documents = [
-    { key: "has_application_form", name: "Application Form", desc: "Validated by the University Registrar" },
+    { key: "has_application_form", name: "Application Form", desc: "Hardcopy sent to the school" },
     { key: "has_cv", name: "Curriculum Vitae (CV)", desc: "Standard format" },
     { key: "has_tcg", name: "True Copy of Grades", desc: "Verified true copy" },
     { key: "has_recommendation_letter", name: "Recommendation Letter", desc: "From faculty" },
-    { key: "has_essay", name: "Study Plan / Essay", desc: "Signed by Department Chairperson" },
+    { key: "has_essay", name: "Essay", desc: "Signed by Department Chairperson" },
     { key: "has_form_5", name: "Form 5 (Enrollment)", desc: "Latest enrollment form" },
     { key: "has_valid_passport", name: "Passport Copy", desc: "Valid for at least 12 months" },
     { key: "has_online_application_form", name: "Online Application Form", desc: "Partner university form" },
@@ -27,13 +28,15 @@ export function DocumentsChecklist({ application }: Props) {
     try {
       setToggling(key);
       const payload = { [key]: !currentValue };
-      const res = await apiFetch("/api/v1/applications/me", {
+      await apiFetch("/api/v1/applications/me", {
         method: "PATCH",
         body: JSON.stringify(payload)
       });
-      if (res.ok) {
-        mutate("/api/v1/applications/me");
+      // Immediately update parent local state for real-time reflection
+      if (onUpdate) {
+        onUpdate(key, !currentValue);
       }
+      mutate("/api/v1/applications/me");
     } catch (e) {
       alert("Failed to update document status");
     } finally {
@@ -47,7 +50,7 @@ export function DocumentsChecklist({ application }: Props) {
         <div className="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
           <CheckCircle2 className="h-6 w-6" />
         </div>
-        <h3 className="font-title-lg text-title-lg text-primary">3. Documents Checklist</h3>
+        <h3 className="font-title-lg text-title-lg text-primary">4. Documents Checklist</h3>
       </div>
       
       <div className="space-y-4">

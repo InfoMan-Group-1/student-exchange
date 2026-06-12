@@ -6,6 +6,10 @@ import useSWR, { mutate } from "swr";
 import { fetcher, apiFetch } from "@/lib/api-client";
 
 const PROFICIENCY_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2", "Native"];
+const DEFAULTS = [
+  { name: "English", level: "C2" },
+  { name: "Filipino", level: "Native" }
+];
 
 export function LanguageProficiencies() {
   const { data, isLoading } = useSWR("/api/v1/students/me/languages", fetcher);
@@ -16,6 +20,7 @@ export function LanguageProficiencies() {
   const [adding, setAdding] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [removing, setRemoving] = useState<string | null>(null);
+  const [hiddenDefaults, setHiddenDefaults] = useState<string[]>([]);
 
   const handleAdd = async () => {
     if (!newLang.trim()) return;
@@ -33,6 +38,18 @@ export function LanguageProficiencies() {
       alert("Failed to add language.");
     } finally {
       setAdding(false);
+    }
+  };
+
+  const handleAddDefault = async (langName: string, level: string) => {
+    try {
+      await apiFetch("/api/v1/students/me/languages", {
+        method: "POST",
+        body: JSON.stringify({ name: langName, level }),
+      });
+      mutate("/api/v1/students/me/languages");
+    } catch {
+      alert("Failed to update language.");
     }
   };
 
@@ -57,7 +74,7 @@ export function LanguageProficiencies() {
           <div className="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
             <Languages className="h-6 w-6" />
           </div>
-          <h3 className="font-title-lg text-title-lg text-primary">4. Languages</h3>
+          <h3 className="font-title-lg text-title-lg text-primary">3. Languages</h3>
         </div>
         <button
           type="button"
@@ -107,10 +124,47 @@ export function LanguageProficiencies() {
       )}
 
       <div className="space-y-3">
+        {/* Interactive Default Languages */}
+        {DEFAULTS.map((def) => {
+          if (languages.some(l => l.language_name === def.name) || hiddenDefaults.includes(def.name)) {
+            return null;
+          }
+          return (
+            <div key={`default-${def.name}`} className="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/50 border-dashed">
+              <div className="flex-1 grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase text-on-surface-variant font-bold">Language</p>
+                  <p className="font-label-md text-label-md">{def.name}</p>
+                </div>
+                <div className="space-y-1 text-right flex flex-col items-end">
+                  <p className="text-[10px] uppercase text-on-surface-variant font-bold w-full">Proficiency</p>
+                  <select
+                    defaultValue={def.level}
+                    onChange={(e) => handleAddDefault(def.name, e.target.value)}
+                    className="bg-transparent border-b border-outline-variant focus:outline-none focus:border-primary text-[12px] font-bold text-right text-primary cursor-pointer"
+                  >
+                    {PROFICIENCY_LEVELS.map((l) => (
+                      <option key={l} value={l}>{l}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setHiddenDefaults(prev => [...prev, def.name])}
+                className="text-on-surface-variant/40 hover:text-error transition-colors"
+                title="Remove default suggestion"
+              >
+                <Trash2 className="h-5 w-5" />
+              </button>
+            </div>
+          );
+        })}
+
         {isLoading ? (
           <p className="text-on-surface-variant font-label-md animate-pulse py-4">Loading languages...</p>
         ) : languages.length === 0 ? (
-          <p className="text-on-surface-variant font-label-md text-center py-4 opacity-60">No languages added yet.</p>
+          <p className="text-on-surface-variant font-label-md text-center py-4 opacity-60">No other languages added yet.</p>
         ) : (
           languages.map((lang) => (
             <div
@@ -124,9 +178,15 @@ export function LanguageProficiencies() {
                 </div>
                 <div className="space-y-1 text-right flex flex-col items-end">
                   <p className="text-[10px] uppercase text-on-surface-variant font-bold w-full">Proficiency</p>
-                  <span className="px-2 py-0.5 bg-primary text-on-primary rounded-md text-[12px] font-bold">
-                    {lang.proficiency_level}
-                  </span>
+                  <select
+                    defaultValue={lang.proficiency_level}
+                    onChange={(e) => handleAddDefault(lang.language_name, e.target.value)}
+                    className="bg-transparent border-b border-outline-variant focus:outline-none focus:border-primary text-[12px] font-bold text-right text-primary cursor-pointer"
+                  >
+                    {PROFICIENCY_LEVELS.map((l) => (
+                      <option key={l} value={l}>{l}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <button

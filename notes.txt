@@ -21,6 +21,10 @@ adminpassword
 student@example.com
 studentpassword
 
+
+aaron@gmail.com
+aaron123
+
 Admin api test
 We will login manually to generate a real JWT token.
 We will navigate to the Admin Dashboard and verify that the stats display '0' or match our seed data.
@@ -34,3 +38,4 @@ Verify the Dashboard accurately reflects the state of the application.
 
 Future:
 1. implement file upload for documents, also a online signature where admin can draw their signature in each students applications - or more of a bulk operations
+

@@ -7,7 +7,7 @@ export function ApplicationChecklist({ application }: { application: any }) {
     { key: "has_cv", name: "Curriculum Vitae (CV)", isComplete: application.has_cv },
     { key: "has_tcg", name: "True Copy of Grades", isComplete: application.has_tcg },
     { key: "has_recommendation_letter", name: "Recommendation Letter", isComplete: application.has_recommendation_letter },
-    { key: "has_essay", name: "Study Plan / Essay", isComplete: application.has_essay },
+    { key: "has_essay", name: "Essay", isComplete: application.has_essay },
     { key: "has_form_5", name: "Form 5 (Enrollment)", isComplete: application.has_form_5 },
     { key: "has_valid_passport", name: "Valid Passport", isComplete: application.has_valid_passport },
     { key: "has_online_application_form", name: "Online Application Form", isComplete: application.has_online_application_form },

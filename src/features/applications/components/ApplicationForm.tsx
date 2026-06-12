@@ -70,10 +70,11 @@ export function ApplicationForm({ data }: { data: any }) {
             onChange={updateChoice}
           />
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <DocumentsChecklist application={applicationData} />
           <LanguageProficiencies />
-          </div>
+          <DocumentsChecklist 
+            application={applicationData} 
+            onUpdate={(key, value) => setApplicationData({ ...applicationData, [key]: value })}
+          />
           
           <div className="h-10"></div> {/* Spacer for fixed footer */}
         </form>
