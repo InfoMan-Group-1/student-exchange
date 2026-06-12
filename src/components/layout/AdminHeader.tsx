@@ -6,14 +6,29 @@ import { Bell, HelpCircle, Search } from "lucide-react";
 export function AdminHeader() {
   const pathname = usePathname();
   const isApplications = pathname === "/admin/applications";
+  const isApplicationDetail = pathname.startsWith("/admin/applications/") && pathname.length > "/admin/applications/".length;
+  // Normally we would fetch the name, but for UI mockup we'll hardcode or extract from URL if possible.
+  // We'll just display a placeholder name if it's the detail view.
+  const breadcrumbName = isApplicationDetail ? "Juan Dela Cruz" : "";
+
   return (
     <header className="flex justify-between items-center w-full h-20 px-8 sticky top-0 z-40 bg-surface border-b border-outline-variant">
       <div className="flex flex-col">
-        <h2 className="font-headline-md text-primary font-bold">
-          {isApplications ? "Applicants List" : "Admin portal"}
-        </h2>
-        {isApplications && (
-          <p className="font-label-md text-on-surface-variant">Review and manage student exchange applications</p>
+        {isApplicationDetail ? (
+          <div className="flex items-center text-on-surface-variant font-label-md gap-2">
+            <a href="/admin/applications" className="hover:text-primary transition-colors">Applicants</a>
+            <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+            <span className="text-primary font-bold">{breadcrumbName}</span>
+          </div>
+        ) : (
+          <>
+            <h2 className="font-headline-md text-primary font-bold">
+              {isApplications ? "Applicants List" : "Admin portal"}
+            </h2>
+            {isApplications && (
+              <p className="font-label-md text-on-surface-variant">Review and manage student exchange applications</p>
+            )}
+          </>
         )}
       </div>
 

@@ -37,6 +37,38 @@ export interface ApplicantListEntry {
   colorTheme: "primary" | "secondary";
 }
 
+export interface ApplicationDetailData {
+  studentInfo: {
+    name: string;
+    studentNumber: string;
+    course: string;
+    status: string;
+    email: string;
+    contactNumber: string;
+    gpa: string;
+    homeAddress: string;
+  };
+  emergencyContact: {
+    name: string;
+    relationship: string;
+    phoneNumber: string;
+  };
+  academicPreferences: Array<{
+    priority: string;
+    university: string;
+    location: string;
+    match: string;
+  }>;
+  documents: Array<{
+    name: string;
+    status: "Complete" | "Missing";
+  }>;
+  languages: Array<{
+    language: string;
+    proficiency: string;
+  }>;
+}
+
 export interface ApplicantsData {
   applicants: ApplicantListEntry[];
   stats: {
@@ -150,5 +182,52 @@ export async function getApplicantsData(): Promise<ApplicantsData> {
       reviewedApplications: 86,
       priorityAttention: 8,
     },
+  };
+}
+
+export async function getApplicationDetail(id: string): Promise<ApplicationDetailData> {
+  await new Promise((resolve) => setTimeout(resolve, 600));
+
+  return {
+    studentInfo: {
+      name: "Juan Dela Cruz",
+      studentNumber: id,
+      course: "BS Computer Engineering",
+      status: "UNDER REVIEW",
+      email: "j.delacruz@email.com",
+      contactNumber: "+63 912 345 6789",
+      gpa: "1.25 (President's Lister)",
+      homeAddress: "123 Sampaguita St., Brgy. 456, Manila, Philippines 1008",
+    },
+    emergencyContact: {
+      name: "Maria Dela Cruz",
+      relationship: "Mother",
+      phoneNumber: "+63 998 765 4321",
+    },
+    academicPreferences: [
+      {
+        priority: "1st Choice",
+        university: "Seoul National University",
+        location: "South Korea",
+        match: "95% Match",
+      },
+      {
+        priority: "2nd Choice",
+        university: "National University of Singapore",
+        location: "Singapore",
+        match: "88% Match",
+      },
+    ],
+    documents: [
+      { name: "Transcript of Records", status: "Complete" },
+      { name: "Passport Copy", status: "Complete" },
+      { name: "Medical Certificate", status: "Missing" },
+      { name: "LOI / Essay", status: "Complete" },
+    ],
+    languages: [
+      { language: "English", proficiency: "ADVANCED (C1)" },
+      { language: "Korean", proficiency: "INTERMEDIATE (B1)" },
+      { language: "Filipino", proficiency: "NATIVE" },
+    ],
   };
 }
