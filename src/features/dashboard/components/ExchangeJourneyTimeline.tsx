@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 
 export function ExchangeJourneyTimeline({ application }: { application: any }) {
   const steps = [
-    { label: "Profile Setup", key: "profile" },
+    { label: "Application Setup", key: "profile" },
     { label: "Application Submitted", key: "submitted" },
     { label: "Under Review", key: "review" },
     { label: "Interview Stage", key: "interview" },
@@ -10,8 +10,7 @@ export function ExchangeJourneyTimeline({ application }: { application: any }) {
     { label: "Pre-Departure", key: "predeparture" },
   ];
 
-  let currentStepIndex = 1; // "Application Submitted" by default if application exists but not complete
-  if (application?.is_complete) currentStepIndex = 2; // Under Review
+  let currentStepIndex = application?.is_complete ? 1 : 0;
   
   return (
     <div className="bg-surface p-card-padding rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 w-full mb-6 relative overflow-hidden">

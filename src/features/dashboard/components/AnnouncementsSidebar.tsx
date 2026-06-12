@@ -9,11 +9,11 @@ export function AnnouncementsSidebar() {
         </h3>
         <div className="space-y-3">
           <div className="p-3 bg-error-container text-on-error-container rounded-lg border border-error/20">
-            <p className="text-[11px] font-bold uppercase tracking-widest mb-1">Aug 30, 2024</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest mb-1">Aug 30, 2026</p>
             <p className="font-label-md">Submit Form 5 (Enrollment)</p>
           </div>
           <div className="p-3 bg-surface-container-low rounded-lg border border-outline-variant/50">
-            <p className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Sept 2, 2024</p>
+            <p className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Sept 2, 2026</p>
             <p className="font-label-md text-on-surface">Visa Application Workshop</p>
           </div>
         </div>

@@ -14,56 +14,47 @@ export function ApplicationChecklist({ application }: { application: any }) {
   ];
 
   return (
-    <div className="lg:col-span-8 space-y-4">
+    <div className="space-y-4">
       <h3 className="font-headline-md text-headline-md text-primary px-2">
         Application Checklist
       </h3>
-      <div className="bg-surface rounded-xl border border-outline-variant/30 overflow-hidden">
-        <div className="divide-y divide-outline-variant/50">
-          {documents.map((item) => {
-            const isDone = item.isComplete;
-            
-            return (
-              <div
-                key={item.key}
-                className={`flex items-center justify-between p-5 hover:bg-surface-container-low transition-all duration-200 hover:translate-x-1 ${
-                  !isDone ? "bg-surface-container-lowest" : ""
-                }`}
-              >
-                <div className="flex items-center gap-4">
-                  {isDone ? (
-                    <CheckCircle className="text-green-600 h-6 w-6" />
-                  ) : (
-                    <XCircle className="text-error h-6 w-6" />
-                  )}
-                  <div>
-                    <p className="font-label-md text-label-md text-on-surface">
-                      {item.name}
-                    </p>
-                    <p
-                      className={`text-xs ${
-                        !isDone
-                          ? "text-error"
-                          : "text-on-surface-variant"
-                      }`}
-                    >
-                      {isDone ? "Submitted" : "Missing Attachment"}
-                    </p>
-                  </div>
-                </div>
+      <div className="grid grid-cols-2 gap-3">
+        {documents.map((item) => {
+          const isDone = item.isComplete;
+
+          return (
+            <div
+              key={item.key}
+              className={`flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 ${
+                isDone
+                  ? "bg-surface border-outline-variant/30"
+                  : "bg-surface-container-lowest border-error/20"
+              }`}
+            >
+              <div className="shrink-0">
                 {isDone ? (
-                  <span className="text-success font-label-sm">
-                    Verified
-                  </span>
+                  <CheckCircle className="text-green-600 h-5 w-5" />
                 ) : (
-                  <Link href="/dashboard/applications" className="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:opacity-90">
-                    Upload
-                  </Link>
+                  <XCircle className="text-error h-5 w-5" />
                 )}
               </div>
-            );
-          })}
-        </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-label-md text-label-md text-on-surface truncate">{item.name}</p>
+                <p className={`text-xs ${isDone ? "text-on-surface-variant" : "text-error"}`}>
+                  {isDone ? "Submitted" : "Missing"}
+                </p>
+              </div>
+              {!isDone && (
+                <Link
+                  href="/dashboard/applications"
+                  className="shrink-0 bg-primary text-white px-3 py-1 rounded-md text-xs font-bold hover:opacity-90"
+                >
+                  Upload
+                </Link>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

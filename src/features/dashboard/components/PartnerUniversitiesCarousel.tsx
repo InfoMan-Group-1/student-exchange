@@ -8,7 +8,7 @@ export function PartnerUniversitiesCarousel() {
   ];
 
   return (
-    <div className="bg-surface p-card-padding rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex flex-col h-full">
+    <div className="bg-surface p-card-padding rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex flex-col">
       <div className="flex justify-between items-center mb-6">
         <h3 className="font-title-lg text-title-lg text-primary">Discover Partner Universities</h3>
         <div className="flex gap-2">
