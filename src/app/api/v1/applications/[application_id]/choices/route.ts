@@ -7,8 +7,12 @@ export async function PUT(
   { params }: { params: Promise<{ application_id: string }> }
 ) {
   const user = verifyAuthToken(req);
-  if (!user || user.role !== "admin") {
-    return createProblemDetails(403, "Forbidden", "Admin access required.");
+  if (!user) {
+    return createProblemDetails(401, "Unauthorized", "A valid bearer token is required.");
+  }
+  // Allow both admins and students (students update their own choices)
+  if (user.role !== "admin" && user.role !== "student") {
+    return createProblemDetails(403, "Forbidden", "Access denied.");
   }
 
   const { application_id } = await params;
