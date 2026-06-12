@@ -7,7 +7,7 @@ export function IncompleteApplicationsTable({ apps }: { apps: IncompleteApplicat
     <section className="bg-surface rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 overflow-hidden">
       <div className="p-card-padding border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest">
         <div>
-          <h4 className="font-title-lg text-primary">Recent incomplete applications</h4>
+          <h4 className="font-title-lg text-primary">Incomplete Applications</h4>
           <p className="font-label-sm text-on-surface-variant">Students needing immediate document follow-up</p>
         </div>
         <Link 
@@ -54,7 +54,7 @@ export function IncompleteApplicationsTable({ apps }: { apps: IncompleteApplicat
                     </div>
                   </td>
                   <td className="px-6 py-4 font-body-md text-on-surface-variant">{app.college}</td>
-                  <td className="px-6 py-4 font-body-md text-on-surface">{app.gwa.toFixed(2)}</td>
+                  <td className="px-6 py-4 font-body-md text-on-surface">{app.gwa ? Number(app.gwa).toFixed(2) : "N/A"}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="px-3 py-1 bg-error-container text-on-error-container rounded-full text-[12px] font-bold">
                       {app.status}

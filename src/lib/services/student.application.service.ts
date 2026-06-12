@@ -60,6 +60,18 @@ export class StudentApplicationService {
     const dashboard = await this.getDashboard(userId);
     if (!dashboard) throw new Error("No active application found.");
 
+    const merged = { ...dashboard, ...data };
+    const requiredDocs = [
+      "has_application_form", "has_cv", "has_tcg", "has_recommendation_letter",
+      "has_essay", "has_form_5", "has_valid_passport", "has_online_application_form"
+    ];
+
+    // If any document fields are being updated, evaluate completeness
+    const isDocUpdate = requiredDocs.some(k => Object.keys(data).includes(k));
+    if (isDocUpdate) {
+      data.is_complete = requiredDocs.every(k => !!merged[k]);
+    }
+
     await appRepo.updateApplication(dashboard.application_id, data);
     return true;
   }

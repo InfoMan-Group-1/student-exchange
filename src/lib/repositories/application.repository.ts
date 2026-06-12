@@ -23,8 +23,7 @@ export class ApplicationRepository extends BaseRepository {
       values.push(startingAfter);
     }
 
-    sql += ` ORDER BY a.application_id ASC LIMIT ?`;
-    values.push(limit);
+    sql += ` ORDER BY a.application_id ASC LIMIT ${Number(limit) || 10}`;
 
     return this.query<any[]>(sql, values);
   }

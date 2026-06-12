@@ -308,39 +308,39 @@ export function StudentProfileForm({ student }: { student: any }) {
 
       {/* Floating Action Footer */}
       {isEditing && (
-        <footer className="fixed bottom-0 right-0 w-full md:w-[calc(100%-280px)] bg-surface border-t border-outline-variant flex justify-end items-center gap-4 px-10 py-6 z-40 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
-        <button
-          type="button"
-          onClick={handleReset}
-          className="px-8 py-3 rounded-lg border border-outline text-outline font-label-md text-label-md hover:bg-surface-container-low transition-all active:scale-95"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          form="profile-form"
-          disabled={isSaving || isSuccess}
-          className={`px-10 py-3 rounded-lg font-bold text-label-md shadow-sm transition-all flex items-center gap-2 ${
-            isSuccess
-              ? "bg-green-700 text-white"
-              : "bg-primary text-on-primary hover:opacity-90 active:scale-95"
-          }`}
-        >
-          {isSaving ? (
-            <>
-              <RefreshCw className="h-4 w-4 animate-spin" /> Saving...
-            </>
-          ) : isSuccess ? (
-            <>
-              <CheckCircle2 className="h-4 w-4" /> Saved Successfully
-            </>
-          ) : (
-            <>
-              <Save className="h-4 w-4" /> Save changes
-            </>
-          )}
-        </button>
-      </footer>
+        <footer className="sticky bottom-0 w-full bg-surface border-t border-outline-variant flex justify-end items-center gap-4 px-8 py-5 z-40 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] mt-8">
+          <button
+            type="button"
+            onClick={handleReset}
+            className="px-8 py-3 rounded-lg border border-outline text-outline font-label-md text-label-md hover:bg-surface-container-low transition-all active:scale-95"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="profile-form"
+            disabled={isSaving || isSuccess}
+            className={`px-10 py-3 rounded-lg font-bold text-label-md shadow-sm transition-all flex items-center gap-2 ${
+              isSuccess
+                ? "bg-green-700 text-white"
+                : "bg-primary text-on-primary hover:opacity-90 active:scale-95"
+            }`}
+          >
+            {isSaving ? (
+              <>
+                <RefreshCw className="h-4 w-4 animate-spin" /> Saving...
+              </>
+            ) : isSuccess ? (
+              <>
+                <CheckCircle2 className="h-4 w-4" /> Saved Successfully
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4" /> Save changes
+              </>
+            )}
+          </button>
+        </footer>
       )}
 
       {/* Simulated Toast Notification */}

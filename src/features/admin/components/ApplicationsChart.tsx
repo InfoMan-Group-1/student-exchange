@@ -34,7 +34,7 @@ export function ApplicationsChart({ byProgram }: { byProgram?: ProgramStat[] }) 
         </div>
       ) : (
         <div className="space-y-4">
-          {data.map((prog) => {
+          {data.map((prog, index) => {
             const total = Number(prog.total);
             const complete = Number(prog.complete_count);
             const pct = Math.round((total / maxTotal) * 100);
@@ -42,7 +42,7 @@ export function ApplicationsChart({ byProgram }: { byProgram?: ProgramStat[] }) 
             const color = collegColors[prog.college_name] ?? "bg-primary/60";
 
             return (
-              <div key={prog.program_name} className="space-y-1.5">
+              <div key={`${prog.program_name}-${index}`} className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-label-md text-on-surface font-medium truncate max-w-[240px]">{prog.program_name}</p>

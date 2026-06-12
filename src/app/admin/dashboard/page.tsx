@@ -5,7 +5,6 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/api-client";
 import { AdminStatCards } from "@/features/admin/components/AdminStatCards";
 import { ApplicationsChart } from "@/features/admin/components/ApplicationsChart";
-import { RecentAlerts } from "@/features/admin/components/RecentAlerts";
 import { IncompleteApplicationsTable } from "@/features/admin/components/IncompleteApplicationsTable";
 
 export default function AdminDashboardPage() {
@@ -40,11 +39,8 @@ export default function AdminDashboardPage() {
         incompleteAppsStatus: "Action Required"
       }} />
 
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <section className="mb-8">
         <ApplicationsChart byProgram={data?.byProgram} />
-        <RecentAlerts alerts={[
-          { id: "1", type: "info", title: "System Update", description: "Admin Dashboard APIs are now connected." }
-        ]} />
       </section>
 
       <IncompleteApplicationsTable apps={data?.recentIncomplete || []} />

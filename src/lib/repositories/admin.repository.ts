@@ -31,14 +31,14 @@ export class AdminRepository extends BaseRepository {
   async getRecentIncompleteApplications(limit: number = 5) {
     const sql = `
       SELECT 
-        a.application_id, s.full_name, p.program_name as program
+        a.application_id, s.student_number as studentNumber, s.full_name as name, p.program_name as program, p.college_name as college, s.cumulative_gwa as gwa
       FROM applications a
       JOIN students s ON a.student_number = s.student_number
       JOIN programs p ON s.program_id = p.program_id
       WHERE a.is_complete = false
       ORDER BY a.created_at DESC
-      LIMIT ?
+      LIMIT ${Number(limit) || 5}
     `;
-    return this.query<any[]>(sql, [limit]);
+    return this.query<any[]>(sql);
   }
 }
