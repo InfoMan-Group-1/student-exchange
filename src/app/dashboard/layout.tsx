@@ -1,25 +1,18 @@
 import { ReactNode } from "react";
 import Link from "next/link";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
-import { getStudentDashboardData } from "@/lib/mockStudentData";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
-export default async function DashboardLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  const { student } = await getStudentDashboardData();
-
   return (
     <ProtectedRoute allowedRoles={["student"]}>
       <div className="bg-background text-on-background font-body-md min-h-screen flex flex-col w-full">
-        {/* Top Navigation Bar */}
-        <DashboardHeader
-          fullName={student.fullName}
-          studentNumber={student.studentNumber}
-          avatarUrl={student.avatarUrl}
-        />
+        {/* Top Navigation Bar — now fetches its own data client-side */}
+        <DashboardHeader />
 
         {/* Content Area */}
         <main className="flex-1 flex flex-col">
