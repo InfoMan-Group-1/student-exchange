@@ -7,6 +7,9 @@ import { ApplicationOverviewCard } from "@/features/dashboard/components/Applica
 import { BriefStats } from "@/features/dashboard/components/BriefStats";
 import { ApplicationChecklist } from "@/features/dashboard/components/ApplicationChecklist";
 import { ProgramSelectionCard } from "@/features/dashboard/components/ProgramSelectionCard";
+import { ExchangeJourneyTimeline } from "@/features/dashboard/components/ExchangeJourneyTimeline";
+import { PartnerUniversitiesCarousel } from "@/features/dashboard/components/PartnerUniversitiesCarousel";
+import { AnnouncementsSidebar } from "@/features/dashboard/components/AnnouncementsSidebar";
 import { FileText, ArrowRight } from "lucide-react";
 
 export default function DashboardPage() {
@@ -69,23 +72,32 @@ export default function DashboardPage() {
 
   return (
     <div className="p-8 max-w-6xl mx-auto w-full space-y-stack-lg">
-      {/* Status Card & Primary CTA */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <ApplicationOverviewCard application={data} />
-        <BriefStats application={data} />
-      </section>
+      <ExchangeJourneyTimeline application={data} />
 
       {/* Main Layout: Bento Style */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Checklist (Large Column) */}
-        <ApplicationChecklist application={data} />
+        
+        {/* Left Column (Main Content) */}
+        <div className="lg:col-span-8 space-y-6">
+          <ApplicationOverviewCard application={data} />
+          
+          <PartnerUniversitiesCarousel />
+          
+          <ApplicationChecklist application={data} />
+        </div>
 
-        {/* Secondary Info (Right Column) */}
+        {/* Right Column (Sidebar) */}
         <div className="lg:col-span-4 space-y-6">
-          <h3 className="font-headline-md text-headline-md text-primary px-2">
-            Program Selection
-          </h3>
-          <ProgramSelectionCard choices={data.university_choices} />
+          <BriefStats application={data} />
+          
+          <AnnouncementsSidebar />
+          
+          <div className="pt-4">
+            <h3 className="font-headline-md text-headline-md text-primary px-2 mb-4">
+              Program Selection
+            </h3>
+            <ProgramSelectionCard choices={data.university_choices} />
+          </div>
         </div>
       </section>
     </div>

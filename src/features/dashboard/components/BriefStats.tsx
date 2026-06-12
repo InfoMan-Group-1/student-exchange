@@ -4,7 +4,7 @@ export function BriefStats({ application }: { application: any }) {
   // Count boolean flags for documents
   const documentKeys = [
     'has_application_form', 'has_cv', 'has_tcg', 'has_recommendation_letter',
-    'has_medical_certificate', 'has_consent_form', 'has_study_plan', 'has_valid_passport'
+    'has_essay', 'has_form_5', 'has_valid_passport', 'has_online_application_form'
   ];
   const uploadedCount = documentKeys.filter(key => application[key]).length;
   const totalCount = documentKeys.length;

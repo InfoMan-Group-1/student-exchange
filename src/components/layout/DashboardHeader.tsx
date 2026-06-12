@@ -28,6 +28,12 @@ export function DashboardHeader() {
 
   const isApplication = pathname.startsWith("/dashboard/applications");
 
+  const { data: appData } = useSWR(
+    user && isApplication ? "/api/v1/applications/me" : null,
+    fetcher
+  );
+  const application = appData?.data;
+
   return (
     <header className="sticky top-0 z-40 bg-surface border-b border-outline-variant flex justify-between items-center w-full h-16 px-8 shadow-sm">
       <div className="flex items-center gap-12">
@@ -65,7 +71,9 @@ export function DashboardHeader() {
       <div className="flex items-center gap-6">
         {isApplication && (
           <div className="text-right hidden sm:block">
-            <p className="font-label-md text-label-md font-bold text-primary">Draft Application</p>
+            <p className="font-label-md text-label-md font-bold text-primary">
+              {application?.is_complete ? "Application Complete" : "Draft Application"}
+            </p>
             <p className="text-[11px] text-on-surface-variant uppercase tracking-widest">Academic Year 2024–2025</p>
           </div>
         )}
