@@ -1,4 +1,4 @@
-import { ArrowRight, MoreVertical } from "lucide-react";
+import { ArrowRight, MoreVertical, Eye } from "lucide-react";
 import { IncompleteApplication } from "@/lib/mockAdminData";
 import Link from "next/link";
 
@@ -61,9 +61,13 @@ export function IncompleteApplicationsTable({ apps }: { apps: IncompleteApplicat
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <button className="text-primary hover:text-on-primary-fixed-variant transition-colors p-1 rounded-full hover:bg-surface-container-high active:scale-95">
-                      <MoreVertical className="h-5 w-5" />
-                    </button>
+                    <Link 
+                      href={`/admin/applications/${app.application_id}`}
+                      className="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full inline-flex active:scale-95"
+                      title="View Application"
+                    >
+                      <Eye className="h-5 w-5" />
+                    </Link>
                   </td>
                 </tr>
               );

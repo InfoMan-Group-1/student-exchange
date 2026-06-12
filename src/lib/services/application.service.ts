@@ -59,6 +59,22 @@ export class ApplicationService {
       }
     }
 
+    const application = await repo.getApplicationById(applicationId);
+    if (!application) throw new Error("Application not found.");
+
+    const merged = { ...application, ...cleanData };
+    const requiredDocs = [
+      "has_application_form", "has_cv", "has_tcg", "has_valid_passport",
+      "has_recommendation_letter", "has_essay", "has_form_5",
+      "has_online_application_form"
+    ];
+
+    // Evaluate completeness if documents are being updated
+    const isDocUpdate = requiredDocs.some(k => Object.keys(cleanData).includes(k));
+    if (isDocUpdate) {
+      cleanData.is_complete = requiredDocs.every(k => !!merged[k]);
+    }
+
     return repo.updateApplication(applicationId, cleanData);
   }
 

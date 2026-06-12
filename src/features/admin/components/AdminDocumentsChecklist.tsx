@@ -13,10 +13,10 @@ export function AdminDocumentsChecklist({ detail }: { detail: any }) {
     { key: "has_cv", name: "Curriculum Vitae", isComplete: detail.has_cv },
     { key: "has_tcg", name: "True Copy of Grades", isComplete: detail.has_tcg },
     { key: "has_recommendation_letter", name: "Recommendation Letter", isComplete: detail.has_recommendation_letter },
-    { key: "has_medical_certificate", name: "Medical Certificate", isComplete: detail.has_medical_certificate },
-    { key: "has_consent_form", name: "Consent Form", isComplete: detail.has_consent_form },
-    { key: "has_study_plan", name: "Study Plan", isComplete: detail.has_study_plan },
-    { key: "has_valid_passport", name: "Valid Passport", isComplete: detail.has_valid_passport },
+    { key: "has_essay", name: "Essay", isComplete: detail.has_essay },
+    { key: "has_form_5", name: "Form 5 (Enrollment)", isComplete: detail.has_form_5 },
+    { key: "has_valid_passport", name: "Passport Copy", isComplete: detail.has_valid_passport },
+    { key: "has_online_application_form", name: "Online Application Form", isComplete: detail.has_online_application_form },
   ];
 
   const toggleDocument = async (docKey: string, currentStatus: boolean) => {
