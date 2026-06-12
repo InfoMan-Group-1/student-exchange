@@ -178,7 +178,7 @@ export function LoginForm() {
         <div className="mt-8 text-center">
           <a
             className="inline-flex items-center gap-2 font-label-md text-label-md text-[#5a413d] hover:text-primary transition-colors group"
-            href="#"
+            href="/"
           >
             <span className="transition-transform group-hover:-translate-x-1">
               ←
