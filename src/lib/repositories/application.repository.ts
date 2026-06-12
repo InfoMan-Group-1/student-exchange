@@ -1,0 +1,64 @@
+import { BaseRepository } from "./base";
+
+export class ApplicationRepository extends BaseRepository {
+  async getApplications(limit: number, startingAfter?: string | null, isComplete?: boolean | null) {
+    let sql = `
+      SELECT 
+        a.application_id, a.student_number, a.semester_preference, a.duration_preference, a.is_complete,
+        s.full_name, s.cumulative_gwa, p.program_name as program, p.college_name as college
+      FROM applications a
+      JOIN students s ON a.student_number = s.student_number
+      JOIN programs p ON s.program_id = p.program_id
+      WHERE 1=1
+    `;
+    const values: any[] = [];
+
+    if (isComplete !== null && isComplete !== undefined) {
+      sql += ` AND a.is_complete = ?`;
+      values.push(isComplete);
+    }
+
+    if (startingAfter) {
+      sql += ` AND a.application_id > ?`;
+      values.push(startingAfter);
+    }
+
+    sql += ` ORDER BY a.application_id ASC LIMIT ?`;
+    values.push(limit);
+
+    return this.query<any[]>(sql, values);
+  }
+
+  async checkNext(limit: number, lastApplicationId: string) {
+    const nextSql = `SELECT application_id FROM applications WHERE application_id > ? ORDER BY application_id ASC LIMIT 1`;
+    const nextCheck = await this.query<any[]>(nextSql, [lastApplicationId]);
+    return nextCheck && nextCheck.length > 0;
+  }
+
+  async getApplicationById(id: string) {
+    const applicationSql = `
+      SELECT 
+        a.*,
+        s.full_name, s.age, s.nationality, s.sex, s.birth_date, s.school_email, s.alternate_email, 
+        s.home_address, s.mobile_number, s.passport_number, s.passport_issue_date, s.passport_expiry_date,
+        s.year_level, s.cumulative_gwa, s.guardian_id,
+        p.program_name as program, p.college_name as college
+      FROM applications a
+      JOIN students s ON a.student_number = s.student_number
+      JOIN programs p ON s.program_id = p.program_id
+      WHERE a.application_id = ?
+    `;
+    const applications = await this.query<any[]>(applicationSql, [id]);
+    return applications.length > 0 ? applications[0] : null;
+  }
+
+  async getUniversityChoices(applicationId: string) {
+    const choicesSql = `
+      SELECT university_choice_rank, university_name
+      FROM university_choices
+      WHERE application_id = ?
+      ORDER BY university_choice_rank ASC
+    `;
+    return this.query<any[]>(choicesSql, [applicationId]);
+  }
+}

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { ApplicationService } from "@/lib/services/application.service";
 import { verifyAuthToken, createProblemDetails, checkRateLimit, rateLimitResponse } from "@/lib/api-utils";
 
 export async function GET(
@@ -25,43 +25,13 @@ export async function GET(
     return createProblemDetails(400, "Bad Request", "Missing application_id parameter.");
   }
 
-  // 3. Execute Query
   try {
-    // We join the applications with the student, program, and college
-    const applicationSql = `
-      SELECT 
-        a.*,
-        s.full_name, s.age, s.nationality, s.sex, s.birth_date, s.school_email, s.alternate_email, 
-        s.home_address, s.mobile_number, s.passport_number, s.passport_issue_date, s.passport_expiry_date,
-        s.year_level, s.cumulative_gwa, s.guardian_id,
-        p.program_name as program, p.college
-      FROM applications a
-      JOIN students s ON a.student_number = s.student_number
-      JOIN programs p ON s.program_id = p.program_id
-      WHERE a.application_id = ?
-    `;
-    const applications = await query<any[]>(applicationSql, [application_id]);
+    const service = new ApplicationService();
+    const result = await service.getApplication(application_id);
 
-    if (!applications || applications.length === 0) {
+    if (!result) {
       return createProblemDetails(404, "Not Found", `Application with ID ${application_id} not found.`);
     }
-
-    const application = applications[0];
-
-    // Fetch University Choices
-    const choicesSql = `
-      SELECT university_choice_rank, university_name
-      FROM university_choices
-      WHERE application_id = ?
-      ORDER BY university_choice_rank ASC
-    `;
-    const choices = await query<any[]>(choicesSql, [application_id]);
-
-    // Construct final aggregated object
-    const result = {
-      ...application,
-      university_choices: choices
-    };
 
     return NextResponse.json(result);
   } catch (error) {
