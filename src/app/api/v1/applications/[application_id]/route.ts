@@ -39,3 +39,29 @@ export async function GET(
     return createProblemDetails(500, "Internal Server Error", "Failed to retrieve application detail.");
   }
 }
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ application_id: string }> }
+) {
+  const user = verifyAuthToken(req);
+  if (!user || user.role !== "admin") {
+    // Eventually allow student to update their own application
+    return createProblemDetails(403, "Forbidden", "Admin access required.");
+  }
+
+  const { application_id } = await params;
+  if (!application_id) {
+    return createProblemDetails(400, "Bad Request", "Missing application_id parameter.");
+  }
+
+  try {
+    const body = await req.json();
+    const service = new ApplicationService();
+    await service.updateApplication(application_id, body);
+    return NextResponse.json({ message: "Application updated successfully" });
+  } catch (error) {
+    console.error("Application update failed:", error);
+    return createProblemDetails(500, "Internal Server Error", "Failed to update application.");
+  }
+}

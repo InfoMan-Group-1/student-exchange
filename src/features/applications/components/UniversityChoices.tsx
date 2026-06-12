@@ -25,51 +25,35 @@ export function UniversityChoices({ choices }: Props) {
             ? "bg-secondary text-on-secondary" 
             : "bg-outline text-white";
 
-          const placeholderInst = isFirst ? "e.g. Nanyang Technological University" : 
-                                  index === 1 ? "Second Choice Institution" : "Third Choice Institution";
-          
-          const placeholderProg = isFirst ? "e.g. BS Computer Engineering" : 
-                                  index === 1 ? "Second Choice Course" : "Third Choice Course";
+            const placeholderInst = isFirst ? "e.g. Nanyang Technological University" : 
+                                    index === 1 ? "Second Choice Institution" : "Third Choice Institution";
 
-          return (
-            <div key={choice.preferenceOrder} className="grid grid-cols-12 gap-4 items-end">
-              <div className="col-span-1 flex justify-center pb-3">
-                <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${numberStyle}`}>
-                  {choice.preferenceOrder}
-                </span>
-              </div>
-              <div className="col-span-11 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  {isFirst && (
-                    <label className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">
-                      Host Institution
-                    </label>
-                  )}
-                  <input 
-                    type="text" 
-                    defaultValue={choice.universityName}
-                    placeholder={placeholderInst}
-                    className="w-full bg-surface-container-low border border-outline rounded-lg px-4 py-3 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
-                  />
+            return (
+              <div key={choice.preferenceOrder} className="grid grid-cols-12 gap-4 items-end">
+                <div className="col-span-1 flex justify-center pb-3">
+                  <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${numberStyle}`}>
+                    {choice.preferenceOrder}
+                  </span>
                 </div>
-                <div className="space-y-2">
-                  {isFirst && (
-                    <label className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">
-                      Course/Program
-                    </label>
-                  )}
-                  <input 
-                    type="text" 
-                    defaultValue={choice.programName}
-                    placeholder={placeholderProg}
-                    className="w-full bg-surface-container-low border border-outline rounded-lg px-4 py-3 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
-                  />
+                <div className="col-span-11 grid grid-cols-1 gap-4">
+                  <div className="space-y-2">
+                    {isFirst && (
+                      <label className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">
+                        Host Institution
+                      </label>
+                    )}
+                    <input 
+                      type="text" 
+                      defaultValue={choice.universityName}
+                      placeholder={placeholderInst}
+                      className="w-full bg-surface-container-low border border-outline rounded-lg px-4 py-3 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+            );
+          })}
+        </div>
+      </section>
   );
 }

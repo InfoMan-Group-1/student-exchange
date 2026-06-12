@@ -39,4 +39,33 @@ export class ApplicationService {
       university_choices: choices
     };
   }
+
+  async updateApplication(applicationId: string, data: Record<string, any>) {
+    // Basic sanitization to ensure we only update allowed fields in the applications table
+    const allowedFields = [
+      'semester_preference', 'duration_preference', 'is_complete',
+      'has_application_form', 'has_cv', 'has_tcg', 'has_valid_passport',
+      'has_recommendation_letter', 'has_medical_certificate', 
+      'has_consent_form', 'has_study_plan'
+    ];
+    
+    const cleanData: Record<string, any> = {};
+    for (const key of Object.keys(data)) {
+      if (allowedFields.includes(key)) {
+        cleanData[key] = data[key];
+      }
+    }
+    
+    return repo.updateApplication(applicationId, cleanData);
+  }
+
+  async updateUniversityChoices(applicationId: string, choices: { rank: number, name: string }[]) {
+    // Since we just need to replace choices, we delete existing and re-insert
+    await repo.deleteUniversityChoices(applicationId);
+    
+    for (const choice of choices) {
+      await repo.insertUniversityChoice(applicationId, choice.rank, choice.name);
+    }
+    return true;
+  }
 }

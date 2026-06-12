@@ -10,10 +10,16 @@ export interface ProblemDetails {
   [key: string]: any;
 }
 
+export interface AuthTokenPayload extends jwt.JwtPayload {
+  userId: number;
+  email: string;
+  role: "admin" | "student";
+}
+
 /**
  * Validates the Authorization Bearer token.
  */
-export function verifyAuthToken(req: NextRequest) {
+export function verifyAuthToken(req: NextRequest): AuthTokenPayload | null {
   const authHeader = req.headers.get("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return null;
@@ -22,7 +28,7 @@ export function verifyAuthToken(req: NextRequest) {
   const token = authHeader.split(" ")[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "fallback_secret");
-    return decoded;
+    return decoded as AuthTokenPayload;
   } catch (err) {
     return null;
   }

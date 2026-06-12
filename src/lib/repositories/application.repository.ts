@@ -61,4 +61,28 @@ export class ApplicationRepository extends BaseRepository {
     `;
     return this.query<any[]>(choicesSql, [applicationId]);
   }
+
+  async updateApplication(applicationId: string, data: Record<string, any>) {
+    const fields = Object.keys(data).map(key => `${key} = ?`).join(", ");
+    const values = Object.values(data);
+    
+    if (fields.length === 0) return true; // Nothing to update
+    
+    values.push(applicationId);
+    const sql = `UPDATE applications SET ${fields} WHERE application_id = ?`;
+    await this.query(sql, values);
+    return true;
+  }
+
+  async deleteUniversityChoices(applicationId: string) {
+    const sql = `DELETE FROM university_choices WHERE application_id = ?`;
+    await this.query(sql, [applicationId]);
+    return true;
+  }
+
+  async insertUniversityChoice(applicationId: string, rank: number, name: string) {
+    const sql = `INSERT INTO university_choices (application_id, university_choice_rank, university_name) VALUES (?, ?, ?)`;
+    await this.query(sql, [applicationId, rank, name]);
+    return true;
+  }
 }

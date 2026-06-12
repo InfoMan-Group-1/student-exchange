@@ -49,3 +49,29 @@ export async function GET(
     return createProblemDetails(500, "Internal Server Error", "Failed to retrieve student detail.");
   }
 }
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ student_number: string }> }
+) {
+  const user = verifyAuthToken(req);
+  if (!user || user.role !== "admin") {
+    // Eventually allow student to update their own profile
+    return createProblemDetails(403, "Forbidden", "Admin access required.");
+  }
+
+  const { student_number } = await params;
+  if (!student_number) {
+    return createProblemDetails(400, "Bad Request", "Missing student_number parameter.");
+  }
+
+  try {
+    const body = await req.json();
+    const service = new StudentService();
+    await service.updateStudent(student_number, body);
+    return NextResponse.json({ message: "Student updated successfully" });
+  } catch (error) {
+    console.error("Student update failed:", error);
+    return createProblemDetails(500, "Internal Server Error", "Failed to update student.");
+  }
+}

@@ -56,4 +56,49 @@ export class StudentRepository extends BaseRepository {
     `;
     return this.query<any[]>(sql, [studentNumber]);
   }
+
+  async updateStudent(studentNumber: string, data: Record<string, any>) {
+    const fields = Object.keys(data).map(key => `${key} = ?`).join(", ");
+    const values = Object.values(data);
+    
+    if (fields.length === 0) return true;
+    
+    values.push(studentNumber);
+    const sql = `UPDATE students SET ${fields} WHERE student_number = ?`;
+    await this.query(sql, values);
+    return true;
+  }
+
+  async updateGuardian(guardianId: string, data: Record<string, any>) {
+    const fields = Object.keys(data).map(key => `${key} = ?`).join(", ");
+    const values = Object.values(data);
+    
+    if (fields.length === 0) return true;
+    
+    values.push(guardianId);
+    const sql = `UPDATE guardians SET ${fields} WHERE guardian_id = ?`;
+    await this.query(sql, values);
+    return true;
+  }
+
+  async deleteLanguages(studentNumber: string) {
+    const sql = `DELETE FROM student_languages WHERE student_number = ?`;
+    await this.query(sql, [studentNumber]);
+    return true;
+  }
+
+  async insertLanguage(studentNumber: string, name: string, level: string) {
+    const sql = `INSERT INTO student_languages (student_number, language_name, proficiency_level) VALUES (?, ?, ?)`;
+    await this.query(sql, [studentNumber, name, level]);
+    return true;
+  }
+
+  async getStudentNumberByUserId(userId: number): Promise<string | null> {
+    const sql = `SELECT student_number FROM students WHERE user_id = ?`;
+    const rows = await this.query<any[]>(sql, [userId]);
+    if (rows.length > 0) {
+      return rows[0].student_number;
+    }
+    return null;
+  }
 }
