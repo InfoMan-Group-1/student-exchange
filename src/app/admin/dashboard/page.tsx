@@ -39,11 +39,7 @@ export default function AdminDashboardPage() {
       {/* Atmospheric Footer Decor */}
       <footer className="pt-8 opacity-30 pointer-events-none">
         <div className="border-t border-outline-variant pt-8 flex justify-between items-center font-label-sm text-on-surface-variant">
-          <p>© 2024 Polytechnic University of the Philippines. International Affairs Office.</p>
-          <div className="flex gap-6">
-            <span>V 2.4.0-admin</span>
-            <span>System Status: Optimal</span>
-          </div>
+          <p>© 2026 Polytechnic University of the Philippines. International Affairs Office.</p>
         </div>
       </footer>
     </div>
