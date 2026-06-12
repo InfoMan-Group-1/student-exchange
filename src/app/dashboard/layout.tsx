@@ -13,7 +13,7 @@ export default async function DashboardLayout({
   return (
     <div className="bg-background text-on-background font-body-md overflow-hidden flex h-screen w-full">
       {/* Sidebar Navigation */}
-      <Sidebar />
+      <Sidebar student={student} />
 
       {/* Main Canvas */}
       <div className="ml-[280px] h-screen overflow-y-auto flex flex-col flex-1">

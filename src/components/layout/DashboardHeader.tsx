@@ -16,10 +16,20 @@ export function DashboardHeader({
 }: DashboardHeaderProps) {
   const pathname = usePathname();
   const isProfile = pathname === "/dashboard/profile";
+  const isApplication = pathname === "/dashboard/applications";
 
   return (
     <header className="sticky top-0 z-40 bg-surface border-b border-outline-variant flex justify-between items-center w-full h-20 px-8">
-      {isProfile ? (
+      {isApplication ? (
+        <div className="flex items-center gap-4">
+          <h2 className="font-headline-md text-headline-md text-primary font-bold">
+            Exchange application
+          </h2>
+          <div className="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm text-label-sm">
+            DRAFT
+          </div>
+        </div>
+      ) : isProfile ? (
         <div className="flex items-center gap-4">
           <User className="text-outline h-6 w-6" />
           <h2 className="font-headline-lg text-2xl font-bold text-primary">
@@ -59,15 +69,32 @@ export function DashboardHeader({
           <button className="p-2 hover:bg-surface-container-high rounded-full transition-colors">
             <HelpCircle className="h-6 w-6" />
           </button>
-          <div className="flex items-center gap-3 pl-4 border-l border-outline-variant">
-            <div className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-primary-container/20">
-              <img
-                alt="User profile avatar"
-                className="w-full h-full object-cover"
-                src={avatarUrl}
-              />
+          
+          {isApplication ? (
+            <>
+              <div className="h-8 w-[1px] bg-outline-variant mx-2"></div>
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <p className="font-label-md text-label-md font-bold">
+                    Academic Year 2024-2025
+                  </p>
+                  <p className="text-[11px] text-on-surface-variant uppercase tracking-widest">
+                    Global Mobility Program
+                  </p>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center gap-3 pl-4 border-l border-outline-variant">
+              <div className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-primary-container/20">
+                <img
+                  alt="User profile avatar"
+                  className="w-full h-full object-cover"
+                  src={avatarUrl}
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </header>
