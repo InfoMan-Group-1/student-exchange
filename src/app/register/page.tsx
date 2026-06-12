@@ -10,7 +10,7 @@ export default function RegisterPage() {
         {/* Left Pane - Brand / Context */}
       <div className="hidden lg:flex flex-col justify-between w-[45%] bg-primary p-12 text-on-primary relative overflow-hidden shrink-0">
         <div className="relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2 text-primary-container hover:text-white transition-colors mb-16 font-label-md">
+          <Link href="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-16 font-label-md">
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </Link>
@@ -20,7 +20,7 @@ export default function RegisterPage() {
           <h1 className="font-display-md text-display-md font-bold mb-6 text-white leading-tight tracking-tight">
             Begin Your Academic <br /> Exchange Journey
           </h1>
-          <p className="font-body-lg text-body-lg text-primary-container/90 max-w-md leading-relaxed">
+          <p className="font-body-lg text-body-lg text-white/90 max-w-md leading-relaxed">
             Join a global community of scholars. Create your official student dossier to apply for international exchange programs and broaden your academic horizons.
           </p>
         </div>
@@ -29,7 +29,7 @@ export default function RegisterPage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-black/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
         
-        <div className="relative z-10 text-primary-container/60 font-label-sm">
+        <div className="relative z-10 text-white/60 font-label-sm">
           &copy; {new Date().getFullYear()} Polytechnic University of the Philippines
         </div>
       </div>
