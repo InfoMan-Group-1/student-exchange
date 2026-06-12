@@ -13,8 +13,11 @@ export class AuthService {
     // Student specifics (required if role is student)
     studentNumber?: string;
     programId?: string;
-    guardianId?: string;
     fullName?: string;
+    guardianName?: string;
+    guardianRelation?: string;
+    guardianContact?: string;
+    guardianEmail?: string;
   }) {
     // Basic validation
     if (!data.email || !data.passwordRaw || !data.role) {
@@ -22,8 +25,8 @@ export class AuthService {
     }
 
     if (data.role === "student") {
-      if (!data.studentNumber || !data.programId || !data.guardianId || !data.fullName) {
-        throw new Error("Student registration requires student_number, program_id, guardian_id, and full_name.");
+      if (!data.studentNumber || !data.programId || !data.fullName || !data.guardianName) {
+        throw new Error("Student registration requires student_number, program_id, full_name, and guardian_name.");
       }
     }
 
@@ -53,10 +56,17 @@ export class AuthService {
       );
       const userId = (userResult as any).insertId;
 
-      // 2. Create Student
+      // 2. Create Guardian
+      const generatedGuardianId = 'G' + Math.floor(10000 + Math.random() * 90000);
+      await connection.execute(
+        `INSERT INTO guardians (guardian_id, guardian_name, relation_to_student, guardian_contact_number, guardian_email) VALUES (?, ?, ?, ?, ?)`,
+        [generatedGuardianId, data.guardianName!, data.guardianRelation || null, data.guardianContact || null, data.guardianEmail || null]
+      );
+
+      // 3. Create Student
       await connection.execute(
         `INSERT INTO students (student_number, user_id, program_id, guardian_id, full_name, school_email) VALUES (?, ?, ?, ?, ?, ?)`,
-        [data.studentNumber, userId, data.programId, data.guardianId, data.fullName, data.email]
+        [data.studentNumber!, userId, data.programId!, generatedGuardianId, data.fullName!, data.email]
       );
 
       await connection.commit();

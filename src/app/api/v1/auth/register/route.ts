@@ -20,8 +20,11 @@ export async function POST(req: NextRequest) {
       role: body.role,
       studentNumber: body.student_number,
       programId: body.program_id,
-      guardianId: body.guardian_id,
-      fullName: body.full_name
+      fullName: body.full_name,
+      guardianName: body.guardian_name,
+      guardianRelation: body.guardian_relation,
+      guardianContact: body.guardian_contact_number,
+      guardianEmail: body.guardian_email
     });
 
     return NextResponse.json({
