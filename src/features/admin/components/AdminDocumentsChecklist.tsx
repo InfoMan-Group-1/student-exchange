@@ -1,17 +1,40 @@
-import { FileCheck, CheckCircle2, XCircle, Eye } from "lucide-react";
-import { ApplicationDetailData } from "@/lib/mockAdminData";
+"use client";
 
-export function AdminDocumentsChecklist({ detail }: { detail: ApplicationDetailData }) {
+import { useState } from "react";
+import { FileCheck, CheckCircle2, XCircle, Eye } from "lucide-react";
+import { apiFetch } from "@/lib/api-client";
+import { mutate } from "swr";
+
+export function AdminDocumentsChecklist({ detail }: { detail: any }) {
+  const [updating, setUpdating] = useState<string | null>(null);
+
   const documents = [
-    { name: "Application Form", isComplete: detail.has_application_form },
-    { name: "Curriculum Vitae", isComplete: detail.has_cv },
-    { name: "True Copy of Grades", isComplete: detail.has_tcg },
-    { name: "Recommendation Letter", isComplete: detail.has_recommendation_letter },
-    { name: "Essay / Letter of Intent", isComplete: detail.has_essay },
-    { name: "Form 5 / Reg Card", isComplete: detail.has_form_5 },
-    { name: "Valid Passport", isComplete: detail.has_valid_passport },
-    { name: "Online Application Form", isComplete: detail.has_online_application_form },
+    { key: "has_application_form", name: "Application Form", isComplete: detail.has_application_form },
+    { key: "has_cv", name: "Curriculum Vitae", isComplete: detail.has_cv },
+    { key: "has_tcg", name: "True Copy of Grades", isComplete: detail.has_tcg },
+    { key: "has_recommendation_letter", name: "Recommendation Letter", isComplete: detail.has_recommendation_letter },
+    { key: "has_medical_certificate", name: "Medical Certificate", isComplete: detail.has_medical_certificate },
+    { key: "has_consent_form", name: "Consent Form", isComplete: detail.has_consent_form },
+    { key: "has_study_plan", name: "Study Plan", isComplete: detail.has_study_plan },
+    { key: "has_valid_passport", name: "Valid Passport", isComplete: detail.has_valid_passport },
   ];
+
+  const toggleDocument = async (docKey: string, currentStatus: boolean) => {
+    setUpdating(docKey);
+    try {
+      await apiFetch(`/api/v1/applications/${detail.application_id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ [docKey]: !currentStatus }),
+      });
+      // Re-fetch data
+      await mutate(`/api/v1/applications/${detail.application_id}`);
+    } catch (err) {
+      console.error("Failed to update document status:", err);
+      alert("Failed to update document status.");
+    } finally {
+      setUpdating(null);
+    }
+  };
 
   return (
     <section className="bg-surface rounded-xl p-card-padding shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant">
@@ -25,13 +48,16 @@ export function AdminDocumentsChecklist({ detail }: { detail: ApplicationDetailD
           
           return (
             <li key={index} className="flex items-center justify-between group">
-              <div className="flex items-center gap-3">
+              <div 
+                className={`flex items-center gap-3 cursor-pointer ${updating === doc.key ? 'opacity-50 pointer-events-none' : ''}`}
+                onClick={() => toggleDocument(doc.key, doc.isComplete)}
+              >
                 {isComplete ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <CheckCircle2 className="h-5 w-5 text-green-600 hover:scale-110 transition-transform" />
                 ) : (
-                  <XCircle className="h-5 w-5 text-error" />
+                  <XCircle className="h-5 w-5 text-error hover:scale-110 transition-transform" />
                 )}
-                <span className="font-body-md">{doc.name}</span>
+                <span className="font-body-md select-none hover:text-primary transition-colors">{doc.name}</span>
               </div>
               
               {isComplete ? (

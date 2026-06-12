@@ -20,3 +20,8 @@ adminpassword
 
 student@example.com
 studentpassword
+
+Admin api test
+We will login manually to generate a real JWT token.
+We will navigate to the Admin Dashboard and verify that the stats display '0' or match our seed data.
+We will interact with the Checklist toggles and verify the network tab shows a successful PATCH request, and the UI remains in sync.

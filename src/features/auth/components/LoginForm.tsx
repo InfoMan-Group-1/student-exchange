@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import Link from "next/link";
-import { mockLogin, UserRole } from "@/lib/mockAuth";
+import { useRouter } from "next/navigation";
 import { ErrorBanner } from "./ErrorBanner";
+import { setAuthToken } from "@/lib/api-client";
+
+type UserRole = "student" | "admin";
 
 export function LoginForm() {
   const [role, setRole] = useState<UserRole>("student");
@@ -14,20 +17,33 @@ export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
     setIsLoading(true);
 
     try {
-      const result = await mockLogin(email, role);
+      const res = await fetch("/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, role }),
+      });
 
-      if (!result.success) {
-        setErrorMessage(result.message || "Login failed");
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMessage(data.detail || data.message || "Login failed");
       } else {
-        // Success: Redirect or set auth state. For now, just log.
-        console.log("Logged in successfully:", result.user);
-        alert(`Success! Logged in as ${result.user?.name}`);
+        // Success: Store token and redirect
+        setAuthToken(data.token);
+        console.log("Logged in successfully");
+        if (role === "admin") {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch (err) {
       setErrorMessage("An unexpected error occurred. Please try again.");

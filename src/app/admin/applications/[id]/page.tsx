@@ -1,4 +1,8 @@
-import { getApplicationDetail } from "@/lib/mockAdminData";
+"use client";
+
+import { use } from "react";
+import useSWR from "swr";
+import { fetcher } from "@/lib/api-client";
 import { DetailHeader } from "@/features/admin/components/DetailHeader";
 import { StudentSummary } from "@/features/admin/components/StudentSummary";
 import { EmergencyContact } from "@/features/admin/components/EmergencyContact";
@@ -7,9 +11,12 @@ import { AdminDocumentsChecklist } from "@/features/admin/components/AdminDocume
 import { AdminLanguagesTable } from "@/features/admin/components/AdminLanguagesTable";
 import { DetailFooter } from "@/features/admin/components/DetailFooter";
 
-export default async function ApplicationDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const detail = await getApplicationDetail(id);
+export default function ApplicationDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const { data: detail, error, isLoading } = useSWR(`/api/v1/applications/${id}`, fetcher);
+
+  if (isLoading) return <div className="p-8 text-center text-on-surface-variant animate-pulse">Loading application detail...</div>;
+  if (error || !detail) return <div className="p-8 text-center text-error">Failed to load application detail.</div>;
 
   return (
     <div className="p-8 max-w-7xl mx-auto w-full pb-12">

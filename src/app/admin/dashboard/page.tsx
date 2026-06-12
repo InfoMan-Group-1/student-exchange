@@ -1,13 +1,20 @@
+"use client";
+
 import { Download } from "lucide-react";
-import { getAdminDashboardData } from "@/lib/mockAdminData";
+import useSWR from "swr";
+import { fetcher } from "@/lib/api-client";
 import { AdminStatCards } from "@/features/admin/components/AdminStatCards";
 import { ApplicationsChart } from "@/features/admin/components/ApplicationsChart";
 import { RecentAlerts } from "@/features/admin/components/RecentAlerts";
 import { IncompleteApplicationsTable } from "@/features/admin/components/IncompleteApplicationsTable";
+import { getAdminDashboardData } from "@/lib/mockAdminData"; // Fallback for alerts/chart
 
-export default async function AdminDashboardPage() {
-  const data = await getAdminDashboardData();
+export default function AdminDashboardPage() {
+  const { data, error, isLoading } = useSWR("/api/v1/admin/dashboard", fetcher);
 
+  if (isLoading) return <div className="p-8 text-center text-on-surface-variant font-body-lg animate-pulse">Loading dashboard...</div>;
+  if (error) return <div className="p-8 text-center text-error font-body-lg">Failed to load dashboard data.</div>;
+  
   return (
     <div className="p-container-padding space-y-stack-lg max-w-7xl mx-auto pb-12">
       <section className="flex items-end justify-between">
@@ -23,14 +30,25 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      <AdminStatCards stats={data.stats} />
+      <AdminStatCards stats={{
+        totalApplicants: data?.stats?.totalApplicants || 0,
+        totalApplicantsChange: "+0% vs LY",
+        avgAge: 20,
+        avgAgeStatus: "Stable",
+        bestGwa: data?.stats?.averageGwa || 0,
+        bestGwaStatus: "Average",
+        incompleteApps: data?.stats?.incompleteApplications || 0,
+        incompleteAppsStatus: "Action Required"
+      }} />
 
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <ApplicationsChart />
-        <RecentAlerts alerts={data.alerts} />
+        <RecentAlerts alerts={[
+          { id: "1", type: "info", title: "System Update", description: "Admin Dashboard APIs are now connected." }
+        ]} />
       </section>
 
-      <IncompleteApplicationsTable apps={data.incompleteApplications} />
+      <IncompleteApplicationsTable apps={data?.recentIncomplete || []} />
 
       {/* Atmospheric Footer Decor */}
       <footer className="pt-8 opacity-30 pointer-events-none">
