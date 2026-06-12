@@ -11,9 +11,9 @@ export function AdminLanguagesTable({ languages }: { languages: ApplicationDetai
       <div className="space-y-4">
         {languages.map((lang, index) => (
           <div key={index} className="flex items-center justify-between">
-            <span className="font-body-md">{lang.language}</span>
+            <span className="font-body-md">{lang.language_name}</span>
             <span className="bg-secondary/10 text-secondary px-2 py-1 rounded font-label-sm">
-              {lang.proficiency}
+              {lang.proficiency_level}
             </span>
           </div>
         ))}

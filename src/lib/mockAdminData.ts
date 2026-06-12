@@ -27,45 +27,50 @@ export interface IncompleteApplication {
 }
 
 export interface ApplicantListEntry {
-  studentNumber: string;
-  name: string;
-  initials: string;
+  application_id: string;
+  student_number: string;
+  full_name: string;
+  semester_preference: string | null;
+  duration_preference: string | null;
   program: string;
   college: string;
-  gwa: number;
-  status: "Complete" | "Pending";
+  cumulative_gwa: number;
+  is_complete: boolean;
   colorTheme: "primary" | "secondary";
 }
 
 export interface ApplicationDetailData {
-  studentInfo: {
-    name: string;
-    studentNumber: string;
-    course: string;
-    status: string;
-    email: string;
-    contactNumber: string;
-    gpa: string;
-    homeAddress: string;
-  };
-  emergencyContact: {
-    name: string;
-    relationship: string;
-    phoneNumber: string;
-  };
-  academicPreferences: Array<{
-    priority: string;
-    university: string;
-    location: string;
-    match: string;
-  }>;
-  documents: Array<{
-    name: string;
-    status: "Complete" | "Missing";
+  application_id: string;
+  student_number: string;
+  is_complete: boolean;
+  has_application_form: boolean;
+  has_cv: boolean;
+  has_tcg: boolean;
+  has_recommendation_letter: boolean;
+  has_essay: boolean;
+  has_form_5: boolean;
+  has_valid_passport: boolean;
+  has_online_application_form: boolean;
+  
+  full_name: string;
+  school_email: string;
+  mobile_number: string;
+  home_address: string;
+  cumulative_gwa: number;
+  program: string;
+  college: string;
+
+  guardian_name: string;
+  relationship: string;
+  guardian_contact_number: string;
+
+  university_choices: Array<{
+    university_choice_rank: number;
+    university_name: string;
   }>;
   languages: Array<{
-    language: string;
-    proficiency: string;
+    language_name: string;
+    proficiency_level: string;
   }>;
 }
 
@@ -157,23 +162,27 @@ export async function getApplicantsData(): Promise<ApplicantsData> {
   return {
     applicants: [
       {
-        studentNumber: "2021-00123-MN-0",
-        name: "Ana Santos",
-        initials: "AS",
+        application_id: "APP001",
+        student_number: "2021-00123-MN-0",
+        full_name: "Ana Santos",
+        semester_preference: "1st Semester",
+        duration_preference: "1 Term",
         program: "Global Scholars Program",
         college: "CCIS",
-        gwa: 1.50,
-        status: "Complete",
+        cumulative_gwa: 1.50,
+        is_complete: true,
         colorTheme: "primary",
       },
       {
-        studentNumber: "2021-00456-MN-0",
-        name: "Juan Dela Cruz",
-        initials: "JC",
+        application_id: "APP002",
+        student_number: "2021-00456-MN-0",
+        full_name: "Juan Dela Cruz",
+        semester_preference: "2nd Semester",
+        duration_preference: "1 Year",
         program: "Asian Exchange Initiative",
         college: "CCIS",
-        gwa: 1.75,
-        status: "Pending",
+        cumulative_gwa: 1.75,
+        is_complete: false,
         colorTheme: "secondary",
       },
     ],
@@ -189,45 +198,44 @@ export async function getApplicationDetail(id: string): Promise<ApplicationDetai
   await new Promise((resolve) => setTimeout(resolve, 600));
 
   return {
-    studentInfo: {
-      name: "Juan Dela Cruz",
-      studentNumber: id,
-      course: "BS Computer Engineering",
-      status: "UNDER REVIEW",
-      email: "j.delacruz@email.com",
-      contactNumber: "+63 912 345 6789",
-      gpa: "1.25 (President's Lister)",
-      homeAddress: "123 Sampaguita St., Brgy. 456, Manila, Philippines 1008",
-    },
-    emergencyContact: {
-      name: "Maria Dela Cruz",
-      relationship: "Mother",
-      phoneNumber: "+63 998 765 4321",
-    },
-    academicPreferences: [
+    application_id: id,
+    student_number: "2020-00123-MN-0",
+    is_complete: false,
+    has_application_form: true,
+    has_cv: true,
+    has_tcg: false,
+    has_recommendation_letter: true,
+    has_essay: true,
+    has_form_5: true,
+    has_valid_passport: true,
+    has_online_application_form: true,
+    
+    full_name: "Juan Dela Cruz",
+    school_email: "j.delacruz@email.com",
+    mobile_number: "+63 912 345 6789",
+    home_address: "123 Sampaguita St., Brgy. 456, Manila, Philippines 1008",
+    cumulative_gwa: 1.25,
+    program: "BS Computer Engineering",
+    college: "CCIS",
+  
+    guardian_name: "Maria Dela Cruz",
+    relationship: "Mother",
+    guardian_contact_number: "+63 998 765 4321",
+  
+    university_choices: [
       {
-        priority: "1st Choice",
-        university: "Seoul National University",
-        location: "South Korea",
-        match: "95% Match",
+        university_choice_rank: 1,
+        university_name: "Seoul National University",
       },
       {
-        priority: "2nd Choice",
-        university: "National University of Singapore",
-        location: "Singapore",
-        match: "88% Match",
+        university_choice_rank: 2,
+        university_name: "National University of Singapore",
       },
-    ],
-    documents: [
-      { name: "Transcript of Records", status: "Complete" },
-      { name: "Passport Copy", status: "Complete" },
-      { name: "Medical Certificate", status: "Missing" },
-      { name: "LOI / Essay", status: "Complete" },
     ],
     languages: [
-      { language: "English", proficiency: "ADVANCED (C1)" },
-      { language: "Korean", proficiency: "INTERMEDIATE (B1)" },
-      { language: "Filipino", proficiency: "NATIVE" },
+      { language_name: "English", proficiency_level: "ADVANCED (C1)" },
+      { language_name: "Korean", proficiency_level: "INTERMEDIATE (B1)" },
+      { language_name: "Filipino", proficiency_level: "NATIVE" },
     ],
   };
 }

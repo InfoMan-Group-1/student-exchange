@@ -1,23 +1,23 @@
 import { CheckCircle2, Edit } from "lucide-react";
 import { ApplicationDetailData } from "@/lib/mockAdminData";
 
-export function DetailHeader({ info }: { info: ApplicationDetailData["studentInfo"] }) {
+export function DetailHeader({ info }: { info: ApplicationDetailData }) {
   return (
     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
       <div className="flex items-center gap-6">
         <div className="w-24 h-24 rounded-xl overflow-hidden shadow-sm bg-surface-container-high border border-outline-variant flex items-center justify-center font-display-lg text-on-surface-variant">
           {/* Fallback avatar block */}
-          {info.name.split(" ").map(n => n[0]).join("")}
+          {info.full_name.split(" ").map(n => n[0]).join("")}
         </div>
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <h2 className="font-headline-lg text-primary">{info.name}</h2>
+            <h2 className="font-headline-lg text-primary">{info.full_name}</h2>
             <span className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm uppercase">
-              {info.status}
+              {info.is_complete ? "UNDER REVIEW" : "MISSING DOCS"}
             </span>
           </div>
           <p className="font-body-lg text-on-surface-variant">
-            Student #{info.studentNumber} • {info.course}
+            Student #{info.student_number} • {info.program}
           </p>
         </div>
       </div>

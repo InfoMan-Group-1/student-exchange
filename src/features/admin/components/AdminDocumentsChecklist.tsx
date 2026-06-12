@@ -1,7 +1,18 @@
 import { FileCheck, CheckCircle2, XCircle, Eye } from "lucide-react";
 import { ApplicationDetailData } from "@/lib/mockAdminData";
 
-export function AdminDocumentsChecklist({ documents }: { documents: ApplicationDetailData["documents"] }) {
+export function AdminDocumentsChecklist({ detail }: { detail: ApplicationDetailData }) {
+  const documents = [
+    { name: "Application Form", isComplete: detail.has_application_form },
+    { name: "Curriculum Vitae", isComplete: detail.has_cv },
+    { name: "True Copy of Grades", isComplete: detail.has_tcg },
+    { name: "Recommendation Letter", isComplete: detail.has_recommendation_letter },
+    { name: "Essay / Letter of Intent", isComplete: detail.has_essay },
+    { name: "Form 5 / Reg Card", isComplete: detail.has_form_5 },
+    { name: "Valid Passport", isComplete: detail.has_valid_passport },
+    { name: "Online Application Form", isComplete: detail.has_online_application_form },
+  ];
+
   return (
     <section className="bg-surface rounded-xl p-card-padding shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant">
       <h3 className="font-title-lg text-primary mb-4 flex items-center gap-2">
@@ -10,7 +21,7 @@ export function AdminDocumentsChecklist({ documents }: { documents: ApplicationD
       </h3>
       <ul className="space-y-3">
         {documents.map((doc, index) => {
-          const isComplete = doc.status === "Complete";
+          const isComplete = doc.isComplete;
           
           return (
             <li key={index} className="flex items-center justify-between group">

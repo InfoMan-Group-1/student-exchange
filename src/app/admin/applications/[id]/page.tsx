@@ -7,24 +7,25 @@ import { AdminDocumentsChecklist } from "@/features/admin/components/AdminDocume
 import { AdminLanguagesTable } from "@/features/admin/components/AdminLanguagesTable";
 import { DetailFooter } from "@/features/admin/components/DetailFooter";
 
-export default async function ApplicationDetailPage({ params }: { params: { id: string } }) {
-  const detail = await getApplicationDetail(params.id);
+export default async function ApplicationDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const detail = await getApplicationDetail(id);
 
   return (
     <div className="p-8 max-w-7xl mx-auto w-full pb-12">
-      <DetailHeader info={detail.studentInfo} />
+      <DetailHeader info={detail} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4 space-y-8">
-          <StudentSummary info={detail.studentInfo} />
-          <EmergencyContact contact={detail.emergencyContact} />
+          <StudentSummary info={detail} />
+          <EmergencyContact info={detail} />
         </div>
 
         <div className="lg:col-span-8 space-y-8">
-          <AcademicPreferences preferences={detail.academicPreferences} />
+          <AcademicPreferences preferences={detail.university_choices} />
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <AdminDocumentsChecklist documents={detail.documents} />
+            <AdminDocumentsChecklist detail={detail} />
             <AdminLanguagesTable languages={detail.languages} />
           </div>
         </div>
