@@ -46,6 +46,113 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* PUP Exchange Colors */
+  --color-on-tertiary-container: #8f8e8d;
+  --color-surface-container-low: #f4f3f3;
+  --color-surface-container-high: #e8e8e8;
+  --color-on-surface: #1a1c1c;
+  --color-on-tertiary-fixed-variant: #474746;
+  --color-surface-container: #eeeeed;
+  --color-inverse-primary: #ffb4a8;
+  --color-surface-container-highest: #e0e0e0;
+  --color-primary-fixed-dim: #ffb4a8;
+  --color-error-container: #ffdad6;
+  --color-primary: #300000;
+  --color-on-error-container: #93000a;
+  --color-surface-variant: #e2e2e2;
+  --color-surface-dim: #dadad9;
+  --color-secondary: #805600;
+  --color-on-tertiary: #ffffff;
+  --color-on-surface-variant: #57423e;
+  --color-primary-container: #800000;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-background: #1a1c1c;
+  /* background is already set via shadcn but we'll override it below or just use the shadcn vars, wait, we can just use the provided colors and they will map as tailwind colors like bg-surface-container-low. */
+  --color-inverse-surface: #2f3131;
+  --color-secondary-container: #fec56c;
+  --color-on-secondary: #ffffff;
+  --color-surface-bright: #f9f9f9;
+  --color-on-primary-container: #e46857;
+  --color-inverse-on-surface: #f1f1f0;
+  --color-on-tertiary-fixed: #1b1c1c;
+  --color-primary-fixed: #ffdad4;
+  --color-secondary-fixed-dim: #f5bd65;
+  --color-outline-variant: #e2bfb9;
+  --color-on-secondary-fixed-variant: #614000;
+  --color-on-secondary-container: #785000;
+  --color-surface: #ffffff;
+  --color-secondary-fixed: #ffddb0;
+  --color-surface-tint: #a53a2d;
+  --color-on-primary-fixed: #410000;
+  --color-error: #ba1a1a;
+  --color-on-primary: #ffffff;
+  --color-tertiary-container: #272727;
+  --color-on-error: #ffffff;
+  --color-tertiary-fixed: #e4e2e1;
+  --color-tertiary: #121213;
+  --color-on-primary-fixed-variant: #852318;
+  --color-outline: #8e706c;
+  --color-tertiary-fixed-dim: #c8c6c5;
+  --color-on-secondary-fixed: #281800;
+
+  /* Spacing */
+  --spacing-gutter: 24px;
+  --spacing-container-padding: 32px;
+  --spacing-stack-md: 16px;
+  --spacing-stack-lg: 32px;
+  --spacing-card-padding: 24px;
+  --spacing-sidebar-width: 280px;
+  --spacing-stack-sm: 8px;
+
+  /* Fonts */
+  --font-body-md: var(--font-inter);
+  --font-headline-lg-mobile: var(--font-inter);
+  --font-headline-md: var(--font-inter);
+  --font-label-sm: var(--font-inter);
+  --font-headline-lg: var(--font-inter);
+  --font-body-lg: var(--font-inter);
+  --font-display-lg: var(--font-inter);
+  --font-label-md: var(--font-inter);
+  --font-title-lg: var(--font-inter);
+
+  /* Typography variables */
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+
+  --text-headline-lg-mobile: 28px;
+  --text-headline-lg-mobile--line-height: 36px;
+  --text-headline-lg-mobile--font-weight: 600;
+
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--font-weight: 600;
+
+  --text-label-sm: 12px;
+  --text-label-sm--line-height: 16px;
+  --text-label-sm--font-weight: 600;
+  --text-label-sm--letter-spacing: 0.05em;
+
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 40px;
+  --text-headline-lg--font-weight: 600;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 26px;
+  --text-body-lg--font-weight: 400;
+
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 56px;
+  --text-display-lg--font-weight: 700;
+
+  --text-label-md: 14px;
+  --text-label-md--line-height: 20px;
+  --text-label-md--font-weight: 500;
+
+  --text-title-lg: 20px;
+  --text-title-lg--line-height: 28px;
+  --text-title-lg--font-weight: 600;
 }
 
 :root {
