@@ -1,12 +1,20 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { Bell, HelpCircle, Search } from "lucide-react";
 
 export function AdminHeader() {
+  const pathname = usePathname();
+  const isApplications = pathname === "/admin/applications";
   return (
     <header className="flex justify-between items-center w-full h-20 px-8 sticky top-0 z-40 bg-surface border-b border-outline-variant">
-      <div className="flex items-center gap-4">
-        <h2 className="font-headline-lg text-headline-lg font-bold text-primary">
-          Admin portal
+      <div className="flex flex-col">
+        <h2 className="font-headline-md text-primary font-bold">
+          {isApplications ? "Applicants List" : "Admin portal"}
         </h2>
+        {isApplications && (
+          <p className="font-label-md text-on-surface-variant">Review and manage student exchange applications</p>
+        )}
       </div>
 
       <div className="flex items-center gap-6">

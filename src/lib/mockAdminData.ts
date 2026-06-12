@@ -26,6 +26,26 @@ export interface IncompleteApplication {
   colorTheme: "secondary" | "primary" | "tertiary";
 }
 
+export interface ApplicantListEntry {
+  studentNumber: string;
+  name: string;
+  initials: string;
+  program: string;
+  college: string;
+  gwa: number;
+  status: "Complete" | "Pending";
+  colorTheme: "primary" | "secondary";
+}
+
+export interface ApplicantsData {
+  applicants: ApplicantListEntry[];
+  stats: {
+    totalApplicants: number;
+    reviewedApplications: number;
+    priorityAttention: number;
+  };
+}
+
 export interface AdminDashboardData {
   stats: AdminStats;
   alerts: AdminAlert[];
@@ -96,5 +116,39 @@ export async function getAdminDashboardData(): Promise<AdminDashboardData> {
         colorTheme: "tertiary",
       },
     ],
+  };
+}
+
+export async function getApplicantsData(): Promise<ApplicantsData> {
+  await new Promise((resolve) => setTimeout(resolve, 600));
+
+  return {
+    applicants: [
+      {
+        studentNumber: "2021-00123-MN-0",
+        name: "Ana Santos",
+        initials: "AS",
+        program: "Global Scholars Program",
+        college: "CCIS",
+        gwa: 1.50,
+        status: "Complete",
+        colorTheme: "primary",
+      },
+      {
+        studentNumber: "2021-00456-MN-0",
+        name: "Juan Dela Cruz",
+        initials: "JC",
+        program: "Asian Exchange Initiative",
+        college: "CCIS",
+        gwa: 1.75,
+        status: "Pending",
+        colorTheme: "secondary",
+      },
+    ],
+    stats: {
+      totalApplicants: 124,
+      reviewedApplications: 86,
+      priorityAttention: 8,
+    },
   };
 }

@@ -1,0 +1,44 @@
+import { Download, Search, ChevronDown, ListFilter } from "lucide-react";
+
+export function ApplicantsToolbar() {
+  return (
+    <section className="bg-surface p-6 rounded-xl shadow-sm border border-outline-variant flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="relative w-full md:w-96 group">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-on-surface-variant" />
+        <input 
+          type="text" 
+          placeholder="Search by name or student number..." 
+          className="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline rounded-lg font-body-md focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
+        />
+      </div>
+      
+      <div className="flex gap-4 w-full md:w-auto">
+        <div className="relative">
+          <select className="appearance-none bg-surface-container-low border border-outline rounded-lg py-2 pl-4 pr-10 font-label-md text-on-surface-variant focus:ring-2 focus:ring-primary focus:border-transparent outline-none cursor-pointer w-full md:w-40">
+            <option>All Colleges</option>
+            <option>CCIS</option>
+            <option>COE</option>
+            <option>CB</option>
+            <option>CAL</option>
+          </select>
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 pointer-events-none text-on-surface-variant" />
+        </div>
+        
+        <div className="relative">
+          <select className="appearance-none bg-surface-container-low border border-outline rounded-lg py-2 pl-4 pr-10 font-label-md text-on-surface-variant focus:ring-2 focus:ring-primary focus:border-transparent outline-none cursor-pointer w-full md:w-40">
+            <option>All Status</option>
+            <option>Complete</option>
+            <option>Pending</option>
+            <option>Reviewing</option>
+          </select>
+          <ListFilter className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 pointer-events-none text-on-surface-variant" />
+        </div>
+        
+        <button className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md hover:brightness-110 transition-all active:scale-95">
+          <Download className="h-5 w-5" />
+          Export
+        </button>
+      </div>
+    </section>
+  );
+}
