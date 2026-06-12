@@ -72,7 +72,9 @@ export function DashboardHeader() {
         {isApplication && (
           <div className="text-right hidden sm:block">
             <p className="font-label-md text-label-md font-bold text-primary">
-              {application?.is_complete ? "Application Complete" : "Draft Application"}
+              {application 
+                ? (application.is_complete ? "Application Complete" : "Application Submitted") 
+                : "Draft Application"}
             </p>
             <p className="text-[11px] text-on-surface-variant uppercase tracking-widest">Academic Year 2024–2025</p>
           </div>

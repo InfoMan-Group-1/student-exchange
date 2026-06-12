@@ -10,7 +10,9 @@ export function ExchangeJourneyTimeline({ application }: { application: any }) {
     { label: "Pre-Departure", key: "predeparture" },
   ];
 
-  let currentStepIndex = application?.is_complete ? 1 : 0;
+  // Having an application record means the student has already submitted.
+  // Steps 0 (Setup) and 1 (Submitted) are both complete. Current = step 2 (Under Review).
+  const currentStepIndex = application ? 2 : 0;
   
   return (
     <div className="bg-surface p-card-padding rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 w-full mb-6 relative overflow-hidden">
