@@ -1,4 +1,5 @@
 import { AdminHeader } from "@/components/layout/AdminHeader";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export default function AdminLayout({
   children,
@@ -12,7 +13,9 @@ export default function AdminLayout({
 
       {/* Content Area */}
       <main className="flex-1 flex flex-col">
-        {children}
+        <ProtectedRoute allowedRoles={["admin"]}>
+          {children}
+        </ProtectedRoute>
       </main>
     </div>
   );

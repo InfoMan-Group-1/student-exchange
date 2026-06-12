@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { LoginCard } from "@/features/auth/components/LoginCard";
 import { LoginForm } from "@/features/auth/components/LoginForm";
+import { RedirectIfAuthenticated } from "@/components/auth/RedirectIfAuthenticated";
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-background w-full">
-      <main className="w-full max-w-[400px]">
+    <RedirectIfAuthenticated>
+      <div className="min-h-screen flex items-center justify-center p-6 bg-background w-full">
+        <main className="w-full max-w-[400px]">
         {/* Brand Identity Header */}
         <div className="text-center mb-8">
           <h1 className="font-headline-lg text-headline-lg text-primary mb-1">
@@ -48,5 +50,6 @@ export default function LoginPage() {
         </footer>
       </main>
     </div>
+    </RedirectIfAuthenticated>
   );
 }

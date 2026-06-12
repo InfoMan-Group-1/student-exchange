@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { RegisterForm } from "@/features/auth/components/RegisterForm";
 import { Landmark, ArrowLeft } from "lucide-react";
+import { RedirectIfAuthenticated } from "@/components/auth/RedirectIfAuthenticated";
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex w-full bg-surface">
-      {/* Left Pane - Brand / Context */}
+    <RedirectIfAuthenticated>
+      <div className="min-h-screen flex w-full bg-surface">
+        {/* Left Pane - Brand / Context */}
       <div className="hidden lg:flex flex-col justify-between w-[45%] bg-primary p-12 text-on-primary relative overflow-hidden shrink-0">
         <div className="relative z-10">
           <Link href="/" className="inline-flex items-center gap-2 text-primary-container hover:text-white transition-colors mb-16 font-label-md">
@@ -67,5 +69,6 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+    </RedirectIfAuthenticated>
   );
 }
