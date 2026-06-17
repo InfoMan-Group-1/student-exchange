@@ -10,8 +10,10 @@ import { EventsAttended } from "./EventsAttended";
 import { useState, useEffect } from "react";
 import { apiFetch } from "@/lib/api-client";
 import { mutate } from "swr";
+import { useRouter } from "next/navigation";
 
 export function ApplicationForm({ data }: { data: any }) {
+  const router = useRouter();
   const hasApplication = !!data?.application_id;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [applicationData, setApplicationData] = useState(data || {});
@@ -109,6 +111,7 @@ export function ApplicationForm({ data }: { data: any }) {
 
       mutate("/api/v1/applications/me");
       alert("Application submitted successfully");
+      router.push("/dashboard");
     } catch (e: any) {
       alert(e.message || "Failed to submit application");
     } finally {

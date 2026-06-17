@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { fetcher, apiFetch } from "@/lib/api-client";
 import { ApplicationOverviewCard } from "@/features/dashboard/components/ApplicationOverviewCard";
@@ -14,22 +15,10 @@ import { FileText, ArrowRight } from "lucide-react";
 
 export default function DashboardPage() {
   const { data: response, error, isLoading, mutate } = useSWR("/api/v1/applications/me", fetcher);
-  const [creating, setCreating] = useState(false);
-  const [createError, setCreateError] = useState("");
+  const router = useRouter();
 
-  const handleCreateApplication = async () => {
-    setCreating(true);
-    setCreateError("");
-    try {
-      await apiFetch("/api/v1/applications/me", {
-        method: "POST",
-        body: JSON.stringify({}),
-      });
-      mutate(); // re-fetch after creating
-    } catch (err: any) {
-      setCreateError(err.message || "Failed to create application.");
-      setCreating(false);
-    }
+  const handleCreateApplication = () => {
+    router.push("/dashboard/applications");
   };
 
   if (isLoading) {
@@ -58,11 +47,10 @@ export default function DashboardPage() {
         )}
         <button
           onClick={handleCreateApplication}
-          disabled={creating}
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-on-primary font-label-md py-3 px-8 rounded-xl transition-all active:scale-[0.98] shadow-sm hover:shadow disabled:opacity-50 group"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-on-primary font-label-md py-3 px-8 rounded-xl transition-all active:scale-[0.98] shadow-sm hover:shadow group"
         >
-          {creating ? "Creating..." : "Start My Application"}
-          {!creating && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
+          Start My Application
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
     );
