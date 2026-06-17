@@ -16,7 +16,13 @@ export function ApplicationForm({ data }: { data: any }) {
   const router = useRouter();
   const hasApplication = !!data?.application_id;
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [applicationData, setApplicationData] = useState(data || {});
+  const [applicationData, setApplicationData] = useState({
+    ...data,
+    languages: data?.languages ?? [
+      { language_name: "English", proficiency_level: "C2" },
+      { language_name: "Filipino", proficiency_level: "Native" }
+    ]
+  });
   const [autoSaveStatus, setAutoSaveStatus] = useState<"Saved" | "Saving..." | "Error" | "">("");
 
   // Debounced Auto-Save
@@ -101,7 +107,19 @@ export function ApplicationForm({ data }: { data: any }) {
         body: JSON.stringify(payload)
       });
       
-
+      // Save all languages from local state to the database
+      if (applicationData.languages && applicationData.languages.length > 0) {
+        for (const lang of applicationData.languages) {
+          try {
+            await apiFetch("/api/v1/students/me/languages", {
+              method: "POST",
+              body: JSON.stringify({ name: lang.language_name, level: lang.proficiency_level })
+            });
+          } catch (e) {
+            console.error(`Failed to save language ${lang.language_name}`, e);
+          }
+        }
+      }
 
       mutate("/api/v1/applications/me");
       alert("Application submitted successfully");
@@ -147,7 +165,11 @@ export function ApplicationForm({ data }: { data: any }) {
           </div>
           
           <div className="pointer-events-auto">
-            <LanguageProficiencies />
+            <LanguageProficiencies 
+              hasApplication={hasApplication}
+              localLanguages={applicationData.languages}
+              onUpdate={(languages) => setApplicationData({ ...applicationData, languages })}
+            />
           </div>
           
           <div className="pointer-events-auto">

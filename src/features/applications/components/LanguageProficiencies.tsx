@@ -6,57 +6,45 @@ import useSWR, { mutate } from "swr";
 import { fetcher, apiFetch } from "@/lib/api-client";
 
 const PROFICIENCY_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2", "Native"];
-const DEFAULTS = [
-  { name: "English", level: "C2" },
-  { name: "Filipino", level: "Native" }
-];
 
-export function LanguageProficiencies() {
-  const { data, isLoading } = useSWR("/api/v1/students/me/languages", fetcher);
-  const languages: { language_name: string; proficiency_level: string }[] = data?.data ?? [];
+export function LanguageProficiencies({ 
+  hasApplication = true, 
+  localLanguages = [], 
+  onUpdate 
+}: { 
+  hasApplication?: boolean; 
+  localLanguages?: { language_name: string; proficiency_level: string }[];
+  onUpdate?: (languages: { language_name: string; proficiency_level: string }[]) => void;
+}) {
+  const { data, isLoading } = useSWR(hasApplication ? "/api/v1/students/me/languages" : null, fetcher);
+  const languages: { language_name: string; proficiency_level: string }[] = hasApplication 
+    ? (data?.data ?? [])
+    : localLanguages;
 
   const [newLang, setNewLang] = useState("");
   const [newLevel, setNewLevel] = useState("B2");
   const [adding, setAdding] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [removing, setRemoving] = useState<string | null>(null);
-  const [initialized, setInitialized] = useState(false);
-
-  useEffect(() => {
-    if (data && !isLoading && !initialized) {
-      const dbLanguages = data.data || [];
-      if (dbLanguages.length === 0) {
-        // Automatically save default languages to DB if untouched
-        const addDefaults = async () => {
-          try {
-            await apiFetch("/api/v1/students/me/languages", {
-              method: "POST",
-              body: JSON.stringify({ name: "English", level: "C2" }),
-            });
-            await apiFetch("/api/v1/students/me/languages", {
-              method: "POST",
-              body: JSON.stringify({ name: "Filipino", level: "Native" }),
-            });
-            mutate("/api/v1/students/me/languages");
-          } catch (e) {
-            console.error("Failed to add default languages", e);
-          }
-        };
-        addDefaults();
-      }
-      setInitialized(true);
-    }
-  }, [data, isLoading, initialized]);
 
   const handleAdd = async () => {
     if (!newLang.trim()) return;
     setAdding(true);
     try {
-      await apiFetch("/api/v1/students/me/languages", {
-        method: "POST",
-        body: JSON.stringify({ name: newLang.trim(), level: newLevel }),
-      });
-      mutate("/api/v1/students/me/languages");
+      if (hasApplication) {
+        await apiFetch("/api/v1/students/me/languages", {
+          method: "POST",
+          body: JSON.stringify({ name: newLang.trim(), level: newLevel }),
+        });
+        mutate("/api/v1/students/me/languages");
+      } else {
+        if (onUpdate) {
+          // Check if it already exists locally to avoid duplicates
+          if (!languages.find(l => l.language_name.toLowerCase() === newLang.trim().toLowerCase())) {
+            onUpdate([...languages, { language_name: newLang.trim(), proficiency_level: newLevel }]);
+          }
+        }
+      }
       setNewLang("");
       setNewLevel("B2");
       setShowForm(false);
@@ -69,15 +57,18 @@ export function LanguageProficiencies() {
 
   const handleUpdateLevel = async (langName: string, level: string) => {
     try {
-      // API currently doesn't have a PATCH for single language level, 
-      // so we delete and re-add or we could just use a PATCH if it exists.
-      // Wait, earlier code had `handleAddDefault` which just POSTed it again (which might upsert or error).
-      // Assuming POST upserts based on backend logic.
-      await apiFetch("/api/v1/students/me/languages", {
-        method: "POST",
-        body: JSON.stringify({ name: langName, level }),
-      });
-      mutate("/api/v1/students/me/languages");
+      if (hasApplication) {
+        await apiFetch("/api/v1/students/me/languages", {
+          method: "POST",
+          body: JSON.stringify({ name: langName, level }),
+        });
+        mutate("/api/v1/students/me/languages");
+      } else {
+        if (onUpdate) {
+          const updated = languages.map(l => l.language_name === langName ? { ...l, proficiency_level: level } : l);
+          onUpdate(updated);
+        }
+      }
     } catch {
       alert("Failed to update language.");
     }
@@ -86,10 +77,17 @@ export function LanguageProficiencies() {
   const handleRemove = async (langName: string) => {
     setRemoving(langName);
     try {
-      await apiFetch(`/api/v1/students/me/languages?name=${encodeURIComponent(langName)}`, {
-        method: "DELETE",
-      });
-      mutate("/api/v1/students/me/languages");
+      if (hasApplication) {
+        await apiFetch(`/api/v1/students/me/languages?name=${encodeURIComponent(langName)}`, {
+          method: "DELETE",
+        });
+        mutate("/api/v1/students/me/languages");
+      } else {
+        if (onUpdate) {
+          const updated = languages.filter(l => l.language_name !== langName);
+          onUpdate(updated);
+        }
+      }
     } catch {
       alert("Failed to remove language.");
     } finally {
@@ -116,7 +114,6 @@ export function LanguageProficiencies() {
         </button>
       </div>
 
-      {/* Inline add form */}
       {showForm && (
         <div className="mb-4 flex gap-3 items-end p-3 bg-surface-container-low rounded-xl border border-outline-variant/50">
           <div className="flex-1 space-y-1">
@@ -154,11 +151,10 @@ export function LanguageProficiencies() {
       )}
 
       <div className="space-y-3">
-
-        {isLoading ? (
+        {hasApplication && isLoading ? (
           <p className="text-on-surface-variant font-label-md animate-pulse py-4">Loading languages...</p>
         ) : languages.length === 0 ? (
-          <p className="text-on-surface-variant font-label-md text-center py-4 opacity-60">No other languages added yet.</p>
+          <p className="text-on-surface-variant font-label-md text-center py-4 opacity-60">No languages added yet.</p>
         ) : (
           languages.map((lang) => (
             <div
@@ -174,7 +170,7 @@ export function LanguageProficiencies() {
                   <p className="text-[10px] uppercase text-on-surface-variant font-bold w-full">Proficiency</p>
                   <select
                     defaultValue={lang.proficiency_level}
-                    onChange={(e) => handleAddDefault(lang.language_name, e.target.value)}
+                    onChange={(e) => handleUpdateLevel(lang.language_name, e.target.value)}
                     className="bg-transparent border-b border-outline-variant focus:outline-none focus:border-primary text-[12px] font-bold text-right text-primary cursor-pointer"
                   >
                     {PROFICIENCY_LEVELS.map((l) => (
