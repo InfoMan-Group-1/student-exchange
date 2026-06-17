@@ -126,8 +126,9 @@ export function ApplicantsTable({
                       <Link
                         href={`/admin/applications/${app.application_id}`}
                         className="text-primary font-label-md hover:underline underline-offset-4 inline-flex items-center gap-1"
+                        title="View Application"
                       >
-                        View <Eye className="h-4 w-4" />
+                        <Eye className="h-4 w-4" />
                       </Link>
                       <button 
                         onClick={() => setAppToDelete({ id: app.application_id, name: app.full_name })}
