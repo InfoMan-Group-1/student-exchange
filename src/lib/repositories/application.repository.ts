@@ -84,6 +84,12 @@ export class ApplicationRepository extends BaseRepository {
       `DELETE FROM events_attended WHERE student_number = (SELECT student_number FROM applications WHERE application_id = ?)`, 
       [applicationId]
     );
+
+    // Clear out student languages when their application is deleted
+    await this.query(
+      `DELETE FROM student_languages WHERE student_number = (SELECT student_number FROM applications WHERE application_id = ?)`, 
+      [applicationId]
+    );
     
     const sql = `DELETE FROM applications WHERE application_id = ?`;
     await this.query(sql, [applicationId]);
