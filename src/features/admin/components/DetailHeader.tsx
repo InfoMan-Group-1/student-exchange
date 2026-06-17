@@ -5,7 +5,7 @@ import { CheckCircle2, Edit } from "lucide-react";
 import { apiFetch } from "@/lib/api-client";
 import { mutate } from "swr";
 
-export function DetailHeader({ info }: { info: any }) {
+export function DetailHeader({ info, isEditing, isSaving, onEdit, onCancel, onSave }: any) {
   const [updating, setUpdating] = useState(false);
 
   const toggleComplete = async () => {
@@ -44,10 +44,21 @@ export function DetailHeader({ info }: { info: any }) {
       </div>
       
       <div className="flex gap-3">
-        <button className="px-6 py-2 border border-outline text-primary font-bold rounded-lg hover:bg-surface-container-low transition-all active:scale-95 flex items-center gap-2">
-          <Edit className="h-5 w-5" />
-          <span className="font-label-md">Edit Info</span>
-        </button>
+        {isEditing ? (
+          <>
+            <button onClick={onCancel} disabled={isSaving} className="px-6 py-2 border border-outline text-on-surface-variant font-bold rounded-lg hover:bg-surface-container-low transition-all active:scale-95 flex items-center gap-2">
+              <span className="font-label-md">Cancel</span>
+            </button>
+            <button onClick={onSave} disabled={isSaving} className="px-6 py-2 bg-primary text-on-primary font-bold rounded-lg hover:brightness-125 transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50">
+              <span className="font-label-md">{isSaving ? "Saving..." : "Save Changes"}</span>
+            </button>
+          </>
+        ) : (
+          <button onClick={onEdit} className="px-6 py-2 border border-outline text-primary font-bold rounded-lg hover:bg-surface-container-low transition-all active:scale-95 flex items-center gap-2">
+            <Edit className="h-5 w-5" />
+            <span className="font-label-md">Edit Info</span>
+          </button>
+        )}
         <button 
           onClick={toggleComplete}
           disabled={updating}

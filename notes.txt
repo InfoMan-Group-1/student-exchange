@@ -39,3 +39,8 @@ Verify the Dashboard accurately reflects the state of the application.
 Future:
 1. implement file upload for documents, also a online signature where admin can draw their signature in each students applications - or more of a bulk operations
 
+- Edit info for applicant details wont work, implement a inline editing once clicked where user can click cancel or save 
+- test mark as complete
+- fix QA test feedback
+
+SintaLink website name
