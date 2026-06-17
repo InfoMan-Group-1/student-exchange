@@ -1,7 +1,8 @@
-import { Building2 } from "lucide-react";
+import { Building2, ChevronDown } from "lucide-react";
 import { UniversityChoice } from "@/lib/types/application";
 import useSWR from "swr";
 import { fetcher } from "@/lib/api-client";
+import { useState, useRef, useEffect } from "react";
 
 interface Props {
   choices: any[];
@@ -51,13 +52,11 @@ export function UniversityChoices({ choices, onChange }: Props) {
                         Host Institution
                       </label>
                     )}
-                    <input 
-                      type="text" 
-                      list="universities-list"
+                    <Combobox
                       value={choiceData?.university_name || ""}
-                      onChange={(e) => onChange(rank, e.target.value)}
+                      options={universities}
+                      onChange={(val) => onChange(rank, val)}
                       placeholder={placeholderInst}
-                      className="w-full bg-surface-container-low border border-outline rounded-lg px-4 py-3 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                     />
                   </div>
                 </div>
@@ -65,12 +64,73 @@ export function UniversityChoices({ choices, onChange }: Props) {
             );
           })}
         </div>
-
-        <datalist id="universities-list">
-          {universities.map(uni => (
-            <option key={uni} value={uni} />
-          ))}
-        </datalist>
       </section>
+  );
+}
+
+function Combobox({ value, options, onChange, placeholder }: { value: string, options: string[], onChange: (val: string) => void, placeholder: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [inputValue, setInputValue] = useState(value);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const filtered = options.filter(o => o.toLowerCase().includes(inputValue.toLowerCase()));
+
+  return (
+    <div ref={wrapperRef} className="relative w-full">
+      <div className="relative">
+        <input 
+          type="text" 
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            onChange(e.target.value);
+            setIsOpen(true);
+          }}
+          onClick={() => setIsOpen(true)}
+          placeholder={placeholder}
+          className="w-full bg-surface-container-low border border-outline rounded-lg px-4 py-3 pr-10 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
+        />
+        <ChevronDown 
+          className={`absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant w-5 h-5 cursor-pointer transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          onClick={() => setIsOpen(!isOpen)} 
+        />
+      </div>
+      
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-1 max-h-60 overflow-y-auto bg-surface border border-outline-variant rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.1)] py-2">
+          {filtered.length > 0 ? filtered.map(opt => (
+            <div 
+              key={opt} 
+              className="px-4 py-2.5 hover:bg-surface-container-high cursor-pointer text-body-md text-on-surface transition-colors"
+              onClick={() => {
+                setInputValue(opt);
+                onChange(opt);
+                setIsOpen(false);
+              }}
+            >
+              {opt}
+            </div>
+          )) : (
+            <div className="px-4 py-3 text-on-surface-variant font-label-md text-sm bg-primary-container/10">
+              "{inputValue}" will be added as a custom university.
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

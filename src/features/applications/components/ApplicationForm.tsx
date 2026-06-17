@@ -89,6 +89,24 @@ export function ApplicationForm({ data }: { data: any }) {
         body: JSON.stringify(payload)
       });
       
+      // Check and add default languages if the student has none
+      try {
+        const langRes = await apiFetch("/api/v1/students/me/languages");
+        if (langRes.data && langRes.data.length === 0) {
+          await apiFetch("/api/v1/students/me/languages", {
+            method: "POST",
+            body: JSON.stringify({ name: "English", level: "C2" })
+          });
+          await apiFetch("/api/v1/students/me/languages", {
+            method: "POST",
+            body: JSON.stringify({ name: "Filipino", level: "Native" })
+          });
+          mutate("/api/v1/students/me/languages");
+        }
+      } catch (e) {
+        console.error("Failed to add default languages", e);
+      }
+
       mutate("/api/v1/applications/me");
       alert("Application submitted successfully");
     } catch (e: any) {
@@ -152,42 +170,20 @@ export function ApplicationForm({ data }: { data: any }) {
             onChange={(key, value) => setApplicationData({ ...applicationData, [key]: value })}
           />
           
-          <div className="h-10"></div> {/* Spacer for fixed footer */}
+          {/* Spacer for fixed footer ONLY if footer is visible */}
+      {!hasApplication && <div className="h-10"></div>}
         </form>
       </div>
 
       {/* Sticky Bottom Bar */}
-      <footer className="sticky bottom-0 w-full h-20 bg-surface border-t border-outline-variant px-8 flex items-center justify-between shadow-[0_-4px_12px_rgba(0,0,0,0.05)] z-40">
-        <div className="flex items-center gap-2 text-on-surface-variant">
-          {hasApplication ? (
-            <>
-              {autoSaveStatus === "Saved" ? (
-                <>
-                  <CheckCircle className="h-[18px] w-[18px] text-success" />
-                  <p className="font-label-md text-label-md text-success">All changes saved</p>
-                </>
-              ) : autoSaveStatus === "Saving..." ? (
-                <>
-                  <div className="h-4 w-4 rounded-full border-2 border-outline-variant border-t-primary animate-spin" />
-                  <p className="font-label-md text-label-md text-on-surface-variant">Saving changes...</p>
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="h-[18px] w-[18px] text-success" />
-                  <p className="font-label-md text-label-md text-success">Application Saved</p>
-                </>
-              )}
-            </>
-          ) : (
-            <>
-              <Info className="h-[18px] w-[18px]" />
-              <p className="font-label-md text-label-md">New Application</p>
-            </>
-          )}
-        </div>
-        
-        <div className="flex items-center gap-4">
-          {!hasApplication && (
+      {!hasApplication && (
+        <footer className="sticky bottom-0 w-full h-20 bg-surface border-t border-outline-variant px-8 flex items-center justify-between shadow-[0_-4px_12px_rgba(0,0,0,0.05)] z-40">
+          <div className="flex items-center gap-2 text-on-surface-variant">
+            <Info className="h-[18px] w-[18px]" />
+            <p className="font-label-md text-label-md">New Application</p>
+          </div>
+          
+          <div className="flex items-center gap-4">
             <button 
               type="button"
               onClick={handleSubmit}
@@ -197,9 +193,9 @@ export function ApplicationForm({ data }: { data: any }) {
               <FileText className="h-5 w-5" />
               {isSubmitting ? "Submitting..." : "Submit Application"}
             </button>
-          )}
-        </div>
-      </footer>
+          </div>
+        </footer>
+      )}
     </>
   );
 }
