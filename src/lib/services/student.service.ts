@@ -1,4 +1,5 @@
 import { StudentRepository } from "@/lib/repositories/student.repository";
+import { formatPassportNumber } from "@/lib/utils";
 
 const repo = new StudentRepository();
 
@@ -61,7 +62,11 @@ export class StudentService {
     
     for (const key of Object.keys(data)) {
       if (studentAllowedFields.includes(key)) {
-        studentData[key] = data[key];
+        if (key === 'passport_number' && data[key]) {
+          studentData[key] = formatPassportNumber(data[key]);
+        } else {
+          studentData[key] = data[key];
+        }
       } else if (guardianAllowedFields.includes(key)) {
         guardianData[key] = data[key];
       }

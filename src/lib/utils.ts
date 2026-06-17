@@ -23,3 +23,12 @@ export function formatPhoneNumber(num: string): string {
   
   return cleaned;
 }
+
+/**
+ * Standardizes a passport number by converting letters to uppercase and removing whitespace.
+ * e.g., ' p1234567a ' -> 'P1234567A'
+ */
+export function formatPassportNumber(num: string | null | undefined): string {
+  if (!num) return "";
+  return num.replace(/\s+/g, "").toUpperCase();
+}
