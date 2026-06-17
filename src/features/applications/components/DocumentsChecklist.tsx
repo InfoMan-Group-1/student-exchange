@@ -53,27 +53,31 @@ export function DocumentsChecklist({ application, onUpdate }: Props) {
         <h3 className="font-title-lg text-title-lg text-primary">4. Documents Checklist</h3>
       </div>
       
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {documents.map((doc) => {
           const isChecked = !!application[doc.key];
           
           return (
             <label 
               key={doc.key}
-              className={`flex items-center gap-4 p-3 hover:bg-surface-container-low rounded-lg transition-colors group ${toggling === doc.key ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              className={`flex items-start gap-4 p-4 rounded-lg border transition-all group ${
+                isChecked ? "border-primary bg-primary-container/5" : "border-outline-variant/50 bg-surface"
+              } ${toggling === doc.key ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:border-primary/50"}`}
             >
-              <input 
-                type="checkbox" 
-                checked={isChecked}
-                disabled={toggling === doc.key}
-                onChange={() => toggleStatus(doc.key, isChecked)}
-                className="w-5 h-5 rounded border-outline text-primary focus:ring-primary focus:ring-offset-0 disabled:opacity-50"
-              />
-              <div className={`flex-1 transition-colors ${isChecked ? "text-on-surface" : "text-on-surface-variant"}`}>
-                <p className="font-label-md text-label-md font-bold">{doc.name}</p>
-                <p className="text-[12px] opacity-80">{doc.desc}</p>
+              <div className="pt-0.5">
+                <input 
+                  type="checkbox" 
+                  checked={isChecked}
+                  disabled={toggling === doc.key}
+                  onChange={() => toggleStatus(doc.key, isChecked)}
+                  className="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 transition-all cursor-pointer disabled:opacity-50"
+                />
               </div>
-              <Eye className="h-5 w-5 text-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="flex-1 min-w-0">
+                <p className={`font-label-lg text-label-lg mb-1 truncate ${isChecked ? "text-primary font-bold" : "text-on-surface"}`} title={doc.name}>{doc.name}</p>
+                <p className="font-body-sm text-body-sm text-on-surface-variant line-clamp-2" title={doc.desc}>{doc.desc}</p>
+              </div>
+              <Eye className="h-5 w-5 text-secondary opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
             </label>
           );
         })}

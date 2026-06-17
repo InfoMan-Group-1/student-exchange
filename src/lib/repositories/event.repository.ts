@@ -29,4 +29,20 @@ export class EventRepository extends BaseRepository {
   async removeAttendance(studentNumber: string, eventId: string) {
     return this.query(`DELETE FROM events_attended WHERE student_number = ? AND event_id = ?`, [studentNumber, eventId]);
   }
+
+  async createEvent(eventName: string, hostCountry: string, eventDate: string) {
+    // Generate sequential ID like EV014
+    const rows = await this.query<any[]>(`SELECT event_id FROM events ORDER BY event_id DESC LIMIT 1`);
+    let nextId = "EV001";
+    if (rows.length > 0) {
+      const lastId = rows[0].event_id; // e.g. "EV013"
+      const numPart = parseInt(lastId.replace("EV", ""), 10);
+      if (!isNaN(numPart)) {
+        nextId = `EV${String(numPart + 1).padStart(3, "0")}`;
+      }
+    }
+    const sql = `INSERT INTO events (event_id, event_name, host_country, event_date) VALUES (?, ?, ?, ?)`;
+    await this.query(sql, [nextId, eventName, hostCountry, eventDate]);
+    return nextId;
+  }
 }

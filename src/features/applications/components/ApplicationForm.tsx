@@ -1,6 +1,6 @@
 "use client";
 
-import { Info, Pencil, CheckCircle } from "lucide-react";
+import { Info, Pencil, CheckCircle, FileText } from "lucide-react";
 import { ApplicationPreferences } from "./ApplicationPreferences";
 import { UniversityChoices } from "./UniversityChoices";
 import { DocumentsChecklist } from "./DocumentsChecklist";
@@ -139,14 +139,24 @@ export function ApplicationForm({ data }: { data: any }) {
               Edit Application
             </button>
           ) : (
-            <button 
-              type="button"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className="px-8 py-3 bg-primary text-on-primary font-label-md text-label-md rounded-lg hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50"
-            >
-              {isSubmitting ? "Submitting..." : "Submit Application"}
-            </button>
+            <div className="flex gap-4">
+              <button 
+                type="button" 
+                onClick={() => setIsEditing(false)}
+                className="px-8 py-3 rounded-xl font-bold transition-all text-on-surface-variant hover:bg-surface-container active:scale-95"
+              >
+                Cancel
+              </button>
+              <button 
+                type="button"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className="px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:bg-primary/90 transition-all active:scale-95 shadow-md flex items-center gap-2 disabled:opacity-50"
+              >
+                <FileText className="h-5 w-5" />
+                {isSubmitting ? "Submitting..." : "Submit Application"}
+              </button>
+            </div>
           )}
         </div>
       </footer>

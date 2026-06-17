@@ -18,7 +18,8 @@ export async function GET(req: NextRequest) {
       guardian_name: profile.guardian?.guardian_name,
       guardian_contact_number: profile.guardian?.guardian_contact_number,
       guardian_email: profile.guardian?.guardian_email,
-      relation_to_student: profile.guardian?.relation_to_student
+      relation_to_student: profile.guardian?.relation_to_student,
+      guardian_address: profile.guardian?.guardian_address
     };
     delete flattened.guardian;
 
