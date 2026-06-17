@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Eye, ChevronLeft, ChevronRight, CheckCircle2, Clock } from "lucide-react";
+import { Eye, ChevronLeft, ChevronRight, CheckCircle2, Clock, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { apiFetch } from "@/lib/api-client";
+import { mutate } from "swr";
+import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 
 interface Applicant {
   application_id: string;
@@ -28,6 +31,21 @@ export function ApplicantsTable({
   filterStatus: string;
 }) {
   const [page, setPage] = useState(1);
+  const [appToDelete, setAppToDelete] = useState<{ id: string, name: string } | null>(null);
+
+  const handleDeleteConfirm = async () => {
+    if (!appToDelete) return;
+    try {
+      await apiFetch(`/api/v1/applications/${appToDelete.id}`, {
+        method: "DELETE",
+      });
+      mutate("/api/v1/applications");
+      setAppToDelete(null);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete application.");
+    }
+  };
 
   const filtered = useMemo(() => {
     let list = applicants;
@@ -104,12 +122,21 @@ export function ApplicantsTable({
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link
-                      href={`/admin/applications/${app.application_id}`}
-                      className="text-primary font-label-md hover:underline underline-offset-4 inline-flex items-center justify-end gap-1"
-                    >
-                      View <Eye className="h-4 w-4" />
-                    </Link>
+                    <div className="flex items-center justify-end gap-3">
+                      <Link
+                        href={`/admin/applications/${app.application_id}`}
+                        className="text-primary font-label-md hover:underline underline-offset-4 inline-flex items-center gap-1"
+                      >
+                        View <Eye className="h-4 w-4" />
+                      </Link>
+                      <button 
+                        onClick={() => setAppToDelete({ id: app.application_id, name: app.full_name })}
+                        className="text-on-surface-variant hover:text-error transition-colors"
+                        title="Delete Application"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -157,6 +184,14 @@ export function ApplicantsTable({
           </button>
         </div>
       </div>
+
+      <DeleteConfirmationModal 
+        isOpen={!!appToDelete}
+        applicationId={appToDelete?.id || ""}
+        studentName={appToDelete?.name || ""}
+        onClose={() => setAppToDelete(null)}
+        onConfirm={handleDeleteConfirm}
+      />
     </section>
   );
 }

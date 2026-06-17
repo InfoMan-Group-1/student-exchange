@@ -87,4 +87,11 @@ export class ApplicationService {
     }
     return true;
   }
+
+  async deleteApplication(applicationId: string) {
+    const application = await repo.getApplicationById(applicationId);
+    if (!application) throw new Error("Application not found.");
+    
+    return repo.deleteApplication(applicationId);
+  }
 }

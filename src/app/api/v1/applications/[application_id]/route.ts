@@ -65,3 +65,30 @@ export async function PATCH(
     return createProblemDetails(500, "Internal Server Error", "Failed to update application.");
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ application_id: string }> }
+) {
+  const user = verifyAuthToken(req);
+  if (!user || user.role !== "admin") {
+    return createProblemDetails(403, "Forbidden", "Admin access required.");
+  }
+
+  const { application_id } = await params;
+  if (!application_id) {
+    return createProblemDetails(400, "Bad Request", "Missing application_id parameter.");
+  }
+
+  try {
+    const service = new ApplicationService();
+    await service.deleteApplication(application_id);
+    return NextResponse.json({ message: "Application deleted successfully" });
+  } catch (error: any) {
+    console.error("Application deletion failed:", error);
+    if (error.message === "Application not found.") {
+      return createProblemDetails(404, "Not Found", "Application not found.");
+    }
+    return createProblemDetails(500, "Internal Server Error", "Failed to delete application.");
+  }
+}

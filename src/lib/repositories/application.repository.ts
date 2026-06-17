@@ -75,6 +75,15 @@ export class ApplicationRepository extends BaseRepository {
     return true;
   }
 
+  async deleteApplication(applicationId: string) {
+    // Delete dependencies first
+    await this.deleteUniversityChoices(applicationId);
+    
+    const sql = `DELETE FROM applications WHERE application_id = ?`;
+    await this.query(sql, [applicationId]);
+    return true;
+  }
+
   async deleteUniversityChoices(applicationId: string) {
     const sql = `DELETE FROM university_choices WHERE application_id = ?`;
     await this.query(sql, [applicationId]);

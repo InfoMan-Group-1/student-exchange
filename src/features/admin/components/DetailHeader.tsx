@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Edit } from "lucide-react";
+import { CheckCircle2, Edit, Trash2 } from "lucide-react";
 import { apiFetch } from "@/lib/api-client";
 import { mutate } from "swr";
 
-export function DetailHeader({ info, isEditing, isSaving, onEdit, onCancel, onSave }: any) {
+export function DetailHeader({ info, isEditing, isSaving, onEdit, onCancel, onSave, onDelete }: any) {
   const [updating, setUpdating] = useState(false);
 
   const toggleComplete = async () => {
@@ -54,10 +54,15 @@ export function DetailHeader({ info, isEditing, isSaving, onEdit, onCancel, onSa
             </button>
           </>
         ) : (
-          <button onClick={onEdit} className="px-6 py-2 border border-outline text-primary font-bold rounded-lg hover:bg-surface-container-low transition-all active:scale-95 flex items-center gap-2">
-            <Edit className="h-5 w-5" />
-            <span className="font-label-md">Edit Info</span>
-          </button>
+          <>
+            <button onClick={onDelete} className="px-4 py-2 border border-error text-error font-bold rounded-lg hover:bg-error/10 transition-all active:scale-95 flex items-center gap-2">
+              <Trash2 className="h-5 w-5" />
+            </button>
+            <button onClick={onEdit} className="px-6 py-2 border border-outline text-primary font-bold rounded-lg hover:bg-surface-container-low transition-all active:scale-95 flex items-center gap-2">
+              <Edit className="h-5 w-5" />
+              <span className="font-label-md">Edit Info</span>
+            </button>
+          </>
         )}
         <button 
           onClick={toggleComplete}
