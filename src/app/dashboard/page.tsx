@@ -42,9 +42,6 @@ export default function DashboardPage() {
         <p className="font-body-md text-on-surface-variant max-w-sm mb-8">
           You haven't started an exchange application. Click below to create your application and begin the process.
         </p>
-        {createError && (
-          <p className="text-error font-label-md mb-4">{createError}</p>
-        )}
         <button
           onClick={handleCreateApplication}
           className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-on-primary font-label-md py-3 px-8 rounded-xl transition-all active:scale-[0.98] shadow-sm hover:shadow group"
