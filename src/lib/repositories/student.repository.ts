@@ -107,25 +107,25 @@ export class StudentRepository extends BaseRepository {
   }
 
   /**
-   * Returns the next sequential guardian ID following the Gxxxxx pattern.
-   * Queries the highest existing ID and increments it (G00001 → G00002)
+   * Returns the next sequential guardian ID following the Gxxx pattern.
+   * Queries the highest existing ID and increments it (G001 → G002)
    */
   async getNextGuardianId(): Promise<string> {
     const sql = `
       SELECT guardian_id 
       FROM guardians 
-      WHERE guardian_id LIKE 'G%' AND LENGTH(guardian_id) = 6 
-      ORDER BY guardian_id DESC 
+      WHERE guardian_id LIKE 'G%' 
+      ORDER BY CAST(SUBSTRING(guardian_id, 2) AS UNSIGNED) DESC 
       LIMIT 1
     `;
     const rows = await this.query<any[]>(sql);
-    if (!rows || rows.length === 0) return 'G00001';
+    if (!rows || rows.length === 0) return 'G001';
     
     const last: string = rows[0].guardian_id; 
     const num = parseInt(last.replace(/^G/, ''), 10);
     const next = isNaN(num) ? 1 : num + 1;
     
-    // e.g. next=2 -> G00002
-    return `G${String(next).padStart(5, '0')}`;
+    // e.g. next=20 -> G020
+    return `G${String(next).padStart(3, '0')}`;
   }
 }
