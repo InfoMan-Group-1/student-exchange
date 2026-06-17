@@ -4,6 +4,7 @@ import { useState } from "react";
 import { User, LogIn, ChevronRight, CheckCircle2, AlertCircle } from "lucide-react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/api-client";
+import { formatPhoneNumber } from "@/lib/utils";
 
 export function RegisterForm() {
   const { data: programsData } = useSWR("/api/v1/programs", fetcher);
@@ -22,6 +23,11 @@ export function RegisterForm() {
     
     // Explicitly set role
     payload.role = "student";
+
+    // Standardize contact number
+    if (typeof payload.guardian_contact_number === "string") {
+      payload.guardian_contact_number = formatPhoneNumber(payload.guardian_contact_number);
+    }
 
     try {
       const res = await fetch("/api/v1/auth/register", {

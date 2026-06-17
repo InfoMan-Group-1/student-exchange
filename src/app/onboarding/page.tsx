@@ -5,6 +5,7 @@ import useSWR, { mutate } from "swr";
 import { fetcher, apiFetch } from "@/lib/api-client";
 import { useRouter } from "next/navigation";
 import { BadgeCheck, ArrowRight, UserCircle2 } from "lucide-react";
+import { formatPhoneNumber } from "@/lib/utils";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -21,6 +22,10 @@ export default function OnboardingPage() {
 
     const formData = new FormData(e.currentTarget);
     const payload = Object.fromEntries(formData.entries());
+
+    if (typeof payload.mobile_number === "string") {
+      payload.mobile_number = formatPhoneNumber(payload.mobile_number);
+    }
 
     try {
       await apiFetch("/api/v1/students/me/profile", {
