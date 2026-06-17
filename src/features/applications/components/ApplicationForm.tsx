@@ -78,6 +78,14 @@ export function ApplicationForm({ data }: { data: any }) {
           rank: c.university_choice_rank,
           name: c.university_name,
         })),
+        has_application_form: applicationData.has_application_form ? 1 : 0,
+        has_cv: applicationData.has_cv ? 1 : 0,
+        has_tcg: applicationData.has_tcg ? 1 : 0,
+        has_recommendation_letter: applicationData.has_recommendation_letter ? 1 : 0,
+        has_essay: applicationData.has_essay ? 1 : 0,
+        has_form_5: applicationData.has_form_5 ? 1 : 0,
+        has_valid_passport: applicationData.has_valid_passport ? 1 : 0,
+        has_online_application_form: applicationData.has_online_application_form ? 1 : 0,
       };
 
       if (!payload.semester_preference || !payload.duration_preference || payload.choices.length === 0) {

@@ -44,8 +44,10 @@ export class StudentApplicationService {
     const sql = `
       INSERT INTO applications (
         application_id, student_number, semester_preference, duration_preference,
-        program_advisor, department_chair, college_secretary, dean_name
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        program_advisor, department_chair, college_secretary, dean_name,
+        has_application_form, has_cv, has_tcg, has_recommendation_letter,
+        has_essay, has_form_5, has_valid_passport, has_online_application_form, is_complete
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     await (appRepo as any).query(sql, [
       appId,
@@ -56,6 +58,15 @@ export class StudentApplicationService {
       data.department_chair || null,
       data.college_secretary || null,
       data.dean_name || null,
+      data.has_application_form || 0,
+      data.has_cv || 0,
+      data.has_tcg || 0,
+      data.has_recommendation_letter || 0,
+      data.has_essay || 0,
+      data.has_form_5 || 0,
+      data.has_valid_passport || 0,
+      data.has_online_application_form || 0,
+      0 // is_complete defaults to 0
     ]);
 
     if (data.choices && Array.isArray(data.choices)) {
@@ -75,17 +86,6 @@ export class StudentApplicationService {
     if (!dashboard) throw new Error("No active application found.");
 
     const merged = { ...dashboard, ...data };
-    const requiredDocs = [
-      "has_application_form", "has_cv", "has_tcg", "has_recommendation_letter",
-      "has_essay", "has_form_5", "has_valid_passport", "has_online_application_form"
-    ];
-
-    // If any document fields are being updated, evaluate completeness
-    const isDocUpdate = requiredDocs.some(k => Object.keys(data).includes(k));
-    if (isDocUpdate) {
-      data.is_complete = requiredDocs.every(k => !!merged[k]);
-    }
-
     await appRepo.updateApplication(dashboard.application_id, data);
     return true;
   }

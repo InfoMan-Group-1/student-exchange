@@ -28,15 +28,19 @@ export function DocumentsChecklist({ application, onUpdate }: Props) {
     try {
       setToggling(key);
       const payload = { [key]: !currentValue };
-      await apiFetch("/api/v1/applications/me", {
-        method: "PATCH",
-        body: JSON.stringify(payload)
-      });
+      
+      if (application.application_id) {
+        await apiFetch("/api/v1/applications/me", {
+          method: "PATCH",
+          body: JSON.stringify(payload)
+        });
+        mutate("/api/v1/applications/me");
+      }
+      
       // Immediately update parent local state for real-time reflection
       if (onUpdate) {
         onUpdate(key, !currentValue);
       }
-      mutate("/api/v1/applications/me");
     } catch (e) {
       alert("Failed to update document status");
     } finally {
@@ -45,14 +49,7 @@ export function DocumentsChecklist({ application, onUpdate }: Props) {
   };
 
   return (
-    <section className={`bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30 p-card-padding relative ${!application.application_id ? 'opacity-70 pointer-events-none' : ''}`}>
-      {!application.application_id && (
-        <div className="absolute inset-0 bg-surface/50 z-10 flex items-center justify-center rounded-xl backdrop-blur-[1px]">
-          <div className="bg-surface px-4 py-2 rounded-lg shadow-sm border border-outline-variant font-label-md text-on-surface-variant">
-            Please submit the application first to enable the checklist.
-          </div>
-        </div>
-      )}
+    <section className="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30 p-card-padding relative">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
           <CheckCircle2 className="h-6 w-6" />
