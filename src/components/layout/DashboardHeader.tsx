@@ -5,6 +5,7 @@ import { removeAuthToken } from "@/lib/api-client";
 import { Bell, HelpCircle, Search, User, LogOut, LayoutDashboard, FileText } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import React, { useEffect } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/api-client";
 
@@ -20,6 +21,13 @@ export function DashboardHeader() {
 
   const fullName = profile?.full_name ?? "Loading...";
   const studentNumber = profile?.student_number ?? "";
+
+  // Onboarding redirect check
+  useEffect(() => {
+    if (profile && (!profile.mobile_number || !profile.year_level)) {
+      router.push("/onboarding");
+    }
+  }, [profile, router]);
 
   const handleLogout = () => {
     removeAuthToken();

@@ -33,6 +33,14 @@ export function EmergencyContact({ info, isEditing, formData, onChange }: any) {
             <p className="font-body-md text-on-surface">{info.guardian_contact_number}</p>
           )}
         </div>
+        <div>
+          <p className="font-label-sm text-on-tertiary-container uppercase">Address</p>
+          {isEditing ? (
+            <textarea name="guardian_address" value={formData?.guardian_address || ''} onChange={onChange} rows={2} className="w-full font-body-md text-on-surface bg-surface-container-low border border-outline px-3 py-1.5 rounded-md focus:outline-none focus:border-primary resize-none" />
+          ) : (
+            <p className="font-body-md text-on-surface leading-relaxed">{info.guardian_address || "—"}</p>
+          )}
+        </div>
       </div>
     </section>
   );

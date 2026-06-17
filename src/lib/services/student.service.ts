@@ -53,7 +53,7 @@ export class StudentService {
     
     const guardianAllowedFields = [
       'guardian_name', 'guardian_contact_number', 
-      'guardian_email', 'relation_to_student'
+      'guardian_email', 'relation_to_student', 'guardian_address'
     ];
     
     const studentData: Record<string, any> = {};

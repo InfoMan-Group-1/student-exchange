@@ -41,7 +41,7 @@ export class ApplicationRepository extends BaseRepository {
         s.full_name, s.age, s.nationality, s.sex, s.birth_date, s.school_email, s.alternate_email, 
         s.home_address, s.mobile_number, s.passport_number, s.passport_issue_date, s.passport_expiry_date,
         s.year_level, s.cumulative_gwa, s.guardian_id,
-        g.guardian_name, g.relation_to_student as relationship, g.guardian_contact_number, g.guardian_email,
+        g.guardian_name, g.relation_to_student as relationship, g.guardian_contact_number, g.guardian_email, g.guardian_address,
         p.program_name as program, p.college_name as college
       FROM applications a
       JOIN students s ON a.student_number = s.student_number

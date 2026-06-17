@@ -98,6 +98,18 @@ export function StudentProfileForm({ student }: { student: any }) {
                   />
                 </div>
 
+                {/* Mobile Number */}
+                <div className="space-y-2">
+                  <label className="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">Mobile Number</label>
+                  <input
+                    type="text"
+                    name="mobile_number"
+                    defaultValue={student.mobile_number}
+                    readOnly
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md text-on-surface-variant opacity-70 cursor-not-allowed"
+                  />
+                </div>
+
                 {/* Name */}
                 <div className="space-y-2">
                   <label className="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">
@@ -160,13 +172,49 @@ export function StudentProfileForm({ student }: { student: any }) {
 
                 {/* Passport Details */}
                 <div className="space-y-2">
-                  <label className="font-label-md text-label-md text-on-surface-variant">Passport Number</label>
+                  <label className="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">Passport Number</label>
                   <input
                     type="text"
                     name="passport_number"
                     placeholder="e.g. P1234567A"
                     defaultValue={student.passport_number}
-                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
+                    readOnly
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md text-on-surface-variant opacity-70 cursor-not-allowed"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">Passport Issue Date</label>
+                    <input
+                      type="date"
+                      name="passport_issue_date"
+                      defaultValue={student.passport_issue_date ? new Date(student.passport_issue_date).toISOString().split('T')[0] : ''}
+                      readOnly
+                      className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md text-on-surface-variant opacity-70 cursor-not-allowed"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">Passport Expiry Date</label>
+                    <input
+                      type="date"
+                      name="passport_expiry_date"
+                      defaultValue={student.passport_expiry_date ? new Date(student.passport_expiry_date).toISOString().split('T')[0] : ''}
+                      readOnly
+                      className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md text-on-surface-variant opacity-70 cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+
+                {/* Year Level */}
+                <div className="space-y-2">
+                  <label className="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">Year Level</label>
+                  <input
+                    type="text"
+                    name="year_level"
+                    defaultValue={student.year_level}
+                    readOnly
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md text-on-surface-variant opacity-70 cursor-not-allowed"
                   />
                 </div>
 
@@ -276,15 +324,28 @@ export function StudentProfileForm({ student }: { student: any }) {
 
                 {/* Contact Info */}
                 <div className="space-y-2">
-                  <label className="font-label-md text-label-md text-on-surface-variant">Contact Number</label>
+                  <label className="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">Contact Number</label>
                   <div className="relative">
                     <input
                       type="tel"
                       name="guardian_contact_number"
                       defaultValue={student.guardian_contact_number}
-                      className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md"
+                      readOnly
+                      className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md text-on-surface-variant opacity-70 cursor-not-allowed"
                     />
                   </div>
+                </div>
+
+                {/* Guardian Address */}
+                <div className="space-y-2 md:col-span-2">
+                  <label className="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">Guardian's Address</label>
+                  <textarea
+                    rows={2}
+                    name="guardian_address"
+                    defaultValue={student.guardian_address}
+                    readOnly
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-body-md text-on-surface-variant opacity-70 cursor-not-allowed resize-none"
+                  />
                 </div>
 
                 {/* Guardian Email */}

@@ -43,9 +43,13 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
           mobile_number: formData.mobile_number,
           cumulative_gwa: formData.cumulative_gwa,
           home_address: formData.home_address,
+          year_level: formData.year_level,
+          passport_issue_date: formData.passport_issue_date,
+          passport_expiry_date: formData.passport_expiry_date,
           guardian_name: formData.guardian_name,
           guardian_contact_number: formData.guardian_contact_number,
-          relation_to_student: formData.relationship
+          relation_to_student: formData.relationship,
+          guardian_address: formData.guardian_address
         }),
       });
       await mutate(`/api/v1/applications/${id}`);

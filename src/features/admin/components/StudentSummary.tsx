@@ -33,6 +33,32 @@ export function StudentSummary({ info, isEditing, formData, onChange }: any) {
             <p className="font-body-md text-on-surface">{info.cumulative_gwa}</p>
           )}
         </div>
+        <div>
+          <p className="font-label-sm text-on-tertiary-container uppercase">Year Level</p>
+          {isEditing ? (
+            <input type="text" name="year_level" value={formData?.year_level || ''} onChange={onChange} className="w-full font-body-md text-on-surface bg-surface-container-low border border-outline px-3 py-1.5 rounded-md focus:outline-none focus:border-primary" />
+          ) : (
+            <p className="font-body-md text-on-surface">{info.year_level || "—"}</p>
+          )}
+        </div>
+        <div className="pt-4 border-t border-outline-variant grid grid-cols-2 gap-4">
+          <div>
+            <p className="font-label-sm text-on-tertiary-container uppercase">Passport Issue</p>
+            {isEditing ? (
+              <input type="date" name="passport_issue_date" value={formData?.passport_issue_date ? new Date(formData.passport_issue_date).toISOString().split('T')[0] : ''} onChange={onChange} className="w-full font-body-md text-on-surface bg-surface-container-low border border-outline px-3 py-1.5 rounded-md focus:outline-none focus:border-primary" />
+            ) : (
+              <p className="font-body-md text-on-surface">{info.passport_issue_date ? new Date(info.passport_issue_date).toLocaleDateString() : "—"}</p>
+            )}
+          </div>
+          <div>
+            <p className="font-label-sm text-on-tertiary-container uppercase">Passport Expiry</p>
+            {isEditing ? (
+              <input type="date" name="passport_expiry_date" value={formData?.passport_expiry_date ? new Date(formData.passport_expiry_date).toISOString().split('T')[0] : ''} onChange={onChange} className="w-full font-body-md text-on-surface bg-surface-container-low border border-outline px-3 py-1.5 rounded-md focus:outline-none focus:border-primary" />
+            ) : (
+              <p className="font-body-md text-on-surface">{info.passport_expiry_date ? new Date(info.passport_expiry_date).toLocaleDateString() : "—"}</p>
+            )}
+          </div>
+        </div>
         <div className="pt-4 border-t border-outline-variant">
           <p className="font-label-sm text-on-tertiary-container uppercase mb-2">Home Address</p>
           {isEditing ? (

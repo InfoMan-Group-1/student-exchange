@@ -6,6 +6,7 @@ import { UniversityChoices } from "./UniversityChoices";
 import { DocumentsChecklist } from "./DocumentsChecklist";
 import { LanguageProficiencies } from "./LanguageProficiencies";
 import { EndorsementDetails } from "./EndorsementDetails";
+import { EventsAttended } from "./EventsAttended";
 import { useState } from "react";
 import { apiFetch } from "@/lib/api-client";
 import { mutate } from "swr";
@@ -77,11 +78,14 @@ export function ApplicationForm({ data }: { data: any }) {
             duration={applicationData?.duration_preference || "1 Semester"} 
             onChange={updatePreference}
           />
-          
           <UniversityChoices 
             choices={applicationData?.university_choices || []} 
             onChange={updateChoice}
           />
+
+          <div className="pointer-events-auto">
+            <EventsAttended isEditing={isEditing} />
+          </div>
           
           <div className="pointer-events-auto">
             <LanguageProficiencies />
