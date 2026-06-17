@@ -1,9 +1,11 @@
 import { UserRepository } from "@/lib/repositories/user.repository";
+import { StudentRepository } from "@/lib/repositories/student.repository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { pool } from "@/lib/db";
 
 const userRepository = new UserRepository();
+const studentRepository = new StudentRepository();
 
 export class AuthService {
   async register(data: {
@@ -18,6 +20,7 @@ export class AuthService {
     guardianRelation?: string;
     guardianContact?: string;
     guardianEmail?: string;
+    yearLevel?: string;
   }) {
     // Basic validation
     if (!data.email || !data.passwordRaw || !data.role) {
@@ -57,7 +60,7 @@ export class AuthService {
       const userId = (userResult as any).insertId;
 
       // 2. Create Guardian
-      const generatedGuardianId = 'G' + Math.floor(10000 + Math.random() * 90000);
+      const generatedGuardianId = await studentRepository.getNextGuardianId();
       await connection.execute(
         `INSERT INTO guardians (guardian_id, guardian_name, relation_to_student, guardian_contact_number, guardian_email) VALUES (?, ?, ?, ?, ?)`,
         [generatedGuardianId, data.guardianName!, data.guardianRelation || null, data.guardianContact || null, data.guardianEmail || null]
@@ -65,8 +68,8 @@ export class AuthService {
 
       // 3. Create Student
       await connection.execute(
-        `INSERT INTO students (student_number, user_id, program_id, guardian_id, full_name, school_email) VALUES (?, ?, ?, ?, ?, ?)`,
-        [data.studentNumber!, userId, data.programId!, generatedGuardianId, data.fullName!, data.email]
+        `INSERT INTO students (student_number, user_id, program_id, guardian_id, full_name, school_email, year_level) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [data.studentNumber!, userId, data.programId!, generatedGuardianId, data.fullName!, data.email, data.yearLevel || null]
       );
 
       await connection.commit();

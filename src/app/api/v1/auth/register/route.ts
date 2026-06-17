@@ -24,7 +24,8 @@ export async function POST(req: NextRequest) {
       guardianName: body.guardian_name,
       guardianRelation: body.guardian_relation,
       guardianContact: body.guardian_contact_number,
-      guardianEmail: body.guardian_email
+      guardianEmail: body.guardian_email,
+      yearLevel: body.year_level
     });
 
     return NextResponse.json({

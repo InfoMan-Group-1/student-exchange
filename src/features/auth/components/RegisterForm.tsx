@@ -120,18 +120,18 @@ export function RegisterForm() {
         </div>
 
         <div className="space-y-6">
-          <div className="space-y-2">
-            <label className="font-label-md text-label-md text-on-surface font-medium">Full Legal Name</label>
-            <input 
-              type="text" 
-              name="full_name"
-              required
-              placeholder="e.g. Juan Miguel Dela Cruz"
-              className="w-full bg-surface border border-outline-variant rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-on-surface placeholder:text-on-surface-variant/40 hover:border-outline"
-            />
-          </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
+            <div className="space-y-2">
+              <label className="font-label-md text-label-md text-on-surface font-medium">Full Legal Name</label>
+              <input 
+                type="text" 
+                name="full_name"
+                required
+                placeholder="e.g. Juan Miguel Dela Cruz"
+                className="w-full bg-surface border border-outline-variant rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-on-surface placeholder:text-on-surface-variant/40 hover:border-outline"
+              />
+            </div>
+
             <div className="space-y-2">
               <label className="font-label-md text-label-md text-on-surface font-medium">Student Number</label>
               <input 
@@ -142,8 +142,10 @@ export function RegisterForm() {
                 className="w-full bg-surface border border-outline-variant rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-on-surface placeholder:text-on-surface-variant/40 hover:border-outline font-mono text-[15px]"
               />
             </div>
+          </div>
 
-            <div className="space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-x-6 gap-y-6">
+            <div className="space-y-2 sm:col-span-3">
               <label className="font-label-md text-label-md text-on-surface font-medium">Academic Program</label>
               <div className="relative">
                 <select 
@@ -156,6 +158,25 @@ export function RegisterForm() {
                   {programsData?.map((p: any) => (
                     <option key={p.program_id} value={p.program_id} className="text-on-surface">{p.program_name}</option>
                   ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2 sm:col-span-1">
+              <label className="font-label-md text-label-md text-on-surface font-medium">Year Level</label>
+              <div className="relative">
+                <select 
+                  name="year_level"
+                  required
+                  defaultValue=""
+                  className="w-full bg-surface border border-outline-variant rounded-xl py-3 pl-4 pr-10 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-on-surface appearance-none hover:border-outline bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%20%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207.5L10%2012.5L15%207.5%22%20stroke%3D%22%236b7280%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px_20px] bg-no-repeat bg-[position:right_12px_center] invalid:text-on-surface-variant/40"
+                >
+                  <option value="" disabled>Select Year Level...</option>
+                  <option value="1.0" className="text-on-surface">1.0</option>
+                  <option value="2.0" className="text-on-surface">2.0</option>
+                  <option value="3.0" className="text-on-surface">3.0</option>
+                  <option value="4.0" className="text-on-surface">4.0</option>
+                  <option value="5.0" className="text-on-surface">5.0</option>
                 </select>
               </div>
             </div>

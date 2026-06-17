@@ -1,20 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useSWR, { mutate } from "swr";
 import { fetcher, apiFetch } from "@/lib/api-client";
 import { useRouter } from "next/navigation";
-import { BadgeCheck, ArrowRight, UserCircle2 } from "lucide-react";
+import { UserCircle2, ArrowRight } from "lucide-react";
 import { formatPhoneNumber } from "@/lib/utils";
 
 export default function OnboardingPage() {
   const router = useRouter();
   const { data: profile, isLoading } = useSWR("/api/v1/students/me/profile", fetcher);
   const [isSaving, setIsSaving] = useState(false);
+  
+  const [birthDate, setBirthDate] = useState("");
+  const [age, setAge] = useState<number | "">("");
 
-  // If the profile is already fully complete, we could redirect to dashboard, 
-  // but we will let them see the onboarding screen so they know they are onboarding.
-  // The actual check will be if the essential fields are already present.
+  useEffect(() => {
+    if (profile?.birth_date) {
+      setBirthDate(new Date(profile.birth_date).toISOString().split('T')[0]);
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (birthDate) {
+      const today = new Date();
+      const birth = new Date(birthDate);
+      let calculatedAge = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+        calculatedAge--;
+      }
+      setAge(calculatedAge > 0 ? calculatedAge : "");
+    } else {
+      setAge("");
+    }
+  }, [birthDate]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,6 +46,9 @@ export default function OnboardingPage() {
     if (typeof payload.mobile_number === "string") {
       payload.mobile_number = formatPhoneNumber(payload.mobile_number);
     }
+    
+    // Ensure age is included if computed
+    payload.age = age.toString();
 
     try {
       await apiFetch("/api/v1/students/me/profile", {
@@ -65,25 +88,160 @@ export default function OnboardingPage() {
       </header>
 
       <main className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-2xl bg-surface rounded-2xl shadow-xl border border-outline-variant/30 overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="w-full max-w-4xl bg-surface rounded-2xl shadow-xl border border-outline-variant/30 overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="bg-primary/5 px-8 py-10 text-center border-b border-outline-variant/50">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <UserCircle2 className="w-8 h-8 text-primary" />
             </div>
             <h1 className="font-headline-lg font-bold text-primary mb-2">Welcome to SintaLink!</h1>
-            <p className="font-body-lg text-on-surface-variant max-w-md mx-auto">
-              Before you can apply for the exchange program, we need to finalize a few details for your student record. 
+            <p className="font-body-lg text-on-surface-variant max-w-xl mx-auto">
+              Before you can apply for the exchange program, we need to finalize your student record. 
               <br/><br/>
-              <strong>Note:</strong> These details cannot be changed later.
+              <strong>Note:</strong> Some of these details cannot be changed later.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-8 space-y-8">
+          <form onSubmit={handleSubmit} className="p-8 space-y-10">
+            
+            {/* 1. Personal Details */}
             <div className="space-y-6">
-              
+              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">1. Personal Details</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Birth Date <span className="text-error">*</span></label>
+                  <input
+                    required
+                    type="date"
+                    name="birth_date"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Age</label>
+                  <input
+                    readOnly
+                    type="number"
+                    value={age}
+                    placeholder="Auto-computed"
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 transition-all font-body-md text-on-surface-variant opacity-70 cursor-not-allowed"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Sex <span className="text-error">*</span></label>
+                  <select
+                    required
+                    name="sex"
+                    defaultValue={profile?.sex || ""}
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                  >
+                    <option value="" disabled>Select Sex</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="font-label-md text-on-surface-variant">Phone Number <span className="text-error">*</span></label>
+                  <label className="font-label-md text-on-surface-variant">Nationality <span className="text-error">*</span></label>
+                  <input
+                    required
+                    type="text"
+                    name="nationality"
+                    defaultValue={profile?.nationality || ""}
+                    placeholder="e.g. Filipino"
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Alternate Email</label>
+                  <input
+                    type="email"
+                    name="alternate_email"
+                    defaultValue={profile?.alternate_email || ""}
+                    placeholder="personal.email@example.com"
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Guardian & Contact Information */}
+            <div className="space-y-6">
+              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">2. Guardian & Contact Information</h3>
+              
+              {/* Guardian Name & Relationship */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Guardian Name <span className="text-error">*</span></label>
+                  <input
+                    required
+                    type="text"
+                    name="guardian_name"
+                    defaultValue={profile?.guardian_name || ""}
+                    placeholder="e.g. Maria Dela Cruz"
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Relationship <span className="text-error">*</span></label>
+                  <select
+                    required
+                    name="relation_to_student"
+                    defaultValue={profile?.relation_to_student || ""}
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                  >
+                    <option value="" disabled>Select relationship</option>
+                    <option value="Father">Father</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Legal Guardian">Legal Guardian</option>
+                    <option value="Sibling">Sibling</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Guardian Contact & Email */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Guardian Contact Number <span className="text-error">*</span></label>
+                  <input
+                    required
+                    type="tel"
+                    name="guardian_contact_number"
+                    defaultValue={profile?.guardian_contact_number || ""}
+                    placeholder="+63 912 345 6789"
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Guardian Email</label>
+                  <input
+                    type="email"
+                    name="guardian_email"
+                    defaultValue={profile?.guardian_email || ""}
+                    placeholder="guardian@example.com"
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                  />
+                </div>
+              </div>
+
+              {/* Addresses and Personal Mobile */}
+              <div className="space-y-2">
+                <label className="font-label-md text-on-surface-variant">Home Address (Permanent) <span className="text-error">*</span></label>
+                <textarea
+                  required
+                  rows={2}
+                  name="home_address"
+                  placeholder="Complete permanent residential address"
+                  defaultValue={profile?.home_address || ""}
+                  className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md resize-none"
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Personal Mobile Number <span className="text-error">*</span></label>
                   <input
                     required
                     type="tel"
@@ -93,7 +251,24 @@ export default function OnboardingPage() {
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
                   />
                 </div>
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Guardian's Address <span className="text-error">*</span></label>
+                  <input
+                    required
+                    type="text"
+                    name="guardian_address"
+                    placeholder="Complete residential address of your guardian"
+                    defaultValue={profile?.guardian_address || ""}
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                  />
+                </div>
+              </div>
+            </div>
 
+            {/* 3. Academic Details */}
+            <div className="space-y-6">
+              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">3. Academic Details</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="font-label-md text-on-surface-variant">Year Level <span className="text-error">*</span></label>
                   <select
@@ -103,18 +278,44 @@ export default function OnboardingPage() {
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
                   >
                     <option value="" disabled>Select Year Level</option>
-                    <option value="1st Year">1st Year</option>
-                    <option value="2nd Year">2nd Year</option>
-                    <option value="3rd Year">3rd Year</option>
-                    <option value="4th Year">4th Year</option>
-                    <option value="5th Year">5th Year</option>
+                    <option value="1.0">1.0</option>
+                    <option value="2.0">2.0</option>
+                    <option value="3.0">3.0</option>
+                    <option value="4.0">4.0</option>
+                    <option value="5.0">5.0</option>
                   </select>
                 </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="font-label-md text-on-surface-variant">Passport Issue Date</label>
+                  <label className="font-label-md text-on-surface-variant">Cumulative GWA <span className="text-error">*</span></label>
+                  <input
+                    required
+                    type="number"
+                    step="0.01"
+                    name="cumulative_gwa"
+                    defaultValue={profile?.cumulative_gwa || ""}
+                    placeholder="e.g. 1.25"
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md font-bold text-primary"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Passport Details */}
+            <div className="space-y-6">
+              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">4. Passport Details</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Passport Number</label>
+                  <input
+                    type="text"
+                    name="passport_number"
+                    defaultValue={profile?.passport_number || ""}
+                    placeholder="e.g. P1234567A"
+                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md uppercase"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-label-md text-on-surface-variant">Issue Date</label>
                   <input
                     type="date"
                     name="passport_issue_date"
@@ -122,9 +323,8 @@ export default function OnboardingPage() {
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
                   />
                 </div>
-
                 <div className="space-y-2">
-                  <label className="font-label-md text-on-surface-variant">Passport Expiry Date</label>
+                  <label className="font-label-md text-on-surface-variant">Expiry Date</label>
                   <input
                     type="date"
                     name="passport_expiry_date"
@@ -133,26 +333,13 @@ export default function OnboardingPage() {
                   />
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <label className="font-label-md text-on-surface-variant">Guardian's Address <span className="text-error">*</span></label>
-                <textarea
-                  required
-                  rows={2}
-                  name="guardian_address"
-                  placeholder="Complete residential address of your guardian"
-                  defaultValue={profile?.guardian_address || ""}
-                  className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md resize-none"
-                />
-              </div>
-
             </div>
 
             <div className="pt-6 flex justify-end">
               <button
                 type="submit"
                 disabled={isSaving}
-                className="flex items-center gap-2 px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:bg-primary/90 transition-all active:scale-95 shadow-md disabled:opacity-50"
+                className="flex items-center gap-2 px-10 py-4 bg-primary text-on-primary rounded-xl font-bold hover:bg-primary/90 transition-all active:scale-95 shadow-md disabled:opacity-50"
               >
                 {isSaving ? "Saving..." : "Complete Profile"}
                 {!isSaving && <ArrowRight className="w-5 h-5" />}
