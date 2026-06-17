@@ -73,7 +73,7 @@ export function ApplicationForm({ data }: { data: any }) {
       <div className={`p-8 space-y-10 ${!isEditing ? "opacity-90 pointer-events-none" : ""}`}>
         <form className="max-w-5xl mx-auto space-y-10 relative">
           <ApplicationPreferences 
-            targetSemester={applicationData?.semester_preference || "1st Semester"} 
+            targetSemester={applicationData?.semester_preference || "Spring"} 
             duration={applicationData?.duration_preference || "1 Semester"} 
             onChange={updatePreference}
           />

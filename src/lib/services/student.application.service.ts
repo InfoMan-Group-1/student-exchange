@@ -49,7 +49,7 @@ export class StudentApplicationService {
     await (appRepo as any).query(sql, [
       appId,
       studentNumber,
-      data.semester_preference || '1st Semester',
+      data.semester_preference || 'Spring',
       data.duration_preference || '1 Semester',
     ]);
 

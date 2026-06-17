@@ -24,9 +24,8 @@ export function ApplicationPreferences({ targetSemester, duration, onChange }: P
             onChange={(e) => onChange("semester_preference", e.target.value)}
             className="w-full bg-surface-container-low border border-outline rounded-lg px-4 py-3 font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 appearance-none transition-all"
           >
-            <option>1st Semester</option>
-            <option>2nd Semester</option>
-            <option>Summer Term</option>
+            <option>Spring</option>
+            <option>Fall</option>
           </select>
         </div>
         
