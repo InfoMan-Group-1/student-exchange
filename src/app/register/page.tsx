@@ -45,7 +45,7 @@ export default function RegisterPage() {
             </Link>
             <div className="flex items-center gap-3 mb-2">
               <Landmark className="w-8 h-8 text-primary" />
-              <h1 className="font-headline-md text-headline-md font-bold text-primary">PUP Exchange</h1>
+              <h1 className="font-headline-md text-headline-md font-bold text-primary">SintaLink</h1>
             </div>
             <p className="font-body-md text-on-surface-variant">Create your student account.</p>
           </div>

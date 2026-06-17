@@ -21,9 +21,9 @@ export function AdminHeader() {
         {/* Branding */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-primary-container rounded flex items-center justify-center font-bold text-on-primary-container text-xs">
-            PUP
+            SL
           </div>
-          <span className="font-headline-md font-bold text-primary">Admin</span>
+          <span className="font-headline-md font-bold text-primary">SintaLink Admin</span>
         </div>
 
         {/* Navigation */}

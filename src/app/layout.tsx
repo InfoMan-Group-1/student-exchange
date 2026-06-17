@@ -18,7 +18,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Student Exchange",
+  title: "SintaLink",
   description: "Native SQL full-stack starter with Next.js and dbmate",
 };
 

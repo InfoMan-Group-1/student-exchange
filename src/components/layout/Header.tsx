@@ -27,7 +27,7 @@ export function Header() {
           <Landmark className="h-6 w-6" />
         </div>
         <h1 className="font-headline-lg text-headline-lg font-bold text-primary-container hidden sm:block">
-          PUP Student Exchange
+          SintaLink
         </h1>
       </div>
       <nav className="hidden md:flex items-center">

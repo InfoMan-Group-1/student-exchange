@@ -11,7 +11,7 @@ export default function LoginPage() {
         {/* Brand Identity Header */}
         <div className="text-center mb-8">
           <h1 className="font-headline-lg text-headline-lg text-primary mb-1">
-            PUP Exchange
+            SintaLink
           </h1>
           <p className="font-label-md text-label-md text-on-surface-variant">
             Academic Excellence Portal

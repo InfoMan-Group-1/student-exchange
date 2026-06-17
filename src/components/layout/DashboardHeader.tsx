@@ -40,9 +40,9 @@ export function DashboardHeader() {
         {/* Branding */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center font-bold text-on-primary text-xs">
-            PUP
+            SL
           </div>
-          <span className="font-headline-md font-bold text-primary">Exchange</span>
+          <span className="font-headline-md font-bold text-primary">SintaLink</span>
         </div>
 
         {/* Navigation */}
