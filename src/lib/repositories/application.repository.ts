@@ -109,4 +109,13 @@ export class ApplicationRepository extends BaseRepository {
     const sql = `SELECT language_name, proficiency_level FROM student_languages WHERE student_number = ?`;
     return this.query<any[]>(sql, [studentNumber]);
   }
+
+  /**
+   * Fetches all unique university names from university_choices table
+   */
+  async getDistinctUniversities() {
+    const sql = `SELECT DISTINCT university_name FROM university_choices WHERE university_name IS NOT NULL AND university_name != '' ORDER BY university_name ASC`;
+    const rows = await this.query<any[]>(sql);
+    return rows.map(r => r.university_name);
+  }
 }

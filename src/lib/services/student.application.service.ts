@@ -43,15 +43,29 @@ export class StudentApplicationService {
 
     const sql = `
       INSERT INTO applications (
-        application_id, student_number, semester_preference, duration_preference
-      ) VALUES (?, ?, ?, ?)
+        application_id, student_number, semester_preference, duration_preference,
+        program_advisor, department_chair, college_secretary, dean_name
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
     await (appRepo as any).query(sql, [
       appId,
       studentNumber,
       data.semester_preference || 'Spring',
       data.duration_preference || '1 Semester',
+      data.program_advisor || null,
+      data.department_chair || null,
+      data.college_secretary || null,
+      data.dean_name || null,
     ]);
+
+    if (data.choices && Array.isArray(data.choices)) {
+      const mappedChoices = data.choices.map((c: any) => ({ rank: c.rank, name: c.name }));
+      for (const choice of mappedChoices) {
+        if (choice.name) {
+          await appRepo.insertUniversityChoice(appId, choice.rank, choice.name);
+        }
+      }
+    }
 
     return { applicationId: appId };
   }

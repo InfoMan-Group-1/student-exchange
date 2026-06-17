@@ -7,17 +7,59 @@ import { DocumentsChecklist } from "./DocumentsChecklist";
 import { LanguageProficiencies } from "./LanguageProficiencies";
 import { EndorsementDetails } from "./EndorsementDetails";
 import { EventsAttended } from "./EventsAttended";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { apiFetch } from "@/lib/api-client";
 import { mutate } from "swr";
-import { useSearchParams } from "next/navigation";
 
 export function ApplicationForm({ data }: { data: any }) {
+  const hasApplication = !!data?.application_id;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [applicationData, setApplicationData] = useState(data || {});
-  const searchParams = useSearchParams();
-  const isEditMode = searchParams.get("edit") === "true";
-  const [isEditing, setIsEditing] = useState(!data || isEditMode); // If data exists and not in edit mode, start in read-only
+  const [autoSaveStatus, setAutoSaveStatus] = useState<"Saved" | "Saving..." | "Error" | "">("");
+
+  // Debounced Auto-Save
+  useEffect(() => {
+    if (!hasApplication) return;
+    
+    setAutoSaveStatus("Saving...");
+    const timeout = setTimeout(async () => {
+      try {
+        const payload = {
+          semester_preference: applicationData.semester_preference,
+          duration_preference: applicationData.duration_preference,
+          program_advisor: applicationData.program_advisor,
+          department_chair: applicationData.department_chair,
+          college_secretary: applicationData.college_secretary,
+          dean_name: applicationData.dean_name,
+          choices: (applicationData.university_choices || []).map((c: any) => ({
+            rank: c.university_choice_rank,
+            name: c.university_name,
+          })),
+        };
+        await apiFetch("/api/v1/applications/me", {
+          method: "PATCH",
+          body: JSON.stringify(payload)
+        });
+        mutate("/api/v1/applications/me");
+        setAutoSaveStatus("Saved");
+        setTimeout(() => setAutoSaveStatus(""), 2000);
+      } catch (e) {
+        console.error("Auto-save failed", e);
+        setAutoSaveStatus("Error");
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [
+    applicationData.semester_preference,
+    applicationData.duration_preference,
+    applicationData.program_advisor,
+    applicationData.department_chair,
+    applicationData.college_secretary,
+    applicationData.dean_name,
+    JSON.stringify(applicationData.university_choices),
+    hasApplication
+  ]);
 
   const handleSubmit = async () => {
     try {
@@ -35,16 +77,20 @@ export function ApplicationForm({ data }: { data: any }) {
           name: c.university_name,
         })),
       };
+
+      if (!payload.semester_preference || !payload.duration_preference || payload.choices.length === 0) {
+        alert("Please fill out preferences and at least one university choice.");
+        setIsSubmitting(false);
+        return;
+      }
       
-      // apiFetch throws on non-2xx — no need to check res.ok
       await apiFetch("/api/v1/applications/me", {
-        method: "PATCH",
+        method: "POST",
         body: JSON.stringify(payload)
       });
       
       mutate("/api/v1/applications/me");
       alert("Application submitted successfully");
-      setIsEditing(false);
     } catch (e: any) {
       alert(e.message || "Failed to submit application");
     } finally {
@@ -53,12 +99,10 @@ export function ApplicationForm({ data }: { data: any }) {
   };
 
   const updatePreference = (key: string, value: string) => {
-    if (!isEditing) return;
     setApplicationData({ ...applicationData, [key]: value });
   };
 
   const updateChoice = (rank: number, name: string) => {
-    if (!isEditing) return;
     const choices = [...(applicationData.university_choices || [])];
     const index = choices.findIndex(c => c.university_choice_rank === rank);
     if (index >= 0) {
@@ -71,7 +115,7 @@ export function ApplicationForm({ data }: { data: any }) {
 
   return (
     <>
-      <div className={`p-8 space-y-10 ${!isEditing ? "opacity-90 pointer-events-none" : ""}`}>
+      <div className="p-8 space-y-10">
         <form className="max-w-5xl mx-auto space-y-10 relative">
           <ApplicationPreferences 
             targetSemester={applicationData?.semester_preference || "Spring"} 
@@ -84,7 +128,7 @@ export function ApplicationForm({ data }: { data: any }) {
           />
 
           <div className="pointer-events-auto">
-            <EventsAttended isEditing={isEditing} />
+            <EventsAttended isEditing={true} />
           </div>
           
           <div className="pointer-events-auto">
@@ -115,48 +159,44 @@ export function ApplicationForm({ data }: { data: any }) {
       {/* Sticky Bottom Bar */}
       <footer className="sticky bottom-0 w-full h-20 bg-surface border-t border-outline-variant px-8 flex items-center justify-between shadow-[0_-4px_12px_rgba(0,0,0,0.05)] z-40">
         <div className="flex items-center gap-2 text-on-surface-variant">
-          {isEditing ? (
+          {hasApplication ? (
             <>
-              <Info className="h-[18px] w-[18px]" />
-              <p className="font-label-md text-label-md">Editing Application</p>
+              {autoSaveStatus === "Saved" ? (
+                <>
+                  <CheckCircle className="h-[18px] w-[18px] text-success" />
+                  <p className="font-label-md text-label-md text-success">All changes saved</p>
+                </>
+              ) : autoSaveStatus === "Saving..." ? (
+                <>
+                  <div className="h-4 w-4 rounded-full border-2 border-outline-variant border-t-primary animate-spin" />
+                  <p className="font-label-md text-label-md text-on-surface-variant">Saving changes...</p>
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="h-[18px] w-[18px] text-success" />
+                  <p className="font-label-md text-label-md text-success">Application Saved</p>
+                </>
+              )}
             </>
           ) : (
             <>
-              <CheckCircle className="h-[18px] w-[18px] text-success" />
-              <p className="font-label-md text-label-md text-success">Application Saved</p>
+              <Info className="h-[18px] w-[18px]" />
+              <p className="font-label-md text-label-md">New Application</p>
             </>
           )}
         </div>
         
         <div className="flex items-center gap-4">
-          {!isEditing ? (
+          {!hasApplication && (
             <button 
               type="button"
-              onClick={() => setIsEditing(true)}
-              className="flex items-center gap-2 px-8 py-3 border border-primary text-primary font-label-md text-label-md rounded-lg hover:bg-primary-container/5 transition-all active:scale-95"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:bg-primary/90 transition-all active:scale-95 shadow-md flex items-center gap-2 disabled:opacity-50"
             >
-              <Pencil className="w-4 h-4" />
-              Edit Application
+              <FileText className="h-5 w-5" />
+              {isSubmitting ? "Submitting..." : "Submit Application"}
             </button>
-          ) : (
-            <div className="flex gap-4">
-              <button 
-                type="button" 
-                onClick={() => setIsEditing(false)}
-                className="px-8 py-3 rounded-xl font-bold transition-all text-on-surface-variant hover:bg-surface-container active:scale-95"
-              >
-                Cancel
-              </button>
-              <button 
-                type="button"
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:bg-primary/90 transition-all active:scale-95 shadow-md flex items-center gap-2 disabled:opacity-50"
-              >
-                <FileText className="h-5 w-5" />
-                {isSubmitting ? "Submitting..." : "Submit Application"}
-              </button>
-            </div>
           )}
         </div>
       </footer>

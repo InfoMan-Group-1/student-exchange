@@ -1,5 +1,7 @@
 import { Building2 } from "lucide-react";
 import { UniversityChoice } from "@/lib/types/application";
+import useSWR from "swr";
+import { fetcher } from "@/lib/api-client";
 
 interface Props {
   choices: any[];
@@ -9,6 +11,9 @@ interface Props {
 export function UniversityChoices({ choices, onChange }: Props) {
   // We need to render exactly 3 choice slots
   const slots = [1, 2, 3];
+  
+  const { data } = useSWR("/api/v1/universities", fetcher);
+  const universities: string[] = data?.data || [];
 
   return (
     <section className="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30 p-card-padding">
@@ -48,6 +53,7 @@ export function UniversityChoices({ choices, onChange }: Props) {
                     )}
                     <input 
                       type="text" 
+                      list="universities-list"
                       value={choiceData?.university_name || ""}
                       onChange={(e) => onChange(rank, e.target.value)}
                       placeholder={placeholderInst}
@@ -59,6 +65,12 @@ export function UniversityChoices({ choices, onChange }: Props) {
             );
           })}
         </div>
+
+        <datalist id="universities-list">
+          {universities.map(uni => (
+            <option key={uni} value={uni} />
+          ))}
+        </datalist>
       </section>
   );
 }

@@ -69,7 +69,6 @@ export function EventsAttended({ isEditing }: { isEditing?: boolean }) {
 
       mutate("/api/v1/events");
       mutate("/api/v1/events/me");
-      setShowOtherForm(false);
       setOtherForm({ event_name: "", host_country: "", event_date: "" });
     } catch (err) {
       console.error(err);
@@ -139,7 +138,10 @@ export function EventsAttended({ isEditing }: { isEditing?: boolean }) {
               {isEditing && !showOtherForm && (
                 <button
                   type="button"
-                  onClick={() => setShowOtherForm(true)}
+                  onClick={() => {
+                    setShowOtherForm(true);
+                    setIsDropdownOpen(false);
+                  }}
                   className="flex items-center gap-2 p-3 mt-1 rounded-lg hover:bg-surface-container-low transition-all text-primary font-label-md"
                 >
                   <Plus className="w-5 h-5" />
@@ -162,7 +164,7 @@ export function EventsAttended({ isEditing }: { isEditing?: boolean }) {
         </div>
       )}
 
-      {showOtherForm && (
+      {showOtherForm && isEditing && (
         <div className="mt-6 p-4 rounded-lg border border-outline-variant bg-surface-container-lowest">
           <h4 className="font-label-lg text-primary mb-4">Add Custom Event</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
