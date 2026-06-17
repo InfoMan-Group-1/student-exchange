@@ -68,16 +68,18 @@ export function ApplicationForm({ data }: { data: any }) {
       setIsSubmitting(true);
       
       const payload = {
-        semester_preference: applicationData.semester_preference,
-        duration_preference: applicationData.duration_preference,
+        semester_preference: applicationData.semester_preference || "Spring",
+        duration_preference: applicationData.duration_preference || "1 Semester",
         program_advisor: applicationData.program_advisor,
         department_chair: applicationData.department_chair,
         college_secretary: applicationData.college_secretary,
         dean_name: applicationData.dean_name,
-        choices: (applicationData.university_choices || []).map((c: any) => ({
-          rank: c.university_choice_rank,
-          name: c.university_name,
-        })),
+        choices: (applicationData.university_choices || [])
+          .filter((c: any) => c.university_name && c.university_name.trim() !== "")
+          .map((c: any) => ({
+            rank: c.university_choice_rank,
+            name: c.university_name,
+          })),
         has_application_form: applicationData.has_application_form ? 1 : 0,
         has_cv: applicationData.has_cv ? 1 : 0,
         has_tcg: applicationData.has_tcg ? 1 : 0,
