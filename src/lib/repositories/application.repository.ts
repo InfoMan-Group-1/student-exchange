@@ -79,6 +79,12 @@ export class ApplicationRepository extends BaseRepository {
     // Delete dependencies first
     await this.deleteUniversityChoices(applicationId);
     
+    // Clear out events attended by the student when their application is deleted
+    await this.query(
+      `DELETE FROM events_attended WHERE student_number = (SELECT student_number FROM applications WHERE application_id = ?)`, 
+      [applicationId]
+    );
+    
     const sql = `DELETE FROM applications WHERE application_id = ?`;
     await this.query(sql, [applicationId]);
     return true;
