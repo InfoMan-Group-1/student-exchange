@@ -278,11 +278,11 @@ export default function OnboardingPage() {
                     className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
                   >
                     <option value="" disabled>Select Year Level</option>
-                    <option value="1.0">1.0</option>
-                    <option value="2.0">2.0</option>
-                    <option value="3.0">3.0</option>
-                    <option value="4.0">4.0</option>
-                    <option value="5.0">5.0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                   </select>
                 </div>
                 <div className="space-y-2">
