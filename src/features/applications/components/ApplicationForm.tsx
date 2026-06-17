@@ -101,23 +101,7 @@ export function ApplicationForm({ data }: { data: any }) {
         body: JSON.stringify(payload)
       });
       
-      // Check and add default languages if the student has none
-      try {
-        const langRes = await apiFetch("/api/v1/students/me/languages");
-        if (langRes.data && langRes.data.length === 0) {
-          await apiFetch("/api/v1/students/me/languages", {
-            method: "POST",
-            body: JSON.stringify({ name: "English", level: "C2" })
-          });
-          await apiFetch("/api/v1/students/me/languages", {
-            method: "POST",
-            body: JSON.stringify({ name: "Filipino", level: "Native" })
-          });
-          mutate("/api/v1/students/me/languages");
-        }
-      } catch (e) {
-        console.error("Failed to add default languages", e);
-      }
+
 
       mutate("/api/v1/applications/me");
       alert("Application submitted successfully");

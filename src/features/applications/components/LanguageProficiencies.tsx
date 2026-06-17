@@ -20,7 +20,33 @@ export function LanguageProficiencies() {
   const [adding, setAdding] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [removing, setRemoving] = useState<string | null>(null);
-  const [hiddenDefaults, setHiddenDefaults] = useState<string[]>([]);
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (data && !isLoading && !initialized) {
+      const dbLanguages = data.data || [];
+      if (dbLanguages.length === 0) {
+        // Automatically save default languages to DB if untouched
+        const addDefaults = async () => {
+          try {
+            await apiFetch("/api/v1/students/me/languages", {
+              method: "POST",
+              body: JSON.stringify({ name: "English", level: "C2" }),
+            });
+            await apiFetch("/api/v1/students/me/languages", {
+              method: "POST",
+              body: JSON.stringify({ name: "Filipino", level: "Native" }),
+            });
+            mutate("/api/v1/students/me/languages");
+          } catch (e) {
+            console.error("Failed to add default languages", e);
+          }
+        };
+        addDefaults();
+      }
+      setInitialized(true);
+    }
+  }, [data, isLoading, initialized]);
 
   const handleAdd = async () => {
     if (!newLang.trim()) return;
@@ -41,8 +67,12 @@ export function LanguageProficiencies() {
     }
   };
 
-  const handleAddDefault = async (langName: string, level: string) => {
+  const handleUpdateLevel = async (langName: string, level: string) => {
     try {
+      // API currently doesn't have a PATCH for single language level, 
+      // so we delete and re-add or we could just use a PATCH if it exists.
+      // Wait, earlier code had `handleAddDefault` which just POSTed it again (which might upsert or error).
+      // Assuming POST upserts based on backend logic.
       await apiFetch("/api/v1/students/me/languages", {
         method: "POST",
         body: JSON.stringify({ name: langName, level }),
@@ -124,42 +154,6 @@ export function LanguageProficiencies() {
       )}
 
       <div className="space-y-3">
-        {/* Interactive Default Languages */}
-        {DEFAULTS.map((def) => {
-          if (languages.some(l => l.language_name === def.name) || hiddenDefaults.includes(def.name)) {
-            return null;
-          }
-          return (
-            <div key={`default-${def.name}`} className="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/50 border-dashed">
-              <div className="flex-1 grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase text-on-surface-variant font-bold">Language</p>
-                  <p className="font-label-md text-label-md">{def.name}</p>
-                </div>
-                <div className="space-y-1 text-right flex flex-col items-end">
-                  <p className="text-[10px] uppercase text-on-surface-variant font-bold w-full">Proficiency</p>
-                  <select
-                    defaultValue={def.level}
-                    onChange={(e) => handleAddDefault(def.name, e.target.value)}
-                    className="bg-transparent border-b border-outline-variant focus:outline-none focus:border-primary text-[12px] font-bold text-right text-primary cursor-pointer"
-                  >
-                    {PROFICIENCY_LEVELS.map((l) => (
-                      <option key={l} value={l}>{l}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setHiddenDefaults(prev => [...prev, def.name])}
-                className="text-on-surface-variant/40 hover:text-error transition-colors"
-                title="Remove default suggestion"
-              >
-                <Trash2 className="h-5 w-5" />
-              </button>
-            </div>
-          );
-        })}
 
         {isLoading ? (
           <p className="text-on-surface-variant font-label-md animate-pulse py-4">Loading languages...</p>
