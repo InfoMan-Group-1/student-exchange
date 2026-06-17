@@ -61,11 +61,25 @@ export class AuthService {
       const userId = (userResult as any).insertId;
 
       // 2. Create Guardian
-      const generatedGuardianId = await studentRepository.getNextGuardianId();
-      await connection.execute(
-        `INSERT INTO guardians (guardian_id, guardian_name, relation_to_student, guardian_contact_number, guardian_email, guardian_address) VALUES (?, ?, ?, ?, ?, ?)`,
-        [generatedGuardianId, data.guardianName!, data.guardianRelation || null, data.guardianContact || null, data.guardianEmail || null, data.guardianAddress || null]
-      );
+      let generatedGuardianId = "";
+      let retries = 0;
+      while (retries < 5) {
+        generatedGuardianId = await studentRepository.getNextGuardianId();
+        try {
+          await connection.execute(
+            `INSERT INTO guardians (guardian_id, guardian_name, relation_to_student, guardian_contact_number, guardian_email, guardian_address) VALUES (?, ?, ?, ?, ?, ?)`,
+            [generatedGuardianId, data.guardianName!, data.guardianRelation || null, data.guardianContact || null, data.guardianEmail || null, data.guardianAddress || null]
+          );
+          break; // Success
+        } catch (err: any) {
+          if (err.code === 'ER_DUP_ENTRY' && err.message.includes('guardians.PRIMARY')) {
+            retries++;
+            if (retries === 5) throw err;
+          } else {
+            throw err;
+          }
+        }
+      }
 
       // 3. Create Student
       await connection.execute(

@@ -111,7 +111,13 @@ export class StudentRepository extends BaseRepository {
    * Queries the highest existing ID and increments it (G00001 → G00002)
    */
   async getNextGuardianId(): Promise<string> {
-    const sql = `SELECT guardian_id FROM guardians ORDER BY guardian_id DESC LIMIT 1`;
+    const sql = `
+      SELECT guardian_id 
+      FROM guardians 
+      WHERE guardian_id LIKE 'G%' AND LENGTH(guardian_id) = 6 
+      ORDER BY guardian_id DESC 
+      LIMIT 1
+    `;
     const rows = await this.query<any[]>(sql);
     if (!rows || rows.length === 0) return 'G00001';
     
