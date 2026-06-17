@@ -18,7 +18,7 @@ export function ApplicationForm({ data }: { data: any }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [applicationData, setApplicationData] = useState({
     ...data,
-    languages: data?.languages ?? [
+    languages: (data?.languages && data.languages.length > 0) ? data.languages : [
       { language_name: "English", proficiency_level: "C2" },
       { language_name: "Filipino", proficiency_level: "Native" }
     ]
