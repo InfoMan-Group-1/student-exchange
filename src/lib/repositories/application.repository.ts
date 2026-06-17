@@ -101,7 +101,13 @@ export class ApplicationRepository extends BaseRepository {
    * Queries the highest existing ID and increments it (APP001 → APP002 → APP020, etc.)
    */
   async getNextApplicationId(): Promise<string> {
-    const sql = `SELECT application_id FROM applications ORDER BY application_id DESC LIMIT 1`;
+    const sql = `
+      SELECT application_id 
+      FROM applications 
+      WHERE application_id LIKE 'APP%' 
+      ORDER BY CAST(SUBSTRING(application_id, 4) AS UNSIGNED) DESC 
+      LIMIT 1
+    `;
     const rows = await this.query<any[]>(sql);
     if (!rows || rows.length === 0) return 'APP001';
     const last: string = rows[0].application_id; // e.g. "APP019"

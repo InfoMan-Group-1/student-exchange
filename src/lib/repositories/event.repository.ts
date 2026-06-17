@@ -32,7 +32,13 @@ export class EventRepository extends BaseRepository {
 
   async createEvent(eventName: string, hostCountry: string, eventDate: string) {
     // Generate sequential ID like EV014
-    const rows = await this.query<any[]>(`SELECT event_id FROM events ORDER BY event_id DESC LIMIT 1`);
+    const rows = await this.query<any[]>(`
+      SELECT event_id 
+      FROM events 
+      WHERE event_id LIKE 'EV%' 
+      ORDER BY CAST(SUBSTRING(event_id, 3) AS UNSIGNED) DESC 
+      LIMIT 1
+    `);
     let nextId = "EV001";
     if (rows.length > 0) {
       const lastId = rows[0].event_id; // e.g. "EV013"
