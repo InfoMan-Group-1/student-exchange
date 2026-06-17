@@ -20,6 +20,7 @@ export class AuthService {
     guardianRelation?: string;
     guardianContact?: string;
     guardianEmail?: string;
+    guardianAddress?: string;
     yearLevel?: string;
   }) {
     // Basic validation
@@ -62,8 +63,8 @@ export class AuthService {
       // 2. Create Guardian
       const generatedGuardianId = await studentRepository.getNextGuardianId();
       await connection.execute(
-        `INSERT INTO guardians (guardian_id, guardian_name, relation_to_student, guardian_contact_number, guardian_email) VALUES (?, ?, ?, ?, ?)`,
-        [generatedGuardianId, data.guardianName!, data.guardianRelation || null, data.guardianContact || null, data.guardianEmail || null]
+        `INSERT INTO guardians (guardian_id, guardian_name, relation_to_student, guardian_contact_number, guardian_email, guardian_address) VALUES (?, ?, ?, ?, ?, ?)`,
+        [generatedGuardianId, data.guardianName!, data.guardianRelation || null, data.guardianContact || null, data.guardianEmail || null, data.guardianAddress || null]
       );
 
       // 3. Create Student

@@ -245,6 +245,17 @@ export function RegisterForm() {
               />
             </div>
           </div>
+
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface font-medium">Guardian's Address</label>
+            <textarea 
+              name="guardian_address"
+              required
+              rows={2}
+              placeholder="Complete residential address"
+              className="w-full bg-surface border border-outline-variant rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-on-surface hover:border-outline placeholder:text-on-surface-variant/40 resize-none"
+            />
+          </div>
         </div>
       </div>
 

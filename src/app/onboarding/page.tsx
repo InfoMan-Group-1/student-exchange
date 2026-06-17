@@ -168,11 +168,37 @@ export default function OnboardingPage() {
               </div>
             </div>
 
-            {/* 2. Guardian & Contact Information */}
+            {/* 2. Contact Information */}
             <div className="space-y-6">
-              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">2. Guardian & Contact Information</h3>
+              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">2. Contact Information</h3>
+              <div className="space-y-2">
+                <label className="font-label-md text-on-surface-variant">Home Address (Permanent) <span className="text-error">*</span></label>
+                <textarea
+                  required
+                  rows={2}
+                  name="home_address"
+                  placeholder="Complete permanent residential address"
+                  defaultValue={profile?.home_address || ""}
+                  className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md resize-none"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="font-label-md text-on-surface-variant">Personal Mobile Number <span className="text-error">*</span></label>
+                <input
+                  required
+                  type="tel"
+                  name="mobile_number"
+                  defaultValue={profile?.mobile_number || ""}
+                  placeholder="+63 912 345 6789"
+                  className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
+                />
+              </div>
+            </div>
+
+            {/* 3. Guardian Information */}
+            <div className="space-y-6">
+              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">3. Guardian Information</h3>
               
-              {/* Guardian Name & Relationship */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="font-label-md text-on-surface-variant">Guardian Name <span className="text-error">*</span></label>
@@ -202,7 +228,6 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              {/* Guardian Contact & Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="font-label-md text-on-surface-variant">Guardian Contact Number <span className="text-error">*</span></label>
@@ -227,47 +252,22 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              {/* Addresses and Personal Mobile */}
               <div className="space-y-2">
-                <label className="font-label-md text-on-surface-variant">Home Address (Permanent) <span className="text-error">*</span></label>
+                <label className="font-label-md text-on-surface-variant">Guardian's Address <span className="text-error">*</span></label>
                 <textarea
                   required
                   rows={2}
-                  name="home_address"
-                  placeholder="Complete permanent residential address"
-                  defaultValue={profile?.home_address || ""}
+                  name="guardian_address"
+                  placeholder="Complete residential address of your guardian"
+                  defaultValue={profile?.guardian_address || ""}
                   className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md resize-none"
                 />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="font-label-md text-on-surface-variant">Personal Mobile Number <span className="text-error">*</span></label>
-                  <input
-                    required
-                    type="tel"
-                    name="mobile_number"
-                    defaultValue={profile?.mobile_number || ""}
-                    placeholder="+63 912 345 6789"
-                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="font-label-md text-on-surface-variant">Guardian's Address <span className="text-error">*</span></label>
-                  <input
-                    required
-                    type="text"
-                    name="guardian_address"
-                    placeholder="Complete residential address of your guardian"
-                    defaultValue={profile?.guardian_address || ""}
-                    className="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md"
-                  />
-                </div>
-              </div>
             </div>
 
-            {/* 3. Academic Details */}
+            {/* 4. Academic Details */}
             <div className="space-y-6">
-              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">3. Academic Details</h3>
+              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">4. Academic Details</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="font-label-md text-on-surface-variant">Year Level <span className="text-error">*</span></label>
@@ -300,9 +300,9 @@ export default function OnboardingPage() {
               </div>
             </div>
 
-            {/* 4. Passport Details */}
+            {/* 5. Passport Details */}
             <div className="space-y-6">
-              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">4. Passport Details</h3>
+              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">5. Passport Details</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <label className="font-label-md text-on-surface-variant">Passport Number</label>

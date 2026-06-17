@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
       guardianRelation: body.guardian_relation,
       guardianContact: body.guardian_contact_number,
       guardianEmail: body.guardian_email,
+      guardianAddress: body.guardian_address,
       yearLevel: body.year_level
     });
 
