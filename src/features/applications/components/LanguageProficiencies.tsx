@@ -6,6 +6,12 @@ import useSWR, { mutate } from "swr";
 import { fetcher, apiFetch } from "@/lib/api-client";
 
 const PROFICIENCY_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2", "Native"];
+const COMMON_LANGUAGES = [
+  "English", "Mandarin", "Hindi", "Spanish", "French", 
+  "Arabic", "Bengali", "Russian", "Portuguese", "Urdu", 
+  "Indonesian", "German", "Japanese", "Korean", "Italian", 
+  "Tagalog", "Others"
+];
 
 export function LanguageProficiencies({ 
   hasApplication = true, 
@@ -21,32 +27,36 @@ export function LanguageProficiencies({
     ? (data?.data ?? [])
     : localLanguages;
 
-  const [newLang, setNewLang] = useState("");
+  const [selectedLang, setSelectedLang] = useState("English");
+  const [customLang, setCustomLang] = useState("");
   const [newLevel, setNewLevel] = useState("B2");
   const [adding, setAdding] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [removing, setRemoving] = useState<string | null>(null);
 
   const handleAdd = async () => {
-    if (!newLang.trim()) return;
+    const langToAdd = selectedLang === "Others" ? customLang.trim() : selectedLang;
+    if (!langToAdd) return;
+    
     setAdding(true);
     try {
       if (hasApplication) {
         await apiFetch("/api/v1/students/me/languages", {
           method: "POST",
-          body: JSON.stringify({ name: newLang.trim(), level: newLevel }),
+          body: JSON.stringify({ name: langToAdd, level: newLevel }),
         });
         mutate("/api/v1/students/me/languages");
       } else {
         if (onUpdate) {
           // Check if it already exists locally to avoid duplicates
-          if (!languages.find(l => l.language_name.toLowerCase() === newLang.trim().toLowerCase())) {
-            onUpdate([...languages, { language_name: newLang.trim(), proficiency_level: newLevel }]);
+          if (!languages.find(l => l.language_name.toLowerCase() === langToAdd.toLowerCase())) {
+            onUpdate([...languages, { language_name: langToAdd, proficiency_level: newLevel }]);
           }
         }
       }
-      setNewLang("");
+      setCustomLang("");
       setNewLevel("B2");
+      setSelectedLang("English");
       setShowForm(false);
     } catch {
       alert("Failed to add language.");
@@ -115,38 +125,60 @@ export function LanguageProficiencies({
       </div>
 
       {showForm && (
-        <div className="mb-4 flex gap-3 items-end p-3 bg-surface-container-low rounded-xl border border-outline-variant/50">
-          <div className="flex-1 space-y-1">
-            <p className="text-[10px] uppercase text-on-surface-variant font-bold">Language</p>
-            <input
-              type="text"
-              value={newLang}
-              onChange={(e) => setNewLang(e.target.value)}
-              placeholder="e.g. Korean"
-              className="bg-transparent border-b border-outline-variant w-full focus:outline-none focus:border-primary py-1 text-sm font-label-md"
-            />
-          </div>
-          <div className="space-y-1">
-            <p className="text-[10px] uppercase text-on-surface-variant font-bold">Level</p>
-            <select
-              value={newLevel}
-              onChange={(e) => setNewLevel(e.target.value)}
-              className="bg-transparent border-b border-outline-variant focus:outline-none focus:border-primary text-sm font-bold"
+        <div className="mb-4 flex flex-col gap-3 p-3 bg-surface-container-low rounded-xl border border-outline-variant/50">
+          <div className="flex gap-3 items-end">
+            <div className="flex-1 space-y-1">
+              <p className="text-[10px] uppercase text-on-surface-variant font-bold">Language</p>
+              <select
+                value={selectedLang}
+                onChange={(e) => {
+                  setSelectedLang(e.target.value);
+                  if (e.target.value !== "Others") setCustomLang("");
+                }}
+                className="bg-transparent border-b border-outline-variant w-full focus:outline-none focus:border-primary py-1 text-sm font-label-md"
+              >
+                {COMMON_LANGUAGES.map(l => (
+                  <option key={l} value={l}>{l}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="space-y-1">
+              <p className="text-[10px] uppercase text-on-surface-variant font-bold">Level</p>
+              <select
+                value={newLevel}
+                onChange={(e) => setNewLevel(e.target.value)}
+                className="bg-transparent border-b border-outline-variant focus:outline-none focus:border-primary py-1 text-sm font-bold"
+              >
+                {PROFICIENCY_LEVELS.map((l) => (
+                  <option key={l} value={l}>{l}</option>
+                ))}
+              </select>
+            </div>
+            
+            <button
+              type="button"
+              onClick={handleAdd}
+              disabled={adding || (selectedLang === "Others" && !customLang.trim())}
+              className="flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md text-sm transition-all hover:brightness-110 active:scale-95 disabled:opacity-50"
             >
-              {PROFICIENCY_LEVELS.map((l) => (
-                <option key={l} value={l}>{l}</option>
-              ))}
-            </select>
+              {adding ? <RefreshCw className="h-4 w-4 animate-spin" /> : null}
+              Save
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={handleAdd}
-            disabled={adding || !newLang.trim()}
-            className="flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md text-sm transition-all hover:brightness-110 active:scale-95 disabled:opacity-50"
-          >
-            {adding ? <RefreshCw className="h-4 w-4 animate-spin" /> : null}
-            Save
-          </button>
+          
+          {selectedLang === "Others" && (
+            <div className="flex-1 space-y-1">
+              <p className="text-[10px] uppercase text-on-surface-variant font-bold">Please specify language</p>
+              <input
+                type="text"
+                value={customLang}
+                onChange={(e) => setCustomLang(e.target.value)}
+                placeholder="e.g. Swahili"
+                className="bg-transparent border-b border-outline-variant w-full focus:outline-none focus:border-primary py-1 text-sm font-label-md"
+              />
+            </div>
+          )}
         </div>
       )}
 
