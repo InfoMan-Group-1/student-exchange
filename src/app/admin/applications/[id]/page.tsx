@@ -100,6 +100,7 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
         <div className="lg:col-span-4 space-y-8">
           <StudentSummary info={detail} isEditing={isEditing} formData={formData} onChange={handleChange} />
           <EmergencyContact info={detail} isEditing={isEditing} formData={formData} onChange={handleChange} />
+          <AdminEventsTable events={detail.events} />
         </div>
 
         <div className="lg:col-span-8 space-y-8">
@@ -109,7 +110,6 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
             <AdminDocumentsChecklist detail={detail} />
             <AdminLanguagesTable languages={detail.languages} />
           </div>
-          <AdminEventsTable events={detail.events} />
           <AdminEndorsementDetails detail={detail} />
         </div>
       </div>
