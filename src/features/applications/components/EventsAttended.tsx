@@ -5,12 +5,22 @@ import { fetcher, apiFetch } from "@/lib/api-client";
 import { Calendar, CheckCircle2, Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
-export function EventsAttended({ isEditing }: { isEditing?: boolean }) {
+export function EventsAttended({ 
+  isEditing,
+  localMode = false,
+  localEvents = [],
+  onUpdate
+}: { 
+  isEditing?: boolean;
+  localMode?: boolean;
+  localEvents?: any[];
+  onUpdate?: (events: any[]) => void;
+}) {
   const { data: allEventsData } = useSWR("/api/v1/events", fetcher);
-  const { data: attendedData } = useSWR("/api/v1/events/me", fetcher);
+  const { data: attendedData } = useSWR(!localMode ? "/api/v1/events/me" : null, fetcher);
 
   const allEvents = allEventsData?.data || [];
-  const attendedEvents = attendedData?.data || [];
+  const attendedEvents = localMode ? localEvents : (attendedData?.data || []);
   const attendedIds = new Set(attendedEvents.map((e: any) => e.event_id));
 
   const [showOtherForm, setShowOtherForm] = useState(false);
@@ -31,6 +41,19 @@ export function EventsAttended({ isEditing }: { isEditing?: boolean }) {
 
   const toggleEvent = async (eventId: string, isAttending: boolean) => {
     if (!isEditing) return;
+    
+    if (localMode && onUpdate) {
+      if (isAttending) {
+        const eventToAdd = allEvents.find((e: any) => e.event_id === eventId);
+        if (eventToAdd) {
+          onUpdate([...attendedEvents, eventToAdd]);
+        }
+      } else {
+        onUpdate(attendedEvents.filter((e: any) => e.event_id !== eventId));
+      }
+      return;
+    }
+
     try {
       if (isAttending) {
         await apiFetch(`/api/v1/events/me`, {
@@ -54,17 +77,25 @@ export function EventsAttended({ isEditing }: { isEditing?: boolean }) {
     if (!otherForm.event_name || !otherForm.host_country || !otherForm.event_date) return;
     setIsAdding(true);
     try {
-      // Create new event
+      // Create new event globally
       const res = await apiFetch("/api/v1/events", {
         method: "POST",
         body: JSON.stringify(otherForm)
       });
-      const newEventId = res.data.event_id;
+      const newEvent = res.data;
       
-      // Auto-check it off
+      if (localMode && onUpdate) {
+        onUpdate([...attendedEvents, newEvent]);
+        mutate("/api/v1/events");
+        setOtherForm({ event_name: "", host_country: "", event_date: "" });
+        setIsAdding(false);
+        return;
+      }
+
+      // Auto-check it off (server mode)
       await apiFetch(`/api/v1/events/me`, {
         method: "POST",
-        body: JSON.stringify({ event_id: newEventId })
+        body: JSON.stringify({ event_id: newEvent.event_id })
       });
 
       mutate("/api/v1/events");

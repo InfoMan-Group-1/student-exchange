@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BadgeCheck, Users, GraduationCap, Save, RefreshCw, CheckCircle2, Pencil } from "lucide-react";
 import { apiFetch } from "@/lib/api-client";
 import { mutate } from "swr";
+import { EventsAttended } from "@/features/applications/components/EventsAttended";
 
 export function StudentProfileForm({ student }: { student: any }) {
   const [isSaving, setIsSaving] = useState(false);
@@ -363,6 +364,12 @@ export function StudentProfileForm({ student }: { student: any }) {
               </div>
             </div>
           </section>
+
+          {/* Events Attended */}
+          <section className="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30 p-8">
+            <EventsAttended isEditing={isEditing} />
+          </section>
+
           </fieldset>
         </form>
       </div>

@@ -6,6 +6,7 @@ import { fetcher, apiFetch } from "@/lib/api-client";
 import { useRouter } from "next/navigation";
 import { UserCircle2, ArrowRight } from "lucide-react";
 import { formatPhoneNumber } from "@/lib/utils";
+import { EventsAttended } from "@/features/applications/components/EventsAttended";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function OnboardingPage() {
   
   const [birthDate, setBirthDate] = useState("");
   const [age, setAge] = useState<number | "">("");
+  const [events, setEvents] = useState<any[]>([]);
 
   useEffect(() => {
     if (profile?.birth_date) {
@@ -55,6 +57,14 @@ export default function OnboardingPage() {
         method: "PATCH",
         body: JSON.stringify(payload),
       });
+
+      // Save events
+      for (const event of events) {
+        await apiFetch(`/api/v1/events/me`, {
+          method: "POST",
+          body: JSON.stringify({ event_id: event.event_id })
+        });
+      }
 
       await mutate("/api/v1/students/me/profile");
       router.push("/dashboard");
@@ -335,14 +345,25 @@ export default function OnboardingPage() {
               </div>
             </div>
 
-            <div className="pt-6 flex justify-end">
+            {/* 5. Events Attended */}
+            <div className="space-y-6">
+              <h3 className="font-title-lg text-primary border-b border-outline-variant pb-2">5. Exchange Events Attended</h3>
+              <EventsAttended 
+                isEditing={true} 
+                localMode={true} 
+                localEvents={events} 
+                onUpdate={setEvents} 
+              />
+            </div>
+
+            <div className="pt-6 border-t border-outline-variant flex justify-end">
               <button
                 type="submit"
                 disabled={isSaving}
-                className="flex items-center gap-2 px-10 py-4 bg-primary text-on-primary rounded-xl font-bold hover:bg-primary/90 transition-all active:scale-95 shadow-md disabled:opacity-50"
+                className="bg-primary text-on-primary px-8 py-3 rounded-full font-label-lg hover:bg-primary/90 transition-all flex items-center gap-2 disabled:opacity-50"
               >
-                {isSaving ? "Saving..." : "Complete Profile"}
-                {!isSaving && <ArrowRight className="w-5 h-5" />}
+                {isSaving ? "Completing Profile..." : "Complete Profile"}
+                <ArrowRight className="w-5 h-5" />
               </button>
             </div>
           </form>
