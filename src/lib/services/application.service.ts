@@ -1,6 +1,8 @@
 import { ApplicationRepository } from "@/lib/repositories/application.repository";
+import { EventRepository } from "@/lib/repositories/event.repository";
 
 const repo = new ApplicationRepository();
+const eventRepo = new EventRepository();
 
 export class ApplicationService {
   async listApplications(limit: number, startingAfter?: string | null, isComplete?: boolean | null) {
@@ -34,11 +36,13 @@ export class ApplicationService {
 
     const choices = await repo.getUniversityChoices(applicationId);
     const languages = await repo.getLanguagesForStudent(application.student_number);
+    const events = await eventRepo.getEventsForStudent(application.student_number);
 
     return {
       ...application,
       university_choices: choices,
       languages,
+      events,
     };
   }
 

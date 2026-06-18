@@ -11,6 +11,7 @@ import { AcademicPreferences } from "@/features/admin/components/AcademicPrefere
 import { AdminDocumentsChecklist } from "@/features/admin/components/AdminDocumentsChecklist";
 import { AdminLanguagesTable } from "@/features/admin/components/AdminLanguagesTable";
 import { AdminEndorsementDetails } from "@/features/admin/components/AdminEndorsementDetails";
+import { AdminEventsTable } from "@/features/admin/components/AdminEventsTable";
 import { DetailFooter } from "@/features/admin/components/DetailFooter";
 import { DeleteConfirmationModal } from "@/features/admin/components/DeleteConfirmationModal";
 
@@ -108,6 +109,7 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
             <AdminDocumentsChecklist detail={detail} />
             <AdminLanguagesTable languages={detail.languages} />
           </div>
+          <AdminEventsTable events={detail.events} />
           <AdminEndorsementDetails detail={detail} />
         </div>
       </div>
