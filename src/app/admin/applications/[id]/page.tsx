@@ -99,7 +99,6 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4 space-y-8">
           <StudentSummary info={detail} isEditing={isEditing} formData={formData} onChange={handleChange} />
-          <EmergencyContact info={detail} isEditing={isEditing} formData={formData} onChange={handleChange} />
           <AdminEventsTable events={detail.events} />
         </div>
 
@@ -110,7 +109,10 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
             <AdminDocumentsChecklist detail={detail} />
             <AdminLanguagesTable languages={detail.languages} />
           </div>
-          <AdminEndorsementDetails detail={detail} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <AdminEndorsementDetails detail={detail} />
+            <EmergencyContact info={detail} isEditing={isEditing} formData={formData} onChange={handleChange} />
+          </div>
         </div>
       </div>
 
