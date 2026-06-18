@@ -284,6 +284,11 @@ export function StudentProfileForm({ student }: { student: any }) {
             </div>
           </section>
 
+          {/* Events Attended */}
+          <section className="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30 p-8">
+            <EventsAttended isEditing={isEditing} />
+          </section>
+
           {/* Section B: Guardian Information */}
           <section className="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] overflow-hidden border border-outline-variant/30 mb-32">
             <div className="bg-surface-container-low px-card-padding py-4 border-b border-outline-variant/50 flex items-center justify-between">
@@ -363,11 +368,6 @@ export function StudentProfileForm({ student }: { student: any }) {
 
               </div>
             </div>
-          </section>
-
-          {/* Events Attended */}
-          <section className="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30 p-8">
-            <EventsAttended isEditing={isEditing} />
           </section>
 
           </fieldset>
